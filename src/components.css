@@ -1,0 +1,49 @@
+.preprPreviewBar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: #5237e6;
+}
+
+.preprPreviewBarWrapper {
+    margin: 0 auto;
+    display: flex;
+    max-width: 105rem;
+    justify-content: space-between;
+    padding: 0.625rem 1.25rem;
+}
+
+.preprPreviewDropdownWrapper {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.preprPreviewDropdown {
+    display: flex;
+    width: 100%;
+    min-width: 200px;
+    border-radius: 0.5rem;
+    border: solid 1px #d1d5db;
+    background-color: #f9fafb;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    color: #1f2937;
+}
+
+.preprPreviewDropdown:hover {
+    background-color: #e5e7eb;
+    cursor: pointer;
+}
+
+.preprPreviewReset {
+    border-radius: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    background-color: #f9fafb;
+    color: #1f2937;
+}
+
+.preprPreviewReset:hover {
+    background-color: #e5e7eb;
+}
