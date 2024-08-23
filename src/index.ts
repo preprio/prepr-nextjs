@@ -29,13 +29,13 @@ export function PreprMiddleware(request: NextRequest, response?: NextResponse) {
 
         if (request.nextUrl.searchParams.has('a-b-testing')) {
             const ab_testing = request.nextUrl.searchParams.get('a-b-testing')
-            let value = ab_testing?.toLowerCase()
-            if (value === 'a') {
-                value = 'LAST_VERSION'
+            let value = ab_testing?.toUpperCase()
+            if (value === 'B') {
+                value = 'B'
             } else {
-                value = 'ALTERNATIVE_VERSION'
+                value = 'A'
             }
-            newResponse.headers.set('Prepr-ABtesting', value)
+            newResponse.headers.set('Prepr-ABtesting',  value)
             newResponse.cookies.set('Prepr-ABtesting', value, {
                 maxAge: 60, // Set for one year
             })
@@ -114,12 +114,31 @@ export function getPreprHeaders() {
     return newHeaders
 }
 
+export type PreprSegment = {
+    id: string
+    created_on: string
+    changed_on: string
+    synced_on: string
+    label: string
+    reference_id: string
+    body: string
+    query: string
+    count: number
+}
+
+export type PreprSegmentsResponse = {
+    total: number
+    skip: number
+    limit: number
+    items: PreprSegment[]
+}
 
 /**
  * Fetches the segments from the Prepr API
  * @param token Prepr access token with scope 'segments'
+ * @returns Object with total, skip, limit and items
  */
-export async function getPreprEnvironmentSegments(token: string) {
+export async function getPreprEnvironmentSegments(token: string): Promise<PreprSegmentsResponse> {
     const response = await fetch('https://api.eu1.prepr.io/segments', {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -137,7 +156,7 @@ export async function getPreprEnvironmentSegments(token: string) {
 export async function getPreviewBarProps(token: string): Promise<{
     activeSegment: string | null,
     activeVariant: string | null,
-    data: any
+    data: PreprSegmentsResponse
 }> {
     const data = await getPreprEnvironmentSegments(token)
     const activeSegment = getActiveSegment()
