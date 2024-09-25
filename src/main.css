@@ -1,0 +1,6 @@
+@tailwind components;
+@tailwind utilities;
+
+.prp-regular-text {
+    @apply prp-text-sm prp-font-medium prp-leading-normal;
+}

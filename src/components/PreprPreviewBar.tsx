@@ -1,17 +1,40 @@
 'use client'
 
-import {usePathname, useRouter} from 'next/navigation'
-import React, {useState} from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 
-export default function PreprPreviewBar(props: {
+import '../main.css'
+import PreprLogo from './PreprLogo'
+import ResetButton from './ResetButton'
+import {
+    Listbox,
+    ListboxButton,
+    ListboxOption,
+    ListboxOptions,
+    Radio,
+    RadioGroup,
+} from '@headlessui/react'
+import { FaCaretDown, FaChevronDown } from 'react-icons/fa6'
+import { FaInfoCircle } from 'react-icons/fa'
+
+export function PreprPreviewBar(props: {
     activeSegment?: string | null
     activeVariant?: string | null
     data?: any
 }) {
-    const {activeSegment, activeVariant, data} = props
-    const [selectedSegment, setSelectedSegment] = useState(activeSegment)
+    const { activeSegment, activeVariant, data } = props
+
+    const emptySegment = {
+        body: 'Choose segment',
+    }
+    const [selectedSegment, setSelectedSegment] = useState(
+        data.items.filter(
+            (segmentData: any) => segmentData === activeSegment
+        )[0] || emptySegment
+    )
+
     const [selectedVariant, setSelectedVariant] = useState<string | null>(
-        activeVariant === 'LAST_VERSION' ? 'A' : 'B'
+        (!activeVariant && 'A') || activeVariant === 'LAST_VERSION' ? 'A' : 'B'
     )
 
     const router = useRouter()
@@ -35,72 +58,138 @@ export default function PreprPreviewBar(props: {
         router.refresh()
     }
 
-    const handleUpdateSegment = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const segment = e.target.value
-        setSelectedSegment(segment)
+    // const handleUpdateSegment = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    //     const segment = e.target.value
+    //     setSelectedSegment(segment)
+    //
+    //     const params = new URLSearchParams({})
+    //
+    //     if (segment !== 'Choose segment') {
+    //         params.append('segments', segment as string)
+    //     } else {
+    //         params.append('segments', 'null')
+    //     }
+    //
+    //     router.push(`${pathname}?${params.toString()}`, {
+    //         scroll: false,
+    //     })
+    //     router.refresh()
+    // }
 
-        const params = new URLSearchParams({})
-
-        if (segment !== 'Choose segment') {
-            params.append('segments', segment as string)
-        } else {
-            params.append('segments', 'null')
-        }
-
-        router.push(`${pathname}?${params.toString()}`, {
-            scroll: false,
-        })
-        router.refresh()
-    }
-
-    const handleReset = () => {
-        setSelectedSegment(null)
-        setSelectedVariant(null)
-
-        const params = new URLSearchParams({})
-        params.append('segments', 'null')
-        params.append('a-b-testing', 'null')
-
-        router.push(`${pathname}?${params.toString()}`, {
-            scroll: false,
-        })
-    }
+    // const handleReset = () => {
+    //     setSelectedSegment(null)
+    //     setSelectedVariant(null)
+    //
+    //     const params = new URLSearchParams({})
+    //     params.append('segments', 'null')
+    //     params.append('a-b-testing', 'null')
+    //
+    //     router.push(`${pathname}?${params.toString()}`, {
+    //         scroll: false,
+    //     })
+    // }
 
     return (
-        <div className={"preprPreviewBar"}>
-            <div className={"preprPreviewBarWrapper"}>
-                {/* Dropdowns */}
-                <div className={"preprPreviewDropdownWrapper"}>
-                    <select
-                        value={selectedSegment || 'Choose segment'}
-                        onChange={handleUpdateSegment}
-                        id='segments'
-                        name='segments'
-                        className={"preprPreviewDropdown"}>
-                        <option>Choose segment</option>
-                        {data?.items?.map((segment: any) => (
-                            <option
-                                key={segment.reference_id}
-                                value={segment.reference_id}>
-                                {segment.body}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        value={selectedVariant || 'Choose variant'}
-                        onChange={handleUpdateVariant}
-                        id='variant'
-                        name='variant'
-                        className={"preprPreviewDropdown"}>
-                        <option>Choose variant</option>
-                        <option value='A'>Variant A</option>
-                        <option value='B'>Variant B</option>
-                    </select>
+        <div className="prp-py-4 prp-px-5 md:prp-px-19.5 prp-bg-indigo-default">
+            <div className="prp-flex prp-gap-y-4 prp-flex-wrap prp-justify-between">
+                {/* Logo & Text */}
+                <div className="prp-flex prp-gap-8 prp-items-center">
+                    <span className="prp-h-full prp-flex prp-items-center">
+                        <PreprLogo />
+                    </span>
+                    <span className="prp-hidden prp-leading-[1.375rem] prp-pb-1 lg:prp-block prp-text-white prp-text-lg prp-text-bold prp-mr-10">
+                        Adaptive preview
+                    </span>
                 </div>
 
-                <button onClick={handleReset} className={"preprPreviewReset"}>
-                    Reset
-                </button>
+                <div className="prp-flex prp-gap-6 prp-items-center prp-justify-end">
+                    <div className="prp-flex prp-gap-4">
+                        <p className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
+                            <span className="prp-pb-0.5">
+                                Adapt for segment
+                            </span>
+                            <span className="prp-font-bold prp-text-indigo-300 prp-text-xs">
+                                <FaInfoCircle />
+                            </span>
+                        </p>
+                        <Listbox
+                            value={selectedSegment.slug}
+                            onChange={setSelectedSegment}
+                        >
+                            <ListboxButton className="prp-h-10 prp-flex-initial prp-w-[15rem] prp-rounded-md data-[open]:prp-rounded-b-none data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-justify-center prp-px-4 prp-regular-text prp-text-gray-500">
+                                <span className="prp-flex prp-items-center prp-justify-between">
+                                    <span>{selectedSegment.body}</span>
+                                    <span className="prp-text-gray-900">
+                                        <FaCaretDown className="prp-w-3" />
+                                    </span>
+                                </span>
+                            </ListboxButton>
+                            <ListboxOptions
+                                anchor="bottom"
+                                className="prp-z-[9999] prp-w-[var(--button-width)] prp-pb-2 prp-rounded-b-md prp-bg-white"
+                            >
+                                {data?.items?.map((segment: any) => (
+                                    <ListboxOption
+                                        className="prp-px-4 prp-py-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full"
+                                        key={segment.reference_id}
+                                        value={segment}
+                                    >
+                                        {segment.body}
+                                    </ListboxOption>
+                                ))}
+                            </ListboxOptions>
+                        </Listbox>
+                    </div>
+
+                    <div className="prp-flex prp-gap-4">
+                        <p className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
+                            <span className="prp-pb-0.5">Show A/B test</span>
+                            <span className="prp-font-bold prp-text-indigo-300 prp-text-xs">
+                                <FaInfoCircle />
+                            </span>
+                        </p>
+
+                        <RadioGroup
+                            className="prp-rounded-lg prp-p-1 prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center"
+                            value={selectedVariant}
+                            onChange={setSelectedVariant}
+                        >
+                            <Radio
+                                value={'A'}
+                                className="prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text
+                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer
+                                "
+                            >
+                                <span className="prp-hidden md:prp-inline prp-mr-1">
+                                    Option{' '}
+                                </span>
+                                A
+                            </Radio>
+                            <Radio
+                                value={'B'}
+                                className="prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text
+                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer
+                                "
+                            >
+                                <span className="prp-hidden md:prp-inline prp-mr-1">
+                                    Option{' '}
+                                </span>
+                                B
+                            </Radio>
+                        </RadioGroup>
+                    </div>
+
+                    <ResetButton
+                        handleClick={() => {
+                            setSelectedSegment(emptySegment)
+                            setSelectedVariant('A')
+                        }}
+                        enabled={
+                            selectedSegment.reference_id ||
+                            selectedVariant !== 'A'
+                        }
+                    />
+                </div>
             </div>
         </div>
     )

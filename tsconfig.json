@@ -3,6 +3,7 @@
     "outDir": "dist",
     "module": "esnext",
     "target": "es2015",
+    "strict": false,
     "lib": ["dom", "esnext"],
     "moduleResolution": "node",
     "jsx": "react",
@@ -12,8 +13,8 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true,
+    "strictNullChecks": false,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true
   },

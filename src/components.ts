@@ -1,5 +1,6 @@
 'use client'
 
-import PreprPreviewBar from './components/PreprPreviewBar'
+import "./main.css"
+import {PreprPreviewBar} from './components/PreprPreviewBar'
 
 export {PreprPreviewBar}

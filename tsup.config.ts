@@ -3,7 +3,7 @@ import path from "path";
 
 export default defineConfig([
     {
-        entry: ["src/index.ts", "src/components.tsx", "src/components.css"],
+        entry: ["src/index.ts", "src/components.ts", "src/components.css"],
         clean: true,
         dts: true,
         sourcemap: true,
