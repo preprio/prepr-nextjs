@@ -1,6 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 @tailwind components;
 @tailwind utilities;
 
 .prp-regular-text {
     @apply prp-text-sm prp-font-medium prp-leading-normal;
+}
+
+.prp-base {
+    font-family: Inter, sans-serif;
+}
+
+.prp-dropshadow {
+    box-shadow: 0px 0px 12px 0px #C3C3C3;
 }
