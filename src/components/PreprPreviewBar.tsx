@@ -14,8 +14,8 @@ import {
     Radio,
     RadioGroup,
 } from '@headlessui/react'
-import { FaCaretDown, FaChevronDown } from 'react-icons/fa6'
-import { FaInfoCircle } from 'react-icons/fa'
+import { FaCaretDown } from 'react-icons/fa6'
+import InfoPopover from './InfoPopover'
 
 export function PreprPreviewBar(props: {
     activeSegment?: string | null
@@ -95,25 +95,27 @@ export function PreprPreviewBar(props: {
         <div className="prp-py-4 prp-px-5 md:prp-px-19.5 prp-bg-indigo-default prp-sticky prp-top-0 prp-z-[1000] prp-base">
             <div className="prp-flex prp-gap-y-4 prp-gap-x-6 prp-flex-wrap prp-justify-between">
                 {/* Logo & Text */}
-                <div className="prp-flex prp-gap-8 prp-items-center">
-                    <span className="prp-h-full prp-flex prp-items-center">
+                <div className="prp-flex prp-gap-6 prp-items-center">
+                    <div className="prp-h-full prp-flex prp-justify-center prp-items-center">
                         <PreprLogo />
-                    </span>
-                    <span className="prp-hidden prp-leading-[1.375rem] prp-pb-1 lg:prp-block prp-text-white prp-text-lg prp-text-bold prp-mr-10">
-                        Adaptive preview
-                    </span>
+                    </div>
+                    <div className="prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold prp-mr-10">
+                        Adaptive Preview
+                    </div>
                 </div>
 
                 <div className="prp-flex prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center">
                     <div className="prp-flex prp-gap-4">
-                        <p className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
-                            <span className="prp-pb-0.5">
-                                Adapt for segment
-                            </span>
-                            <span className="prp-font-bold prp-text-indigo-300 prp-text-xs">
-                                <FaInfoCircle />
-                            </span>
-                        </p>
+                        <div className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
+                            <span className="prp-pb-0.5">Apply segment</span>
+                            <InfoPopover
+                                title={'Adaptive Preview'}
+                                text={
+                                    "Choose a segment to see how it's displayed."
+                                }
+                                link={'Learn more'}
+                            />
+                        </div>
                         <Listbox
                             value={selectedSegment.slug}
                             onChange={handleUpdateSegment}
@@ -144,12 +146,16 @@ export function PreprPreviewBar(props: {
                     </div>
 
                     <div className="prp-flex prp-gap-4">
-                        <p className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
-                            <span className="prp-pb-0.5">Show A/B test</span>
-                            <span className="prp-font-bold prp-text-indigo-300 prp-text-xs">
-                                <FaInfoCircle />
-                            </span>
-                        </p>
+                        <div className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
+                            <span className="prp-pb-0.5">Show A/B variant</span>
+                            <InfoPopover
+                                title={'A/B Testing'}
+                                text={
+                                    'Choose between two different versions of a page to see which one performs better.'
+                                }
+                                link={'Learn more'}
+                            />
+                        </div>
 
                         <RadioGroup
                             className="prp-rounded-lg prp-p-1 prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center"
@@ -163,7 +169,7 @@ export function PreprPreviewBar(props: {
                                 "
                             >
                                 <span className="prp-hidden md:prp-inline prp-mr-1">
-                                    Option{' '}
+                                    Variant{' '}
                                 </span>
                                 A
                             </Radio>
@@ -174,7 +180,7 @@ export function PreprPreviewBar(props: {
                                 "
                             >
                                 <span className="prp-hidden md:prp-inline prp-mr-1">
-                                    Option{' '}
+                                    Variant{' '}
                                 </span>
                                 B
                             </Radio>
