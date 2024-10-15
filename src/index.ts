@@ -1,5 +1,5 @@
-import {NextRequest, NextResponse} from "next/server";
-import {headers} from "next/headers";
+import { NextRequest, NextResponse } from 'next/server'
+import { headers } from 'next/headers'
 
 export function PreprMiddleware(request: NextRequest, response?: NextResponse) {
     const newResponse = response || NextResponse.next()
@@ -16,6 +16,8 @@ export function PreprMiddleware(request: NextRequest, response?: NextResponse) {
     newResponse.headers.set('Prepr-Customer-Id', cookie)
 
     if (process.env.PREPR_ENV === 'preview') {
+        newResponse.headers.set('Prepr-Preview-Bar', 'true')
+
         if (request.nextUrl.searchParams.has('segments')) {
             const segments = request.nextUrl.searchParams.get('segments')
 
@@ -35,7 +37,7 @@ export function PreprMiddleware(request: NextRequest, response?: NextResponse) {
             } else {
                 value = 'A'
             }
-            newResponse.headers.set('Prepr-ABtesting',  value)
+            newResponse.headers.set('Prepr-ABtesting', value)
             newResponse.cookies.set('Prepr-ABtesting', value, {
                 maxAge: 60, // Set for one year
             })
@@ -77,22 +79,6 @@ export function getActiveVariant() {
 }
 
 /**
- * Helper function to only retrieve Prepr preview headers
- */
-export function getPreviewHeaders() {
-    let newHeaders: {
-        [key: string]: string
-    } = {}
-    headers().forEach((value, key) => {
-        if (key.startsWith('prepr') && key !== 'prepr-customer-id') {
-            newHeaders[key] = value
-        }
-    })
-
-    return newHeaders
-}
-
-/**
  * Helper function to retrieve Prepr headers (will filter out customer ID if in preview mode)
  */
 export function getPreprHeaders() {
@@ -100,16 +86,11 @@ export function getPreprHeaders() {
         [key: string]: string
     } = {}
 
-    if (process.env.PREPR_ENV !== 'preview') {
-        newHeaders['prepr-customer-id'] =
-            headers().get('prepr-customer-id') || ''
-    } else {
-        headers().forEach((value, key) => {
-            if (key.startsWith('prepr') && key !== 'prepr-customer-id') {
-                newHeaders[key] = value
-            }
-        })
-    }
+    headers().forEach((value, key) => {
+        if (key.startsWith('prepr')) {
+            newHeaders[key] = value
+        }
+    })
 
     return newHeaders
 }
@@ -138,10 +119,13 @@ export type PreprSegmentsResponse = {
  * @param token Prepr access token with scope 'segments'
  * @returns Object with total, skip, limit and items
  */
-export async function getPreprEnvironmentSegments(token: string): Promise<PreprSegmentsResponse> {
+export async function getPreprEnvironmentSegments(
+    token: string
+): Promise<PreprSegmentsResponse> {
     const response = await fetch('https://api.eu1.prepr.io/segments', {
         headers: {
             Authorization: `Bearer ${token}`,
+            'User-Agent': 'Prepr-Preview-Bar/1.0',
         },
     })
 
@@ -154,8 +138,8 @@ export async function getPreprEnvironmentSegments(token: string): Promise<PreprS
  * @returns Object with activeSegment, activeVariant and data
  */
 export async function getPreviewBarProps(token: string): Promise<{
-    activeSegment: string | null,
-    activeVariant: string | null,
+    activeSegment: string | null
+    activeVariant: string | null
     data: PreprSegmentsResponse
 }> {
     const data = await getPreprEnvironmentSegments(token)
@@ -165,6 +149,6 @@ export async function getPreviewBarProps(token: string): Promise<{
     return {
         activeSegment,
         activeVariant,
-        data
+        data,
     }
 }
