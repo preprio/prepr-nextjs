@@ -10,7 +10,7 @@ easier personalization & A/B testing implementation in your NextJS project.
 To install the Prepr NextJS package, run the following command:
 
 ```bash
-npm install @prepr/prepr-nextjs
+npm install @prepr/@preprio/prepr-nextjs
 ```
 
 Next you should navigate to your .env file and add the following environment variables:
@@ -28,7 +28,7 @@ file. If you don't have this file, you can create it in the root of your project
 Then add the following code to the `middleware.js|middleware.ts` file:
 ```javascript
 import type { NextRequest } from 'next/server'
-import { PreprMiddleware } from 'prepr-nextjs'
+import { PreprMiddleware } from '@preprio/prepr-nextjs'
 
 export function middleware(request: NextRequest) {
     return PreprMiddleware(request)
@@ -51,7 +51,7 @@ To setup the headers with your API calls, you can call the `getPreprHeaders()` h
 ```javascript
 import { getClient } from '@/lib/client'
 import { GetPageBySlugDocument, GetPageBySlugQuery } from '@/gql/graphql'
-import { getPreprHeaders } from 'prepr-nextjs'
+import { getPreprHeaders } from '@preprio/prepr-nextjs'
 
 const getData = async () => {
     // Fetching the data using Apollo Client
@@ -85,11 +85,11 @@ Then add the following code to the `layout.tsx` file:
 
 ```javascript
 // Helper function to get all the props for the PreviewBar component (this needs a server component)
-import { getPreviewBarProps } from 'prepr-nextjs'
+import { getPreviewBarProps } from '@preprio/prepr-nextjs'
 // Import the PreviewBar component
-import { PreprPreviewBar } from 'prepr-nextjs/components'
+import { PreprPreviewBar } from '@preprio/prepr-nextjs/components'
 // Import the PreviewBar CSS
-import 'prepr-nextjs/dist/components.css'
+import '@preprio/prepr-nextjs/dist/components.css'
 
 
 export default async function RootLayout({children}: {children: React.ReactNode}) {
