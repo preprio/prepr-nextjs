@@ -1,6 +1,6 @@
 {
-  "name": "prepr-nextjs",
-  "version": "1.0.0",
+  "name": "@preprio/prepr-nextjs",
+  "version": "1.0.0-beta.1",
   "description": "A next.js package with code snippets to use with Prepr",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -52,5 +52,17 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/preprio/prepr-nextjs.git"
+  },
+  "keywords": [
+    "prepr",
+    "nextjs"
+  ],
+  "bugs": {
+    "url": "https://github.com/preprio/prepr-nextjs/issues"
+  },
+  "homepage": "https://github.com/preprio/prepr-nextjs#readme"
 }
