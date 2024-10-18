@@ -19,8 +19,8 @@ Next you should navigate to your `.env` file and add the following environment v
 PREPR_ENV=
 ```
 
-Certain functionality like the PreviewBar component requires the `PREPR_ENV` environment variable to be set to `preview`. 
-To prevent unwanted display of the PreviewBar component in production, you can set the `PREPR_ENV` environment variable to `production`.
+If you want to include the PreviewBar component in your project, set the `PREPR_ENV` environment variable to `preview`. 
+When you're launching your project to production, then set the `PREPR_ENV` environment variable to `production`. This way, the PreviewBar component doesn't get displayed on a live web app.
 
 Next, we will implement the PreprMiddleware function. Navigate to your `middleware.js` or the `middleware.ts`
 file. If you don't have this file, you can create it in the root of your project.
@@ -107,7 +107,7 @@ const getData = async () => {
 For the PreviewBar to work we need to fetch all the segments from the Prepr API. To do this navigate to Prepr -> Settings -> Access tokens and create a new access token with the following scopes:
 - `segments`
 
-THen copy the access token and navigate to your `.env` file and add the following environment variable:
+Then copy the access token and navigate to your `.env` file and add the following environment variable:
 ```bash
 PREPR_SEGMENTS_ACCESS_TOKEN=<YOUR_ACCESS_TOKEN>
 ```
