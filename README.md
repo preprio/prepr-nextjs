@@ -13,7 +13,7 @@ To install the Prepr NextJS package, run the following command:
 npm install @preprio/prepr-nextjs
 ```
 
-Next you should navigate to your .env file and add the following environment variables:
+Next you should navigate to your `.env` file and add the following environment variable:
 
 ```bash
 PREPR_ENV=
@@ -22,15 +22,24 @@ PREPR_ENV=
 Certain functionality like the PreviewBar component requires the `PREPR_ENV` environment variable to be set to `preview`. 
 To prevent unwanted display of the PreviewBar component in production, you can set the `PREPR_ENV` environment variable to `production`.
 
-Next we will implement the PreprMiddleware function, navigate to your `middleware.js`or `middleware.ts`
+Next, we will implement the PreprMiddleware function. Navigate to your `middleware.js` or the `middleware.ts`
 file. If you don't have this file, you can create it in the root of your project.
 
-Then add the following code to the `middleware.js`or `middleware.ts` file:
+Then add the following code to the `middleware.ts` file:
 ```javascript
 import type { NextRequest } from 'next/server'
 import { PreprMiddleware } from '@preprio/prepr-nextjs'
 
 export function middleware(request: NextRequest) {
+    return PreprMiddleware(request)
+}
+```
+
+Or add the following code to the `middleware.js` file:
+```javascript
+import { PreprMiddleware } from '@preprio/prepr-nextjs'
+
+export function middleware(request) {
     return PreprMiddleware(request)
 }
 ```
@@ -48,7 +57,7 @@ If these searchParams are set, the PreprMiddleware will set the `Prepr-Segments`
 ## Usage
 To setup the headers with your API calls, you can call the `getPreprHeaders()` helper function. This will return an array of headers that you can spread in your fetch call.
 
-```javascript
+```javascript filename="page.tsx"
 import { getClient } from '@/lib/client'
 import { GetPageBySlugDocument, GetPageBySlugQuery } from '@/gql/graphql'
 import { getPreprHeaders } from '@preprio/prepr-nextjs'
