@@ -10,7 +10,7 @@ easier personalization & A/B testing implementation in your NextJS project.
 To install the Prepr NextJS package, run the following command:
 
 ```bash
-npm install @prepr/@preprio/prepr-nextjs
+npm install @preprio/prepr-nextjs
 ```
 
 Next you should navigate to your .env file and add the following environment variables:
@@ -22,10 +22,10 @@ PREPR_ENV=
 Certain functionality like the PreviewBar component requires the `PREPR_ENV` environment variable to be set to `preview`. 
 To prevent unwanted display of the PreviewBar component in production, you can set the `PREPR_ENV` environment variable to `production`.
 
-Next we will implement the PreprMiddleware function, navigate to your `middleware.js|middleware.ts`
+Next we will implement the PreprMiddleware function, navigate to your `middleware.js`or `middleware.ts`
 file. If you don't have this file, you can create it in the root of your project.
 
-Then add the following code to the `middleware.js|middleware.ts` file:
+Then add the following code to the `middleware.js`or `middleware.ts` file:
 ```javascript
 import type { NextRequest } from 'next/server'
 import { PreprMiddleware } from '@preprio/prepr-nextjs'
