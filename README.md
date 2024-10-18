@@ -55,9 +55,10 @@ If the `PREPR_ENV` environment variable is set to `preview`, the PreprMiddleware
 If these searchParams are set, the PreprMiddleware will set the `Prepr-Segments` and `Prepr-AB-Testing` headers with the values of the searchParams, and store its value in a cookie.
 
 ## Usage
-To setup the headers with your API calls, you can call the `getPreprHeaders()` helper function. This will return an array of headers that you can spread in your fetch call.
+To set up the headers with your API calls, you can call the `getPreprHeaders()` helper function. This will return an array of headers that you can spread in your fetch call.
+See the example code below in the `page.tsx` file. 
 
-```javascript filename="page.tsx"
+```javascript
 import { getClient } from '@/lib/client'
 import { GetPageBySlugDocument, GetPageBySlugQuery } from '@/gql/graphql'
 import { getPreprHeaders } from '@preprio/prepr-nextjs'
@@ -75,6 +76,29 @@ const getData = async () => {
         },
         fetchPolicy: 'no-cache',
     })
+}
+```
+See the javascript example code below in the `page.js`file.
+
+```javascript
+import { getClient } from '@/lib/client'
+import { GetPageBySlug } from '@/queries/get-page-by-slug';
+import { getPreprHeaders } from '@preprio/prepr-nextjs'
+
+const getData = async () => {
+    // Fetching the data using Apollo Client
+    const { data } = await client.query({
+    query: GetPageBySlug,
+    variables: {
+        slug: '/',
+    },
+    context: {
+            // Call the getPreprHeaders function to get the appropriate headers
+            headers: getPreprHeaders(),
+        },
+        fetchPolicy: 'no-cache',
+    })
+    return data;
 }
 ```
 
