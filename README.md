@@ -156,7 +156,7 @@ The `getPreprUUID()` function will return the value of the `__prepr_uid` cookie.
 Returns the active segment from the `Prepr-Segments` header.
 
 #### getActiveVariant()
-Returns the active variant from the `Prepr-AB-Testing` header.
+Returns the active variant from the `Prepr-ABTesting` header.
 
 #### getPreviewHeaders()
 Helper function to only get the preview headers.
