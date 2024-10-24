@@ -10,27 +10,36 @@ easier personalization & A/B testing implementation in your NextJS project.
 To install the Prepr NextJS package, run the following command:
 
 ```bash
-npm install @prepr/@preprio/prepr-nextjs
+npm install @preprio/prepr-nextjs
 ```
 
-Next you should navigate to your .env file and add the following environment variables:
+Next you should navigate to your `.env` file and add the following environment variable:
 
 ```bash
 PREPR_ENV=
 ```
 
-Certain functionality like the PreviewBar component requires the `PREPR_ENV` environment variable to be set to `preview`. 
-To prevent unwanted display of the PreviewBar component in production, you can set the `PREPR_ENV` environment variable to `production`.
+If you want to include the PreviewBar component in your project, set the `PREPR_ENV` environment variable to `preview`. 
+When you're launching your project to production, then set the `PREPR_ENV` environment variable to `production`. This way, the PreviewBar component doesn't get displayed on a live web app.
 
-Next we will implement the PreprMiddleware function, navigate to your `middleware.js|middleware.ts`
+Next, we will implement the PreprMiddleware function. Navigate to your `middleware.js` or the `middleware.ts`
 file. If you don't have this file, you can create it in the root of your project.
 
-Then add the following code to the `middleware.js|middleware.ts` file:
+Then add the following code to the `middleware.ts` file:
 ```javascript
 import type { NextRequest } from 'next/server'
 import { PreprMiddleware } from '@preprio/prepr-nextjs'
 
 export function middleware(request: NextRequest) {
+    return PreprMiddleware(request)
+}
+```
+
+Or add the following code to the `middleware.js` file:
+```javascript
+import { PreprMiddleware } from '@preprio/prepr-nextjs'
+
+export function middleware(request) {
     return PreprMiddleware(request)
 }
 ```
@@ -46,7 +55,8 @@ If the `PREPR_ENV` environment variable is set to `preview`, the PreprMiddleware
 If these searchParams are set, the PreprMiddleware will set the `Prepr-Segments` and `Prepr-AB-Testing` headers with the values of the searchParams, and store its value in a cookie.
 
 ## Usage
-To setup the headers with your API calls, you can call the `getPreprHeaders()` helper function. This will return an array of headers that you can spread in your fetch call.
+To set up the headers with your API calls, you can call the `getPreprHeaders()` helper function. This will return an array of headers that you can spread in your fetch call.
+See the example code below in the `page.tsx` file. 
 
 ```javascript
 import { getClient } from '@/lib/client'
@@ -68,13 +78,36 @@ const getData = async () => {
     })
 }
 ```
+See the javascript example code below in the `page.js`file.
+
+```javascript
+import { getClient } from '@/lib/client'
+import { GetPageBySlug } from '@/queries/get-page-by-slug';
+import { getPreprHeaders } from '@preprio/prepr-nextjs'
+
+const getData = async () => {
+    // Fetching the data using Apollo Client
+    const { data } = await client.query({
+    query: GetPageBySlug,
+    variables: {
+        slug: '/',
+    },
+    context: {
+            // Call the getPreprHeaders function to get the appropriate headers
+            headers: getPreprHeaders(),
+        },
+        fetchPolicy: 'no-cache',
+    })
+    return data;
+}
+```
 
 ### Installing the PreviewBar component
 
 For the PreviewBar to work we need to fetch all the segments from the Prepr API. To do this navigate to Prepr -> Settings -> Access tokens and create a new access token with the following scopes:
 - `segments`
 
-THen copy the access token and navigate to your `.env` file and add the following environment variable:
+Then copy the access token and navigate to your `.env` file and add the following environment variable:
 ```bash
 PREPR_SEGMENTS_ACCESS_TOKEN=<YOUR_ACCESS_TOKEN>
 ```
@@ -123,7 +156,7 @@ The `getPreprUUID()` function will return the value of the `__prepr_uid` cookie.
 Returns the active segment from the `Prepr-Segments` header.
 
 #### getActiveVariant()
-Returns the active variant from the `Prepr-AB-Testing` header.
+Returns the active variant from the `Prepr-ABTesting` header.
 
 #### getPreviewHeaders()
 Helper function to only get the preview headers.
