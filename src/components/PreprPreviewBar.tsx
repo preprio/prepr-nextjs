@@ -29,9 +29,11 @@ export function PreprPreviewBar(props: {
         body: 'Choose segment',
     }
     const [selectedSegment, setSelectedSegment] = useState(
-        data.items.filter(
-            (segmentData: any) => segmentData === activeSegment
-        )[0] || emptySegment
+        (data.items &&
+            data.items.filter(
+                (segmentData: any) => segmentData === activeSegment
+            )[0]) ||
+            emptySegment
     )
 
     const [selectedVariant, setSelectedVariant] = useState<string | null>(
