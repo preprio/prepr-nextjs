@@ -1,6 +1,6 @@
 {
   "name": "@preprio/prepr-nextjs",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "A next.js package with code snippets to use with Prepr",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
