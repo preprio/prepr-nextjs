@@ -167,9 +167,6 @@ function PreprPreviewBar(props) {
     });
     router.refresh();
   };
-  if (process.env.PREPR_ENV !== "preview") {
-    return null;
-  }
   return /* @__PURE__ */ React4.createElement("div", { className: "prp-py-4 prp-px-5 md:prp-px-19.5 prp-bg-indigo-default prp-sticky prp-top-0 prp-z-[1000] prp-base" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-y-4 prp-gap-x-6 prp-flex-wrap prp-justify-between" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ React4.createElement(PreprLogo, null)), /* @__PURE__ */ React4.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold prp-mr-10" }, "Adaptive Preview")), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5" }, "Apply segment"), /* @__PURE__ */ React4.createElement(
     InfoPopover,
     {

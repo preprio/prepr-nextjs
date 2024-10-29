@@ -91,10 +91,6 @@ export function PreprPreviewBar(props: {
         router.refresh()
     }
 
-    if (process.env.PREPR_ENV !== 'preview') {
-        return null
-    }
-
     return (
         <div className="prp-py-4 prp-px-5 md:prp-px-19.5 prp-bg-indigo-default prp-sticky prp-top-0 prp-z-[1000] prp-base">
             <div className="prp-flex prp-gap-y-4 prp-gap-x-6 prp-flex-wrap prp-justify-between">
