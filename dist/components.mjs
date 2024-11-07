@@ -121,7 +121,7 @@ function PreprPreviewBar(props) {
     body: "Choose segment"
   };
   const [selectedSegment, setSelectedSegment] = useState(
-    data.items.filter(
+    data.items && data.items.filter(
       (segmentData) => segmentData === activeSegment
     )[0] || emptySegment
   );

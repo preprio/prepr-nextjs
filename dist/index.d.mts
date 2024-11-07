@@ -4,21 +4,21 @@ declare function PreprMiddleware(request: NextRequest, response?: NextResponse):
 /**
  * Returns the Prepr Customer ID from the headers
  */
-declare function getPreprUUID(): string;
+declare function getPreprUUID(): Promise<string>;
 /**
  * Retuns the active segment from the headers
  */
-declare function getActiveSegment(): string;
+declare function getActiveSegment(): Promise<string>;
 /**
  * Returns the active variant from the headers
  */
-declare function getActiveVariant(): string;
+declare function getActiveVariant(): Promise<string>;
 /**
  * Helper function to retrieve Prepr headers (will filter out customer ID if in preview mode)
  */
-declare function getPreprHeaders(): {
+declare function getPreprHeaders(): Promise<{
     [key: string]: string;
-};
+}>;
 type PreprSegment = {
     id: string;
     created_on: string;

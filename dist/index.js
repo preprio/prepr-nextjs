@@ -100,22 +100,34 @@ function PreprMiddleware(request, response) {
   return newResponse;
 }
 function getPreprUUID() {
-  return (0, import_headers.headers)().get("prepr-customer-id");
+  return __async(this, null, function* () {
+    const headersList = yield (0, import_headers.headers)();
+    return headersList.get("prepr-customer-id");
+  });
 }
 function getActiveSegment() {
-  return (0, import_headers.headers)().get("Prepr-Segments");
+  return __async(this, null, function* () {
+    const headersList = yield (0, import_headers.headers)();
+    return headersList.get("Prepr-Segments");
+  });
 }
 function getActiveVariant() {
-  return (0, import_headers.headers)().get("Prepr-ABtesting");
+  return __async(this, null, function* () {
+    const headersList = yield (0, import_headers.headers)();
+    return headersList.get("Prepr-ABtesting");
+  });
 }
 function getPreprHeaders() {
-  let newHeaders = {};
-  (0, import_headers.headers)().forEach((value, key) => {
-    if (key.startsWith("prepr")) {
-      newHeaders[key] = value;
-    }
+  return __async(this, null, function* () {
+    let newHeaders = {};
+    const headersList = yield (0, import_headers.headers)();
+    headersList.forEach((value, key) => {
+      if (key.startsWith("prepr")) {
+        newHeaders[key] = value;
+      }
+    });
+    return newHeaders;
   });
-  return newHeaders;
 }
 function getPreprEnvironmentSegments(token) {
   return __async(this, null, function* () {
@@ -131,8 +143,8 @@ function getPreprEnvironmentSegments(token) {
 function getPreviewBarProps(token) {
   return __async(this, null, function* () {
     const data = yield getPreprEnvironmentSegments(token);
-    const activeSegment = getActiveSegment();
-    const activeVariant = getActiveVariant();
+    const activeSegment = yield getActiveSegment();
+    const activeVariant = yield getActiveVariant();
     return {
       activeSegment,
       activeVariant,

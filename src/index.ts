@@ -60,33 +60,38 @@ export function PreprMiddleware(request: NextRequest, response?: NextResponse) {
 /**
  * Returns the Prepr Customer ID from the headers
  */
-export function getPreprUUID() {
-    return headers().get('prepr-customer-id')
+export async function getPreprUUID() {
+    const headersList = await headers()
+    return headersList.get('prepr-customer-id')
 }
 
 /**
  * Retuns the active segment from the headers
  */
-export function getActiveSegment() {
-    return headers().get('Prepr-Segments')
+export async function getActiveSegment() {
+    const headersList = await headers()
+    return headersList.get('Prepr-Segments')
 }
 
 /**
  * Returns the active variant from the headers
  */
-export function getActiveVariant() {
-    return headers().get('Prepr-ABtesting')
+export async function getActiveVariant() {
+    const headersList = await headers()
+    return headersList.get('Prepr-ABtesting')
 }
 
 /**
  * Helper function to retrieve Prepr headers (will filter out customer ID if in preview mode)
  */
-export function getPreprHeaders() {
+export async function getPreprHeaders() {
     let newHeaders: {
         [key: string]: string
     } = {}
 
-    headers().forEach((value, key) => {
+    const headersList = await headers()
+
+    headersList.forEach((value, key) => {
         if (key.startsWith('prepr')) {
             newHeaders[key] = value
         }
@@ -143,8 +148,8 @@ export async function getPreviewBarProps(token: string): Promise<{
     data: PreprSegmentsResponse
 }> {
     const data = await getPreprEnvironmentSegments(token)
-    const activeSegment = getActiveSegment()
-    const activeVariant = getActiveVariant()
+    const activeSegment = await getActiveSegment()
+    const activeVariant = await getActiveVariant()
 
     return {
         activeSegment,

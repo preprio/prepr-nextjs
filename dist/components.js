@@ -147,7 +147,7 @@ function PreprPreviewBar(props) {
     body: "Choose segment"
   };
   const [selectedSegment, setSelectedSegment] = (0, import_react5.useState)(
-    data.items.filter(
+    data.items && data.items.filter(
       (segmentData) => segmentData === activeSegment
     )[0] || emptySegment
   );
