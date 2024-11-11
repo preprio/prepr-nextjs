@@ -116,6 +116,12 @@ function InfoPopover({ title, text, link }) {
 function PreprPreviewBar(props) {
   var _a;
   const { activeSegment, activeVariant, data } = props;
+  if ((data == null ? void 0 : data.items) && (data == null ? void 0 : data.items[(data == null ? void 0 : data.items.length) - 1].reference_id) !== "null") {
+    data.items.push({
+      reference_id: "null",
+      body: "All other users"
+    });
+  }
   const emptyVariant = "A";
   const emptySegment = {
     body: "Choose segment"

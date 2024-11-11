@@ -24,6 +24,16 @@ export function PreprPreviewBar(props: {
 }) {
     const { activeSegment, activeVariant, data } = props
 
+    if (
+        data?.items &&
+        data?.items[data?.items.length - 1].reference_id !== 'null'
+    ) {
+        data.items.push({
+            reference_id: 'null',
+            body: 'All other users',
+        })
+    }
+
     const emptyVariant = 'A'
     const emptySegment = {
         body: 'Choose segment',
