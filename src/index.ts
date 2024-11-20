@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 
-export function PreprMiddleware(request: NextRequest, response?: NextResponse) {
+export function PreprMiddleware(request: any, response?: NextResponse) {
     const newResponse = response || NextResponse.next()
 
     let cookie = request.cookies.get('__prepr_uid')?.value

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-declare function PreprMiddleware(request: NextRequest, response?: NextResponse): NextResponse<unknown>;
+declare function PreprMiddleware(request: any, response?: NextResponse): NextResponse<unknown>;
 /**
  * Returns the Prepr Customer ID from the headers
  */
