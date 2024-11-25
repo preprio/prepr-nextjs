@@ -28,7 +28,8 @@ export function PreprPreviewBar(props: {
         data?.items &&
         data?.items[data?.items.length - 1].reference_id !== 'null'
     ) {
-        data.items.push({
+        data.items
+        data.items.unshift({
             reference_id: 'null',
             body: 'All other users',
         })
