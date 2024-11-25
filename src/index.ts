@@ -4,7 +4,21 @@ import { headers } from 'next/headers'
 export function PreprMiddleware(request: any, response?: NextResponse) {
     const newResponse = response || NextResponse.next()
 
+    const utm_source = request.nextUrl.searchParams.get('utm_source')
+    const utm_medium = request.nextUrl.searchParams.get('utm_medium')
+    const utm_term = request.nextUrl.searchParams.get('utm_term')
+    const utm_content = request.nextUrl.searchParams.get('utm_content')
+    const utm_campaign = request.nextUrl.searchParams.get('utm_campaign')
+    const initial_referral = request.headers.get('referer')
+
     let cookie = request.cookies.get('__prepr_uid')?.value
+
+    newResponse.headers.set('prepr-context-utm_source', utm_source)
+    newResponse.headers.set('prepr-context-utm_medium', utm_medium)
+    newResponse.headers.set('prepr-context-utm_term', utm_term)
+    newResponse.headers.set('prepr-context-utm_content', utm_content)
+    newResponse.headers.set('prepr-context-utm_campaign', utm_campaign)
+    newResponse.headers.set('prepr-context-initial_referral', initial_referral)
 
     if (!cookie) {
         cookie = crypto.randomUUID()
@@ -37,6 +51,7 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
             } else {
                 value = 'A'
             }
+
             newResponse.headers.set('Prepr-ABtesting', value)
             newResponse.cookies.set('Prepr-ABtesting', value, {
                 maxAge: 60, // Set for one year
