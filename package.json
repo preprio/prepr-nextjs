@@ -1,6 +1,6 @@
 {
   "name": "@preprio/prepr-nextjs",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.12",
   "description": "A next.js package with code snippets to use with Prepr",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,14 +11,14 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./components": {
+      "types": "./dist/components.d.ts",
       "import": "./dist/components.js",
-      "require": "./dist/components.js",
-      "types": "./dist/components.d.ts"
+      "require": "./dist/components.js"
     },
     "./dist/components.css": {
       "import": "./dist/components.css",

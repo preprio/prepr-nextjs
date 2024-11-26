@@ -53,7 +53,34 @@ var import_headers = require("next/headers");
 function PreprMiddleware(request, response) {
   var _a, _b, _c;
   const newResponse = response || import_server.NextResponse.next();
+  const utm_source = request.nextUrl.searchParams.get("utm_source");
+  const utm_medium = request.nextUrl.searchParams.get("utm_medium");
+  const utm_term = request.nextUrl.searchParams.get("utm_term");
+  const utm_content = request.nextUrl.searchParams.get("utm_content");
+  const utm_campaign = request.nextUrl.searchParams.get("utm_campaign");
+  const initial_referral = request.headers.get("referer");
   let cookie = (_a = request.cookies.get("__prepr_uid")) == null ? void 0 : _a.value;
+  if (utm_source) {
+    newResponse.headers.set("Prepr-Context-utm_source", utm_source);
+  }
+  if (utm_medium) {
+    newResponse.headers.set("Prepr-Context-utm_medium", utm_medium);
+  }
+  if (utm_term) {
+    newResponse.headers.set("Prepr-Context-utm_term", utm_term);
+  }
+  if (utm_content) {
+    newResponse.headers.set("Prepr-Context-utm_content", utm_content);
+  }
+  if (utm_campaign) {
+    newResponse.headers.set("Prepr-Context-utm_campaign", utm_campaign);
+  }
+  if (initial_referral) {
+    newResponse.headers.set(
+      "prepr-context-initial_referral",
+      initial_referral
+    );
+  }
   if (!cookie) {
     cookie = crypto.randomUUID();
     newResponse.cookies.set("__prepr_uid", cookie, {

@@ -13,12 +13,32 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
 
     let cookie = request.cookies.get('__prepr_uid')?.value
 
-    newResponse.headers.set('prepr-context-utm_source', utm_source)
-    newResponse.headers.set('prepr-context-utm_medium', utm_medium)
-    newResponse.headers.set('prepr-context-utm_term', utm_term)
-    newResponse.headers.set('prepr-context-utm_content', utm_content)
-    newResponse.headers.set('prepr-context-utm_campaign', utm_campaign)
-    newResponse.headers.set('prepr-context-initial_referral', initial_referral)
+    if (utm_source) {
+        newResponse.headers.set('Prepr-Context-utm_source', utm_source)
+    }
+
+    if (utm_medium) {
+        newResponse.headers.set('Prepr-Context-utm_medium', utm_medium)
+    }
+
+    if (utm_term) {
+        newResponse.headers.set('Prepr-Context-utm_term', utm_term)
+    }
+
+    if (utm_content) {
+        newResponse.headers.set('Prepr-Context-utm_content', utm_content)
+    }
+
+    if (utm_campaign) {
+        newResponse.headers.set('Prepr-Context-utm_campaign', utm_campaign)
+    }
+
+    if (initial_referral) {
+        newResponse.headers.set(
+            'prepr-context-initial_referral',
+            initial_referral
+        )
+    }
 
     if (!cookie) {
         cookie = crypto.randomUUID()
