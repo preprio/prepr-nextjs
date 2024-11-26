@@ -111,14 +111,13 @@ function ResetButton({
 
 // src/components/PreprPreviewBar.tsx
 var import_react6 = require("@headlessui/react");
-var import_fa63 = require("react-icons/fa6");
+var import_fa62 = require("react-icons/fa6");
 
 // src/components/InfoPopover.tsx
 var import_react3 = require("@headlessui/react");
 var import_fa = require("react-icons/fa");
 var import_react4 = __toESM(require("react"));
-var import_fa62 = require("react-icons/fa6");
-function InfoPopover({ title, text, link }) {
+function InfoPopover({ title, text }) {
   return /* @__PURE__ */ import_react4.default.createElement(import_react3.Popover, null, /* @__PURE__ */ import_react4.default.createElement(import_react3.PopoverButton, { className: "prp-ring-0 focus:prp-ring-0 prp-font-bold prp-text-indigo-300 prp-text-xs hover:prp-text-indigo-400 prp-block" }, /* @__PURE__ */ import_react4.default.createElement(import_fa.FaInfoCircle, null)), /* @__PURE__ */ import_react4.default.createElement(
     import_react3.PopoverPanel,
     {
@@ -126,15 +125,7 @@ function InfoPopover({ title, text, link }) {
       anchor: "bottom",
       className: "prp-z-[1000] prp-p-4"
     },
-    /* @__PURE__ */ import_react4.default.createElement("div", { className: " prp-bg-white rounded-lg p-6 prp-dropshadow-popover prp-space-y-3 prp-max-w-[312px]" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "prp-text-base prp-font-bold prp-leading-tight prp-text-gray-900" }, title), /* @__PURE__ */ import_react4.default.createElement("div", { className: "prp-space-y-2" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "prp-text-sm" }, text), /* @__PURE__ */ import_react4.default.createElement(
-      "a",
-      {
-        href: link,
-        className: "prp-font-black prp-text-sm prp-flex prp-gap-1 prp-items-center prp-text-indigo-700"
-      },
-      "Learn more ",
-      /* @__PURE__ */ import_react4.default.createElement(import_fa62.FaArrowUpRightFromSquare, null)
-    )))
+    /* @__PURE__ */ import_react4.default.createElement("div", { className: " prp-bg-white rounded-lg p-6 prp-dropshadow-popover prp-space-y-3 prp-max-w-[312px]" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "prp-text-base prp-font-bold prp-leading-tight prp-text-gray-900" }, title), /* @__PURE__ */ import_react4.default.createElement("div", { className: "prp-space-y-2" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "prp-text-sm" }, text)))
   ));
 }
 
@@ -204,8 +195,7 @@ function PreprPreviewBar(props) {
     InfoPopover,
     {
       title: "Adaptive Preview",
-      text: "Choose a segment to see how it's displayed.",
-      link: "Learn more"
+      text: "Choose a segment to see how it's displayed."
     }
   )), /* @__PURE__ */ import_react5.default.createElement(
     import_react6.Listbox,
@@ -213,7 +203,7 @@ function PreprPreviewBar(props) {
       value: selectedSegment.slug,
       onChange: handleUpdateSegment
     },
-    /* @__PURE__ */ import_react5.default.createElement(import_react6.ListboxButton, { className: "prp-h-10 prp-flex-initial prp-w-[13rem] md:prp-w-[15rem] prp-max-w-[15rem] prp-rounded-md data-[open]:prp-rounded-b-none data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-justify-center prp-px-4 prp-regular-text prp-text-gray-500" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-flex prp-items-center prp-justify-between" }, /* @__PURE__ */ import_react5.default.createElement("span", null, selectedSegment.body), /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-text-gray-900" }, /* @__PURE__ */ import_react5.default.createElement(import_fa63.FaCaretDown, { className: "prp-w-3" })))),
+    /* @__PURE__ */ import_react5.default.createElement(import_react6.ListboxButton, { className: "prp-h-10 prp-flex-initial prp-w-[13rem] md:prp-w-[15rem] prp-max-w-[15rem] prp-rounded-md data-[open]:prp-rounded-b-none data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-justify-center prp-px-4 prp-regular-text prp-text-gray-500" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-flex prp-items-center prp-justify-between" }, /* @__PURE__ */ import_react5.default.createElement("span", null, selectedSegment.body), /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-text-gray-900" }, /* @__PURE__ */ import_react5.default.createElement(import_fa62.FaCaretDown, { className: "prp-w-3" })))),
     /* @__PURE__ */ import_react5.default.createElement(
       import_react6.ListboxOptions,
       {
@@ -234,8 +224,7 @@ function PreprPreviewBar(props) {
     InfoPopover,
     {
       title: "A/B Testing",
-      text: "Choose between two different versions of a page to see which one performs better.",
-      link: "Learn more"
+      text: "Choose between two different versions of a page to see which one performs better."
     }
   )), /* @__PURE__ */ import_react5.default.createElement(
     import_react6.RadioGroup,

@@ -126,7 +126,6 @@ export function PreprPreviewBar(props: {
                                 text={
                                     "Choose a segment to see how it's displayed."
                                 }
-                                link={'Learn more'}
                             />
                         </div>
                         <Listbox
@@ -166,7 +165,6 @@ export function PreprPreviewBar(props: {
                                 text={
                                     'Choose between two different versions of a page to see which one performs better.'
                                 }
-                                link={'Learn more'}
                             />
                         </div>
 

@@ -6,10 +6,9 @@ import { FaArrowUpRightFromSquare } from 'react-icons/fa6'
 interface InfoPopoverProps {
     title: string
     text: string
-    link: string
 }
 
-export default function InfoPopover({ title, text, link }: InfoPopoverProps) {
+export default function InfoPopover({ title, text }: InfoPopoverProps) {
     return (
         <Popover>
             <PopoverButton className="prp-ring-0 focus:prp-ring-0 prp-font-bold prp-text-indigo-300 prp-text-xs hover:prp-text-indigo-400 prp-block">
@@ -26,12 +25,6 @@ export default function InfoPopover({ title, text, link }: InfoPopoverProps) {
                     </span>
                     <div className="prp-space-y-2">
                         <span className="prp-text-sm">{text}</span>
-                        <a
-                            href={link}
-                            className="prp-font-black prp-text-sm prp-flex prp-gap-1 prp-items-center prp-text-indigo-700"
-                        >
-                            Learn more <FaArrowUpRightFromSquare />
-                        </a>
                     </div>
                 </div>
             </PopoverPanel>

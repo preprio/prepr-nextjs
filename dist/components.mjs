@@ -91,8 +91,7 @@ import { FaCaretDown } from "react-icons/fa6";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { FaInfoCircle } from "react-icons/fa";
 import React3 from "react";
-import { FaArrowUpRightFromSquare } from "react-icons/fa6";
-function InfoPopover({ title, text, link }) {
+function InfoPopover({ title, text }) {
   return /* @__PURE__ */ React3.createElement(Popover, null, /* @__PURE__ */ React3.createElement(PopoverButton, { className: "prp-ring-0 focus:prp-ring-0 prp-font-bold prp-text-indigo-300 prp-text-xs hover:prp-text-indigo-400 prp-block" }, /* @__PURE__ */ React3.createElement(FaInfoCircle, null)), /* @__PURE__ */ React3.createElement(
     PopoverPanel,
     {
@@ -100,15 +99,7 @@ function InfoPopover({ title, text, link }) {
       anchor: "bottom",
       className: "prp-z-[1000] prp-p-4"
     },
-    /* @__PURE__ */ React3.createElement("div", { className: " prp-bg-white rounded-lg p-6 prp-dropshadow-popover prp-space-y-3 prp-max-w-[312px]" }, /* @__PURE__ */ React3.createElement("span", { className: "prp-text-base prp-font-bold prp-leading-tight prp-text-gray-900" }, title), /* @__PURE__ */ React3.createElement("div", { className: "prp-space-y-2" }, /* @__PURE__ */ React3.createElement("span", { className: "prp-text-sm" }, text), /* @__PURE__ */ React3.createElement(
-      "a",
-      {
-        href: link,
-        className: "prp-font-black prp-text-sm prp-flex prp-gap-1 prp-items-center prp-text-indigo-700"
-      },
-      "Learn more ",
-      /* @__PURE__ */ React3.createElement(FaArrowUpRightFromSquare, null)
-    )))
+    /* @__PURE__ */ React3.createElement("div", { className: " prp-bg-white rounded-lg p-6 prp-dropshadow-popover prp-space-y-3 prp-max-w-[312px]" }, /* @__PURE__ */ React3.createElement("span", { className: "prp-text-base prp-font-bold prp-leading-tight prp-text-gray-900" }, title), /* @__PURE__ */ React3.createElement("div", { className: "prp-space-y-2" }, /* @__PURE__ */ React3.createElement("span", { className: "prp-text-sm" }, text)))
   ));
 }
 
@@ -178,8 +169,7 @@ function PreprPreviewBar(props) {
     InfoPopover,
     {
       title: "Adaptive Preview",
-      text: "Choose a segment to see how it's displayed.",
-      link: "Learn more"
+      text: "Choose a segment to see how it's displayed."
     }
   )), /* @__PURE__ */ React4.createElement(
     Listbox,
@@ -208,8 +198,7 @@ function PreprPreviewBar(props) {
     InfoPopover,
     {
       title: "A/B Testing",
-      text: "Choose between two different versions of a page to see which one performs better.",
-      link: "Learn more"
+      text: "Choose between two different versions of a page to see which one performs better."
     }
   )), /* @__PURE__ */ React4.createElement(
     RadioGroup,
