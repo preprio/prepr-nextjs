@@ -24,12 +24,10 @@ export function PreprPreviewBar(props: {
 }) {
     const { activeSegment, activeVariant, data } = props
 
-    if (
-        data?.items &&
-        data?.items[data?.items.length - 1].reference_id !== 'null'
-    ) {
-        data.items
-        data.items.unshift({
+    let segmentList = data?.items
+
+    if (segmentList && segmentList[0].reference_id !== 'null') {
+        segmentList.unshift({
             reference_id: 'null',
             body: 'All other users',
         })
@@ -39,9 +37,10 @@ export function PreprPreviewBar(props: {
     const emptySegment = {
         body: 'Choose segment',
     }
+
     const [selectedSegment, setSelectedSegment] = useState(
-        (data.items &&
-            data.items.filter(
+        (segmentList &&
+            segmentList.filter(
                 (segmentData: any) => segmentData === activeSegment
             )[0]) ||
             emptySegment
@@ -144,7 +143,7 @@ export function PreprPreviewBar(props: {
                                 anchor="bottom"
                                 className="prp-z-[9999] prp-w-[var(--button-width)] prp-pb-2 prp-rounded-b-md prp-bg-white"
                             >
-                                {data?.items?.map((segment: any) => (
+                                {segmentList?.map((segment: any) => (
                                     <ListboxOption
                                         className="prp-px-4 prp-py-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full"
                                         key={segment.reference_id}

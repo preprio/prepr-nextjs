@@ -105,11 +105,10 @@ function InfoPopover({ title, text }) {
 
 // src/components/PreprPreviewBar.tsx
 function PreprPreviewBar(props) {
-  var _a;
   const { activeSegment, activeVariant, data } = props;
-  if ((data == null ? void 0 : data.items) && (data == null ? void 0 : data.items[(data == null ? void 0 : data.items.length) - 1].reference_id) !== "null") {
-    data.items;
-    data.items.unshift({
+  let segmentList = data == null ? void 0 : data.items;
+  if (segmentList && segmentList[0].reference_id !== "null") {
+    segmentList.unshift({
       reference_id: "null",
       body: "All other users"
     });
@@ -119,7 +118,7 @@ function PreprPreviewBar(props) {
     body: "Choose segment"
   };
   const [selectedSegment, setSelectedSegment] = useState(
-    data.items && data.items.filter(
+    segmentList && segmentList.filter(
       (segmentData) => segmentData === activeSegment
     )[0] || emptySegment
   );
@@ -184,7 +183,7 @@ function PreprPreviewBar(props) {
         anchor: "bottom",
         className: "prp-z-[9999] prp-w-[var(--button-width)] prp-pb-2 prp-rounded-b-md prp-bg-white"
       },
-      (_a = data == null ? void 0 : data.items) == null ? void 0 : _a.map((segment) => /* @__PURE__ */ React4.createElement(
+      segmentList == null ? void 0 : segmentList.map((segment) => /* @__PURE__ */ React4.createElement(
         ListboxOption,
         {
           className: "prp-px-4 prp-py-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full",
