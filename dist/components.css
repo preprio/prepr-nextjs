@@ -1,11 +1,17 @@
 @import "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap";
 
 /* src/main.css */
+.prp-absolute {
+  position: absolute;
+}
 .prp-sticky {
   position: sticky;
 }
 .prp-top-0 {
   top: 0px;
+}
+.prp-top-\[-72px\] {
+  top: -72px;
 }
 .prp-z-\[1000\] {
   z-index: 1000;
@@ -15,6 +21,13 @@
 }
 .prp-z-\[9999\] {
   z-index: 9999;
+}
+.prp-mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.prp-ml-2 {
+  margin-left: 0.5rem;
 }
 .prp-mr-1 {
   margin-right: 0.25rem;
@@ -30,6 +43,10 @@
 }
 .prp-hidden {
   display: none;
+}
+.prp-size-3 {
+  width: 0.75rem;
+  height: 0.75rem;
 }
 .prp-h-10 {
   height: 2.5rem;
@@ -63,6 +80,9 @@
 }
 .prp-cursor-pointer {
   cursor: pointer;
+}
+.prp-flex-col {
+  flex-direction: column;
 }
 .prp-flex-wrap {
   flex-wrap: wrap;
@@ -105,11 +125,18 @@
   margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
 }
+.prp-overflow-hidden {
+  overflow: hidden;
+}
 .prp-rounded-lg {
   border-radius: 0.5rem;
 }
 .prp-rounded-md {
   border-radius: 0.375rem;
+}
+.prp-rounded-b-lg {
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
 }
 .prp-rounded-b-md {
   border-bottom-right-radius: 0.375rem;
@@ -138,11 +165,18 @@
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
+.prp-fill-white {
+  fill: #fff;
+}
 .prp-p-1 {
   padding: 0.25rem;
 }
 .prp-p-4 {
   padding: 1rem;
+}
+.prp-px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 .prp-px-3 {
   padding-left: 0.75rem;
@@ -155,6 +189,10 @@
 .prp-px-5 {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
+}
+.prp-py-0\.5 {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
 }
 .prp-py-2 {
   padding-top: 0.5rem;

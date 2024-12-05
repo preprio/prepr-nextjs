@@ -164,73 +164,107 @@ function PreprPreviewBar(props) {
     });
     router.refresh();
   };
-  return /* @__PURE__ */ React4.createElement("div", { className: "prp-py-4 prp-px-5 md:prp-px-19.5 prp-bg-indigo-default prp-sticky prp-top-0 prp-z-[1000] prp-base" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-y-4 prp-gap-x-6 prp-flex-wrap prp-justify-between" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ React4.createElement(PreprLogo, null)), /* @__PURE__ */ React4.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold prp-mr-10" }, "Adaptive Preview")), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5" }, "Apply segment"), /* @__PURE__ */ React4.createElement(
-    InfoPopover,
+  const [isToggled, setIsToggled] = useState(false);
+  const handleToggle = () => {
+    setIsToggled(!isToggled);
+  };
+  return /* @__PURE__ */ React4.createElement("div", { className: "prp-z-[1000] prp-flex prp-flex-col prp-base prp-w-full prp-sticky prp-top-0" }, /* @__PURE__ */ React4.createElement(
+    "div",
     {
-      title: "Adaptive Preview",
-      text: "Choose a segment to see how it's displayed."
-    }
-  )), /* @__PURE__ */ React4.createElement(
-    Listbox,
-    {
-      value: selectedSegment.slug,
-      onChange: handleUpdateSegment
+      className: `prp-py-4 prp-px-5 md:prp-px-19.5 prp-bg-indigo-default prp-overflow-hidden prp-w-full ${isToggled ? "prp-sticky prp-top-0" : "prp-absolute prp-top-[-72px]"}`
     },
-    /* @__PURE__ */ React4.createElement(ListboxButton, { className: "prp-h-10 prp-flex-initial prp-w-[13rem] md:prp-w-[15rem] prp-max-w-[15rem] prp-rounded-md data-[open]:prp-rounded-b-none data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-justify-center prp-px-4 prp-regular-text prp-text-gray-500" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-flex prp-items-center prp-justify-between" }, /* @__PURE__ */ React4.createElement("span", null, selectedSegment.body), /* @__PURE__ */ React4.createElement("span", { className: "prp-text-gray-900" }, /* @__PURE__ */ React4.createElement(FaCaretDown, { className: "prp-w-3" })))),
-    /* @__PURE__ */ React4.createElement(
-      ListboxOptions,
+    /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-y-4 prp-gap-x-6 prp-flex-wrap prp-justify-between" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ React4.createElement(PreprLogo, null)), /* @__PURE__ */ React4.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold prp-mr-10" }, "Adaptive Preview")), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5" }, "Apply segment"), /* @__PURE__ */ React4.createElement(
+      InfoPopover,
       {
-        anchor: "bottom",
-        className: "prp-z-[9999] prp-w-[var(--button-width)] prp-pb-2 prp-rounded-b-md prp-bg-white"
+        title: "Adaptive Preview",
+        text: "Choose a segment to see how it's displayed."
+      }
+    )), /* @__PURE__ */ React4.createElement(
+      Listbox,
+      {
+        value: selectedSegment.slug,
+        onChange: handleUpdateSegment
       },
-      segmentList == null ? void 0 : segmentList.map((segment) => /* @__PURE__ */ React4.createElement(
-        ListboxOption,
+      /* @__PURE__ */ React4.createElement(ListboxButton, { className: "prp-h-10 prp-flex-initial prp-w-[13rem] md:prp-w-[15rem] prp-max-w-[15rem] prp-rounded-md data-[open]:prp-rounded-b-none data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-justify-center prp-px-4 prp-regular-text prp-text-gray-500" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-flex prp-items-center prp-justify-between" }, /* @__PURE__ */ React4.createElement("span", null, selectedSegment.body), /* @__PURE__ */ React4.createElement("span", { className: "prp-text-gray-900" }, /* @__PURE__ */ React4.createElement(FaCaretDown, { className: "prp-w-3" })))),
+      /* @__PURE__ */ React4.createElement(
+        ListboxOptions,
         {
-          className: "prp-px-4 prp-py-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full",
-          key: segment.reference_id,
-          value: segment
+          anchor: "bottom",
+          className: "prp-z-[9999] prp-w-[var(--button-width)] prp-pb-2 prp-rounded-b-md prp-bg-white"
         },
-        segment.body
-      ))
-    )
-  )), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5" }, "Show A/B variant"), /* @__PURE__ */ React4.createElement(
-    InfoPopover,
+        segmentList == null ? void 0 : segmentList.map((segment) => /* @__PURE__ */ React4.createElement(
+          ListboxOption,
+          {
+            className: "prp-px-4 prp-py-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full",
+            key: segment.reference_id,
+            value: segment
+          },
+          segment.body
+        ))
+      )
+    )), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5" }, "Show A/B variant"), /* @__PURE__ */ React4.createElement(
+      InfoPopover,
+      {
+        title: "A/B Testing",
+        text: "Choose between two different versions of a page to see which one performs better."
+      }
+    )), /* @__PURE__ */ React4.createElement(
+      RadioGroup,
+      {
+        className: "prp-rounded-lg prp-p-1 prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center",
+        value: selectedVariant,
+        onChange: handleUpdateVariant
+      },
+      /* @__PURE__ */ React4.createElement(
+        Radio,
+        {
+          value: "A",
+          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
+        },
+        /* @__PURE__ */ React4.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
+        "A"
+      ),
+      /* @__PURE__ */ React4.createElement(
+        Radio,
+        {
+          value: "B",
+          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
+        },
+        /* @__PURE__ */ React4.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
+        "B"
+      )
+    )), /* @__PURE__ */ React4.createElement(
+      ResetButton,
+      {
+        handleClick: handleReset,
+        enabled: selectedSegment.reference_id || selectedVariant !== "A"
+      }
+    )))
+  ), /* @__PURE__ */ React4.createElement(
+    "div",
     {
-      title: "A/B Testing",
-      text: "Choose between two different versions of a page to see which one performs better."
-    }
-  )), /* @__PURE__ */ React4.createElement(
-    RadioGroup,
-    {
-      className: "prp-rounded-lg prp-p-1 prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center",
-      value: selectedVariant,
-      onChange: handleUpdateVariant
+      className: `prp-mx-auto prp-bg-indigo-default prp-regular-text prp-text-white prp-px-2 prp-py-0.5 prp-rounded-b-lg prp-flex prp-items-center prp-cursor-pointer ${isToggled ? "" : "prp-sticky prp-top-0"}`,
+      onClick: handleToggle
     },
-    /* @__PURE__ */ React4.createElement(
-      Radio,
+    "Adaptive Preview",
+    isToggled ? /* @__PURE__ */ React4.createElement(
+      "svg",
       {
-        value: "A",
-        className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 512 512",
+        className: "prp-size-3 prp-fill-white prp-ml-2"
       },
-      /* @__PURE__ */ React4.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
-      "A"
-    ),
-    /* @__PURE__ */ React4.createElement(
-      Radio,
+      /* @__PURE__ */ React4.createElement("path", { d: "M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" })
+    ) : /* @__PURE__ */ React4.createElement(
+      "svg",
       {
-        value: "B",
-        className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 512 512",
+        className: "prp-size-3 prp-fill-white prp-ml-2"
       },
-      /* @__PURE__ */ React4.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
-      "B"
+      /* @__PURE__ */ React4.createElement("path", { d: "M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" })
     )
-  )), /* @__PURE__ */ React4.createElement(
-    ResetButton,
-    {
-      handleClick: handleReset,
-      enabled: selectedSegment.reference_id || selectedVariant !== "A"
-    }
-  ))));
+  ));
 }
 export {
   PreprPreviewBar
