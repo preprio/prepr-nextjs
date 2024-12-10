@@ -6,7 +6,7 @@ import {
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 function PreprMiddleware(request, response) {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
   const newResponse = response || NextResponse.next();
   const utm_source = request.nextUrl.searchParams.get("utm_source");
   const utm_medium = request.nextUrl.searchParams.get("utm_medium");
@@ -15,6 +15,7 @@ function PreprMiddleware(request, response) {
   const utm_campaign = request.nextUrl.searchParams.get("utm_campaign");
   const initial_referral = request.headers.get("referer");
   let cookie = (_a = request.cookies.get("__prepr_uid")) == null ? void 0 : _a.value;
+  const hutkCookie = (_b = request.cookies.get("hubspotutk")) == null ? void 0 : _b.value;
   if (utm_source) {
     newResponse.headers.set("Prepr-Context-utm_source", utm_source);
   }
@@ -29,6 +30,9 @@ function PreprMiddleware(request, response) {
   }
   if (utm_campaign) {
     newResponse.headers.set("Prepr-Context-utm_campaign", utm_campaign);
+  }
+  if (hutkCookie) {
+    newResponse.headers.set("Prepr-Hubspot-Id", hutkCookie);
   }
   if (initial_referral) {
     newResponse.headers.set(
@@ -70,11 +74,11 @@ function PreprMiddleware(request, response) {
         // Set for one year
       });
     }
-    const segmentCookie = (_b = request.cookies.get("Prepr-Segments")) == null ? void 0 : _b.value;
+    const segmentCookie = (_c = request.cookies.get("Prepr-Segments")) == null ? void 0 : _c.value;
     if (segmentCookie) {
       newResponse.headers.set("Prepr-Segments", segmentCookie);
     }
-    const abCookie = (_c = request.cookies.get("Prepr-ABtesting")) == null ? void 0 : _c.value;
+    const abCookie = (_d = request.cookies.get("Prepr-ABtesting")) == null ? void 0 : _d.value;
     if (abCookie) {
       newResponse.headers.set("Prepr-ABtesting", abCookie);
     }

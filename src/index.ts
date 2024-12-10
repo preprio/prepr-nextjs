@@ -12,6 +12,7 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
     const initial_referral = request.headers.get('referer')
 
     let cookie = request.cookies.get('__prepr_uid')?.value
+    const hutkCookie = request.cookies.get('hubspotutk')?.value
 
     if (utm_source) {
         newResponse.headers.set('Prepr-Context-utm_source', utm_source)
@@ -31,6 +32,10 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
 
     if (utm_campaign) {
         newResponse.headers.set('Prepr-Context-utm_campaign', utm_campaign)
+    }
+
+    if (hutkCookie) {
+        newResponse.headers.set('Prepr-Hubspot-Id', hutkCookie)
     }
 
     if (initial_referral) {
