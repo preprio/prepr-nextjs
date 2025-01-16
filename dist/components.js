@@ -132,12 +132,15 @@ function InfoPopover({ title, text }) {
 // src/components/PreprPreviewBar.tsx
 function PreprPreviewBar(props) {
   const { activeSegment, activeVariant, data } = props;
-  let segmentList = data == null ? void 0 : data.items;
+  const [segmentList, setSegmentList] = (0, import_react5.useState)(data == null ? void 0 : data.items);
   if (segmentList && segmentList[0].reference_id !== "null") {
-    segmentList.unshift({
-      reference_id: "null",
-      body: "All other users"
-    });
+    setSegmentList([
+      {
+        reference_id: "null",
+        body: "All other users"
+      },
+      ...segmentList
+    ]);
   }
   const emptyVariant = "A";
   const emptySegment = {
