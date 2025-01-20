@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import '../main.css'
 import PreprLogo from './PreprLogo'
@@ -16,6 +16,7 @@ import {
 } from '@headlessui/react'
 import { FaCaretDown } from 'react-icons/fa6'
 import InfoPopover from './InfoPopover'
+import { clsx } from 'clsx'
 
 export function PreprPreviewBar(props: {
     activeSegment?: string | null
@@ -24,6 +25,7 @@ export function PreprPreviewBar(props: {
 }) {
     const { activeSegment, activeVariant, data } = props
     const [segmentList, setSegmentList] = useState<any>(data?.items)
+    const [isToggled, setIsToggled] = useState<boolean>(false)
 
     if (segmentList && segmentList[0].reference_id !== 'null') {
         setSegmentList([
@@ -39,6 +41,16 @@ export function PreprPreviewBar(props: {
     const emptySegment = {
         body: 'Choose segment',
     }
+
+    useEffect(() => {
+        if (!window) {
+            return
+        }
+
+        if (window.localStorage.getItem('isToggled')) {
+            setIsToggled(window.localStorage.getItem('isToggled') === 'true')
+        }
+    })
 
     const [selectedSegment, setSelectedSegment] = useState(
         (segmentList &&
@@ -105,18 +117,20 @@ export function PreprPreviewBar(props: {
         router.refresh()
     }
 
-    const [isToggled, setIsToggled] = useState(false)
-
     const handleToggle = () => {
         setIsToggled(!isToggled)
+        window.localStorage.setItem('isToggled', String(!isToggled))
     }
 
     return (
-        <div className="prp-z-[1000] prp-flex prp-flex-col prp-base prp-w-full prp-sticky prp-top-0">
+        <div className="prp-z-[999] prp-isolate prp-flex prp-flex-col prp-base prp-w-full prp-sticky prp-top-0">
             <div
-                className={`prp-py-4 prp-px-5 md:prp-px-19.5 prp-bg-indigo-default prp-overflow-hidden prp-w-full ${isToggled ? 'prp-sticky prp-top-0' : 'prp-absolute prp-top-[-72px]'}`}
+                className={clsx(
+                    'prp-py-4 prp-h-20 prp-px-5 md:prp-px-19.5 prp-bg-purple-900 prp-w-full prp-overflow-hidden',
+                    isToggled ? 'prp-sticky prp-top-0' : 'prp-hidden'
+                )}
             >
-                <div className="prp-flex prp-gap-y-4 prp-gap-x-6 prp-flex-wrap prp-justify-between">
+                <div className="prp-flex prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-wrap prp-justify-between">
                     {/* Logo & Text */}
                     <div className="prp-flex prp-gap-6 prp-items-center">
                         <div className="prp-h-full prp-flex prp-justify-center prp-items-center">
@@ -127,7 +141,7 @@ export function PreprPreviewBar(props: {
                         </div>
                     </div>
 
-                    <div className="prp-flex prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center">
+                    <div className="prp-flex prp-ml-auto prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center">
                         <div className="prp-flex prp-gap-4">
                             <div className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
                                 <span className="prp-pb-0.5">
@@ -190,7 +204,7 @@ export function PreprPreviewBar(props: {
                                 <Radio
                                     value={'A'}
                                     className="prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow
-                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer
+                                    data-[checked]:prp-bg-purple-900 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer
                                 "
                                 >
                                     <span className="prp-hidden md:prp-inline prp-mr-1">
@@ -201,7 +215,7 @@ export function PreprPreviewBar(props: {
                                 <Radio
                                     value={'B'}
                                     className="prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow
-                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer
+                                    data-[checked]:prp-bg-purple-900 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer
                                 "
                                 >
                                     <span className="prp-hidden md:prp-inline prp-mr-1">
@@ -223,27 +237,42 @@ export function PreprPreviewBar(props: {
                 </div>
             </div>
             <div
-                className={`prp-mx-auto prp-bg-indigo-default prp-regular-text prp-text-white prp-px-2 prp-py-0.5 prp-rounded-b-lg prp-flex prp-items-center prp-cursor-pointer ${isToggled ? '' : 'prp-sticky prp-top-0'}`}
-                onClick={handleToggle}
-            >
-                Adaptive Preview
-                {isToggled ? (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                        className="prp-size-3 prp-fill-white prp-ml-2"
-                    >
-                        <path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" />
-                    </svg>
-                ) : (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                        className="prp-size-3 prp-fill-white prp-ml-2"
-                    >
-                        <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
-                    </svg>
+                className={clsx(
+                    'prp-w-full prp-flex',
+                    isToggled
+                        ? 'prp-top-20 prp-absolute'
+                        : 'prp-top-0 prp-fixed'
                 )}
+            >
+                <div
+                    className={clsx(
+                        'prp-w-auto prp-mx-auto prp-flex prp-items-center prp-border-t-2 prp-border-purple-900'
+                    )}
+                >
+                    <div
+                        className={`prp-relative prp-z-[100] prp-mx-auto prp-bg-purple-900 prp-regular-text prp-text-white prp-px-2 prp-py-0.5 prp-rounded-b-lg prp-flex prp-items-center prp-cursor-pointer`}
+                        onClick={handleToggle}
+                    >
+                        Adaptive Preview
+                        {isToggled ? (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 512 512"
+                                className="prp-size-3 prp-fill-white prp-ml-2"
+                            >
+                                <path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" />
+                            </svg>
+                        ) : (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 512 512"
+                                className="prp-size-3 prp-fill-white prp-ml-2"
+                            >
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
+                            </svg>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     )

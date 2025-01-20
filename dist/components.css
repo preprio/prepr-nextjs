@@ -1,17 +1,32 @@
 @import "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap";
 
 /* src/main.css */
+.prp-fixed {
+  position: fixed;
+}
 .prp-absolute {
   position: absolute;
+}
+.prp-relative {
+  position: relative;
 }
 .prp-sticky {
   position: sticky;
 }
+.-prp-top-20 {
+  top: -5rem;
+}
 .prp-top-0 {
   top: 0px;
 }
-.prp-top-\[-72px\] {
-  top: -72px;
+.prp-top-20 {
+  top: 5rem;
+}
+.prp-isolate {
+  isolation: isolate;
+}
+.prp-z-\[10000\] {
+  z-index: 10000;
 }
 .prp-z-\[1000\] {
   z-index: 1000;
@@ -22,9 +37,15 @@
 .prp-z-\[9999\] {
   z-index: 9999;
 }
+.prp-z-\[999\] {
+  z-index: 999;
+}
 .prp-mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+.prp-mb-4 {
+  margin-bottom: 1rem;
 }
 .prp-ml-2 {
   margin-left: 0.5rem;
@@ -34,6 +55,9 @@
 }
 .prp-mr-10 {
   margin-right: 2.5rem;
+}
+.prp-ml-auto {
+  margin-left: auto;
 }
 .prp-block {
   display: block;
@@ -50,6 +74,9 @@
 }
 .prp-h-10 {
   height: 2.5rem;
+}
+.prp-h-20 {
+  height: 5rem;
 }
 .prp-h-8 {
   height: 2rem;
@@ -68,6 +95,9 @@
 }
 .prp-w-full {
   width: 100%;
+}
+.prp-w-auto {
+  width: auto;
 }
 .prp-max-w-\[15rem\] {
   max-width: 15rem;
@@ -142,24 +172,35 @@
   border-bottom-right-radius: 0.375rem;
   border-bottom-left-radius: 0.375rem;
 }
+.prp-rounded-t-2xl {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
 .prp-border {
   border-width: 1px;
+}
+.prp-border-t-2 {
+  border-top-width: 2px;
 }
 .prp-border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
 }
+.prp-border-purple-900 {
+  --tw-border-opacity: 1;
+  border-color: rgb(67 56 202 / var(--tw-border-opacity));
+}
 .prp-bg-grey-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(156 163 175 / var(--tw-bg-opacity));
 }
-.prp-bg-indigo-default {
-  --tw-bg-opacity: 1;
-  background-color: rgb(67 56 202 / var(--tw-bg-opacity));
-}
 .prp-bg-orange-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(251 146 60 / var(--tw-bg-opacity));
+}
+.prp-bg-purple-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(67 56 202 / var(--tw-bg-opacity));
 }
 .prp-bg-white {
   --tw-bg-opacity: 1;
@@ -211,6 +252,9 @@
 }
 .prp-pb-2 {
   padding-bottom: 0.5rem;
+}
+.prp-pb-4 {
+  padding-bottom: 1rem;
 }
 .prp-text-center {
   text-align: center;
@@ -303,7 +347,7 @@
   --tw-border-opacity: 1;
   border-bottom-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
-.data-\[checked\]\:prp-bg-indigo-600[data-checked] {
+.data-\[checked\]\:prp-bg-purple-900[data-checked] {
   --tw-bg-opacity: 1;
   background-color: rgb(67 56 202 / var(--tw-bg-opacity));
 }
