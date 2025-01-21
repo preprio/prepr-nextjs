@@ -1,6 +1,6 @@
 'use client'
 
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
 
 import '../main.css'
@@ -23,6 +23,11 @@ export function PreprPreviewBar(props: {
     data?: any
 }) {
     const { activeSegment, activeVariant, data } = props
+    const searchParams = useSearchParams()
+
+    if (searchParams.get('prepr_hidebar') === 'true') {
+        return null
+    }
 
     let segmentList = data?.items
 
@@ -58,7 +63,7 @@ export function PreprPreviewBar(props: {
 
         const params = new URLSearchParams({})
 
-        params.append('a-b-testing', variant as string)
+        params.append('prepr_preview_ab', variant as string)
 
         router.push(`${pathname}?${params.toString()}`, {
             scroll: false,
@@ -78,9 +83,9 @@ export function PreprPreviewBar(props: {
         const params = new URLSearchParams({})
 
         if (segment !== 'Choose segment') {
-            params.append('segments', segment as string)
+            params.append('prepr_preview_segment', segment as string)
         } else {
-            params.append('segments', 'null')
+            params.append('prepr_preview_segment', 'null')
         }
 
         router.push(`${pathname}?${params.toString()}`, {
@@ -94,8 +99,8 @@ export function PreprPreviewBar(props: {
         setSelectedVariant(emptyVariant)
 
         const params = new URLSearchParams({})
-        params.append('segments', 'null')
-        params.append('a-b-testing', 'null')
+        params.append('prepr_preview_segment', 'null')
+        params.append('prepr_preview_ab', 'null')
 
         router.push(`${pathname}?${params.toString()}`, {
             scroll: false,

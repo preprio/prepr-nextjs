@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 
 export function PreprMiddleware(request: any, response?: NextResponse) {
@@ -43,7 +43,7 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
     if (!cookie) {
         cookie = crypto.randomUUID()
         newResponse.cookies.set('__prepr_uid', cookie, {
-            maxAge: 1 * 365 * 24 * 60, // Set for one year
+            maxAge: 60, // Set for one year
         })
     }
 
@@ -52,8 +52,10 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
     if (process.env.PREPR_ENV === 'preview') {
         newResponse.headers.set('Prepr-Preview-Bar', 'true')
 
-        if (request.nextUrl.searchParams.has('segments')) {
-            const segments = request.nextUrl.searchParams.get('segments')
+        if (request.nextUrl.searchParams.has('prepr_preview_segment')) {
+            const segments = request.nextUrl.searchParams.get(
+                'prepr_preview_segment'
+            )
 
             if (segments) {
                 newResponse.headers.set('Prepr-Segments', segments)
@@ -63,8 +65,9 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
             }
         }
 
-        if (request.nextUrl.searchParams.has('a-b-testing')) {
-            const ab_testing = request.nextUrl.searchParams.get('a-b-testing')
+        if (request.nextUrl.searchParams.has('prepr_preview_ab')) {
+            const ab_testing =
+                request.nextUrl.searchParams.get('prepr_preview_ab')
             let value = ab_testing?.toUpperCase()
             if (value === 'B') {
                 value = 'B'

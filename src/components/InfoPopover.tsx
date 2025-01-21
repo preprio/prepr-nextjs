@@ -1,7 +1,6 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import { FaInfoCircle } from 'react-icons/fa'
 import React from 'react'
-import { FaArrowUpRightFromSquare } from 'react-icons/fa6'
 
 interface InfoPopoverProps {
     title: string
