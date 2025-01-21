@@ -1,6 +1,6 @@
 {
   "name": "@preprio/prepr-nextjs",
-  "version": "1.0.0-beta.14",
+  "version": "1.0.0-beta.16",
   "description": "A next.js package with code snippets to use with Prepr",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -48,6 +48,7 @@
   "dependencies": {
     "@headlessui/react": "^2.1.8",
     "classnames": "^2.5.1",
+    "clsx": "^2.1.1",
     "micromatch": "^4.0.8",
     "next": "^14.2.10",
     "react": "^18.3.1",

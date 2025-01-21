@@ -130,19 +130,32 @@ function InfoPopover({ title, text }) {
 }
 
 // src/components/PreprPreviewBar.tsx
+var import_clsx = require("clsx");
 function PreprPreviewBar(props) {
   const { activeSegment, activeVariant, data } = props;
-  let segmentList = data == null ? void 0 : data.items;
+  const [segmentList, setSegmentList] = (0, import_react5.useState)(data == null ? void 0 : data.items);
+  const [isToggled, setIsToggled] = (0, import_react5.useState)(false);
   if (segmentList && segmentList[0].reference_id !== "null") {
-    segmentList.unshift({
-      reference_id: "null",
-      body: "All other users"
-    });
+    setSegmentList([
+      {
+        reference_id: "null",
+        body: "All other users"
+      },
+      ...segmentList
+    ]);
   }
   const emptyVariant = "A";
   const emptySegment = {
     body: "Choose segment"
   };
+  (0, import_react5.useEffect)(() => {
+    if (!window) {
+      return;
+    }
+    if (window.localStorage.getItem("isToggled")) {
+      setIsToggled(window.localStorage.getItem("isToggled") === "true");
+    }
+  });
   const [selectedSegment, setSelectedSegment] = (0, import_react5.useState)(
     segmentList && segmentList.filter(
       (segmentData) => segmentData === activeSegment
@@ -190,16 +203,19 @@ function PreprPreviewBar(props) {
     });
     router.refresh();
   };
-  const [isToggled, setIsToggled] = (0, import_react5.useState)(false);
   const handleToggle = () => {
     setIsToggled(!isToggled);
+    window.localStorage.setItem("isToggled", String(!isToggled));
   };
-  return /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-z-[1000] prp-flex prp-flex-col prp-base prp-w-full prp-sticky prp-top-0" }, /* @__PURE__ */ import_react5.default.createElement(
+  return /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-z-[999] prp-isolate prp-flex prp-flex-col prp-base prp-w-full prp-sticky prp-top-0" }, /* @__PURE__ */ import_react5.default.createElement(
     "div",
     {
-      className: `prp-py-4 prp-px-5 md:prp-px-19.5 prp-bg-indigo-default prp-overflow-hidden prp-w-full ${isToggled ? "prp-sticky prp-top-0" : "prp-absolute prp-top-[-72px]"}`
+      className: (0, import_clsx.clsx)(
+        "prp-py-4 prp-h-20 prp-px-5 md:prp-px-19.5 prp-bg-purple-900 prp-w-full prp-overflow-hidden",
+        isToggled ? "prp-sticky prp-top-0" : "prp-hidden"
+      )
     },
-    /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-y-4 prp-gap-x-6 prp-flex-wrap prp-justify-between" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement(PreprLogo, null)), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold prp-mr-10" }, "Adaptive Preview")), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-pb-0.5" }, "Apply segment"), /* @__PURE__ */ import_react5.default.createElement(
+    /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-wrap prp-justify-between" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement(PreprLogo, null)), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold prp-mr-10" }, "Adaptive Preview")), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-ml-auto prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-pb-0.5" }, "Apply segment"), /* @__PURE__ */ import_react5.default.createElement(
       InfoPopover,
       {
         title: "Adaptive Preview",
@@ -245,7 +261,7 @@ function PreprPreviewBar(props) {
         import_react6.Radio,
         {
           value: "A",
-          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
+          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-purple-900 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
         },
         /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
         "A"
@@ -254,7 +270,7 @@ function PreprPreviewBar(props) {
         import_react6.Radio,
         {
           value: "B",
-          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
+          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-purple-900 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
         },
         /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
         "B"
@@ -269,26 +285,43 @@ function PreprPreviewBar(props) {
   ), /* @__PURE__ */ import_react5.default.createElement(
     "div",
     {
-      className: `prp-mx-auto prp-bg-indigo-default prp-regular-text prp-text-white prp-px-2 prp-py-0.5 prp-rounded-b-lg prp-flex prp-items-center prp-cursor-pointer ${isToggled ? "" : "prp-sticky prp-top-0"}`,
-      onClick: handleToggle
+      className: (0, import_clsx.clsx)(
+        "prp-w-full prp-flex",
+        isToggled ? "prp-top-20 prp-absolute" : "prp-top-0 prp-fixed"
+      )
     },
-    "Adaptive Preview",
-    isToggled ? /* @__PURE__ */ import_react5.default.createElement(
-      "svg",
+    /* @__PURE__ */ import_react5.default.createElement(
+      "div",
       {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 512 512",
-        className: "prp-size-3 prp-fill-white prp-ml-2"
+        className: (0, import_clsx.clsx)(
+          "prp-w-auto prp-mx-auto prp-flex prp-items-center prp-border-t-2 prp-border-purple-900"
+        )
       },
-      /* @__PURE__ */ import_react5.default.createElement("path", { d: "M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" })
-    ) : /* @__PURE__ */ import_react5.default.createElement(
-      "svg",
-      {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 512 512",
-        className: "prp-size-3 prp-fill-white prp-ml-2"
-      },
-      /* @__PURE__ */ import_react5.default.createElement("path", { d: "M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" })
+      /* @__PURE__ */ import_react5.default.createElement(
+        "div",
+        {
+          className: `prp-relative prp-z-[100] prp-mx-auto prp-bg-purple-900 prp-regular-text prp-text-white prp-px-2 prp-py-0.5 prp-rounded-b-lg prp-flex prp-items-center prp-cursor-pointer`,
+          onClick: handleToggle
+        },
+        "Adaptive Preview",
+        isToggled ? /* @__PURE__ */ import_react5.default.createElement(
+          "svg",
+          {
+            xmlns: "http://www.w3.org/2000/svg",
+            viewBox: "0 0 512 512",
+            className: "prp-size-3 prp-fill-white prp-ml-2"
+          },
+          /* @__PURE__ */ import_react5.default.createElement("path", { d: "M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" })
+        ) : /* @__PURE__ */ import_react5.default.createElement(
+          "svg",
+          {
+            xmlns: "http://www.w3.org/2000/svg",
+            viewBox: "0 0 512 512",
+            className: "prp-size-3 prp-fill-white prp-ml-2"
+          },
+          /* @__PURE__ */ import_react5.default.createElement("path", { d: "M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" })
+        )
+      )
     )
   ));
 }
