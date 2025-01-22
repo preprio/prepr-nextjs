@@ -198,7 +198,7 @@ function PreprPreviewBar(props) {
         isToggled ? "prp-sticky prp-top-0" : "prp-hidden"
       )
     },
-    /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-max-w-7xl prp-mx-auto prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-wrap" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ React4.createElement(PreprLogo, null)), /* @__PURE__ */ React4.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold" }, "Adaptive Preview")), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-flex-wrap prp-gap-2 md:prp-gap-4 prp-ml-auto md:prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white prp-flex prp-items-center prp-gap-2" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block" }, "Apply segment"), /* @__PURE__ */ React4.createElement(
+    /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-max-w-7xl prp-mx-auto prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-col sm:prp-flex-row prp-flex-wrap" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ React4.createElement(PreprLogo, null)), /* @__PURE__ */ React4.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold" }, "Adaptive Preview")), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-flex-wrap prp-gap-2 md:prp-gap-4 prp-ml-0 sm:prp-ml-auto md:prp-items-center" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4 prp-flex-1" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white prp-items-center prp-gap-2 prp-hidden lg:prp-flex" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block" }, "Apply segment"), /* @__PURE__ */ React4.createElement(
       InfoPopover,
       {
         title: "Adaptive Preview",
@@ -250,7 +250,7 @@ function PreprPreviewBar(props) {
           )
         ))
       )
-    )), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white prp-flex prp-items-center prp-gap-2" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block" }, "Show A/B variant"), /* @__PURE__ */ React4.createElement(
+    )), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-flex-initial prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white prp-items-center prp-gap-2 prp-hidden lg:prp-flex" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block" }, "Show A/B variant"), /* @__PURE__ */ React4.createElement(
       InfoPopover,
       {
         title: "A/B Testing",
@@ -281,7 +281,7 @@ function PreprPreviewBar(props) {
         /* @__PURE__ */ React4.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
         "B"
       )
-    )), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-mt-auto md:prp-h-full" }, /* @__PURE__ */ React4.createElement(
+    )), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-flex-initial prp-mt-auto md:prp-h-full" }, /* @__PURE__ */ React4.createElement(
       ResetButton,
       {
         handleClick: handleReset,

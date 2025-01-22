@@ -44,9 +44,6 @@
 .prp-ml-2 {
   margin-left: 0.5rem;
 }
-.prp-ml-auto {
-  margin-left: auto;
-}
 .prp-mr-1 {
   margin-right: 0.25rem;
 }
@@ -58,6 +55,12 @@
 }
 .prp-mt-auto {
   margin-top: auto;
+}
+.prp-ml-auto {
+  margin-left: auto;
+}
+.prp-ml-0 {
+  margin-left: 0px;
 }
 .prp-block {
   display: block;
@@ -99,8 +102,23 @@
 .prp-max-w-\[312px\] {
   max-width: 312px;
 }
+.prp-flex-1 {
+  flex: 1 1 0%;
+}
+.prp-flex-none {
+  flex: none;
+}
+.prp-flex-initial {
+  flex: 0 1 auto;
+}
 .prp-shrink-0 {
   flex-shrink: 0;
+}
+.prp-basis-6\/12 {
+  flex-basis: 50%;
+}
+.prp-basis-5\/12 {
+  flex-basis: 41.666667%;
 }
 .prp-cursor-pointer {
   cursor: pointer;
@@ -356,11 +374,26 @@
   visibility: visible;
 }
 @media (min-width: 640px) {
+  .sm\:prp-ml-auto {
+    margin-left: auto;
+  }
   .sm\:prp-hidden {
     display: none;
   }
+  .sm\:prp-flex-1 {
+    flex: 1 1 0%;
+  }
+  .sm\:prp-flex-auto {
+    flex: 1 1 auto;
+  }
+  .sm\:prp-flex-row {
+    flex-direction: row;
+  }
 }
 @media (min-width: 768px) {
+  .md\:prp-ml-auto {
+    margin-left: auto;
+  }
   .md\:prp-inline {
     display: inline;
   }
@@ -372,6 +405,9 @@
   }
   .md\:prp-w-48 {
     width: 12rem;
+  }
+  .md\:prp-flex-auto {
+    flex: 1 1 auto;
   }
   .md\:prp-flex-row {
     flex-direction: row;
@@ -394,6 +430,9 @@
 @media (min-width: 1024px) {
   .lg\:prp-block {
     display: block;
+  }
+  .lg\:prp-flex {
+    display: flex;
   }
 }
 @media (min-width: 1280px) {

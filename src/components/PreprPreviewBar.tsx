@@ -141,7 +141,7 @@ export function PreprPreviewBar(props: {
                     isToggled ? 'prp-sticky prp-top-0' : 'prp-hidden'
                 )}
             >
-                <div className="prp-flex prp-max-w-7xl prp-mx-auto prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-wrap">
+                <div className="prp-flex prp-max-w-7xl prp-mx-auto prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-col sm:prp-flex-row prp-flex-wrap">
                     <div className="prp-flex prp-gap-6 prp-items-center">
                         <div className="prp-h-full prp-flex prp-justify-center prp-items-center">
                             <PreprLogo />
@@ -151,9 +151,9 @@ export function PreprPreviewBar(props: {
                         </div>
                     </div>
 
-                    <div className="prp-flex prp-flex-wrap prp-gap-2 md:prp-gap-4 prp-ml-auto md:prp-items-center">
-                        <div className="prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4">
-                            <div className="prp-regular-text prp-text-white prp-flex prp-items-center prp-gap-2">
+                    <div className="prp-flex prp-flex-wrap prp-gap-2 md:prp-gap-4 prp-ml-0 sm:prp-ml-auto md:prp-items-center">
+                        <div className="prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4 prp-flex-1">
+                            <div className="prp-regular-text prp-text-white prp-items-center prp-gap-2 prp-hidden lg:prp-flex">
                                 <span className="prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block">
                                     Apply segment
                                 </span>
@@ -211,8 +211,8 @@ export function PreprPreviewBar(props: {
                             </Listbox>
                         </div>
 
-                        <div className="prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4">
-                            <div className="prp-regular-text prp-text-white prp-flex prp-items-center prp-gap-2">
+                        <div className="prp-flex prp-flex-initial prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4">
+                            <div className="prp-regular-text prp-text-white prp-items-center prp-gap-2 prp-hidden lg:prp-flex">
                                 <span className="prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block">
                                     Show A/B variant
                                 </span>
@@ -254,7 +254,7 @@ export function PreprPreviewBar(props: {
                             </RadioGroup>
                         </div>
 
-                        <div className="prp-flex prp-mt-auto md:prp-h-full">
+                        <div className="prp-flex prp-flex-initial prp-mt-auto md:prp-h-full">
                             <ResetButton
                                 handleClick={handleReset}
                                 enabled={
