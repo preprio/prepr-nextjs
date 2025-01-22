@@ -48,7 +48,7 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
     if (!cookie) {
         cookie = crypto.randomUUID()
         newResponse.cookies.set('__prepr_uid', cookie, {
-            maxAge: 60, // Set for one year
+            maxAge: 1 * 365 * 24 * 60, // Set for one year
         })
     }
 

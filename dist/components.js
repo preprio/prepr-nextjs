@@ -93,7 +93,7 @@ function ResetButton({
   handleClick
 }) {
   const classes = (0, import_classnames.default)(
-    "prp-py-3 prp-px-4 prp-flex prp-gap-2 prp-items-center rounded-md prp-regular-text h-10",
+    "prp-py-2 prp-px-3 prp-flex prp-gap-2 prp-items-center rounded-md prp-regular-text prp-h-10",
     enabled && "prp-bg-orange-400 hover:prp-orange-500 prp-cursor-pointer prp-text-white",
     !enabled && "prp-bg-grey-400 prp-text-gray-500"
   );
@@ -105,7 +105,7 @@ function ResetButton({
       disabled: !enabled
     },
     /* @__PURE__ */ import_react2.default.createElement(import_fa6.FaRotate, null),
-    /* @__PURE__ */ import_react2.default.createElement("span", { className: "prp-hidden lg:prp-block" }, "Reset")
+    /* @__PURE__ */ import_react2.default.createElement("span", { className: "prp-block sm:prp-hidden lg:prp-block" }, "Reset")
   );
 }
 
@@ -135,6 +135,10 @@ function PreprPreviewBar(props) {
   const { activeSegment, activeVariant, data } = props;
   const [segmentList, setSegmentList] = (0, import_react5.useState)(data == null ? void 0 : data.items);
   const [isToggled, setIsToggled] = (0, import_react5.useState)(false);
+  const searchParams = (0, import_navigation.useSearchParams)();
+  if (searchParams.get("prepr_hidebar") === "true") {
+    return null;
+  }
   if (segmentList && segmentList[0].reference_id !== "null") {
     setSegmentList([
       {
@@ -169,7 +173,7 @@ function PreprPreviewBar(props) {
   const handleUpdateVariant = (variant) => {
     setSelectedVariant(variant);
     const params = new URLSearchParams({});
-    params.append("a-b-testing", variant);
+    params.append("prepr_preview_ab", variant);
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false
     });
@@ -183,9 +187,9 @@ function PreprPreviewBar(props) {
     }
     const params = new URLSearchParams({});
     if (segment !== "Choose segment") {
-      params.append("segments", segment);
+      params.append("prepr_preview_segment", segment);
     } else {
-      params.append("segments", "null");
+      params.append("prepr_preview_segment", "null");
     }
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false
@@ -196,8 +200,8 @@ function PreprPreviewBar(props) {
     setSelectedSegment(emptySegment);
     setSelectedVariant(emptyVariant);
     const params = new URLSearchParams({});
-    params.append("segments", "null");
-    params.append("a-b-testing", "null");
+    params.append("prepr_preview_segment", "null");
+    params.append("prepr_preview_ab", "null");
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false
     });
@@ -207,15 +211,20 @@ function PreprPreviewBar(props) {
     setIsToggled(!isToggled);
     window.localStorage.setItem("isToggled", String(!isToggled));
   };
-  return /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-z-[999] prp-isolate prp-flex prp-flex-col prp-base prp-w-full prp-sticky prp-top-0" }, /* @__PURE__ */ import_react5.default.createElement(
+  console.log(
+    selectedSegment,
+    selectedVariant,
+    selectedSegment.body !== "Choose segment" || selectedVariant !== "A"
+  );
+  return /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-z-[999] prp-isolate prp-flex prp-base prp-w-full prp-sticky prp-top-0" }, /* @__PURE__ */ import_react5.default.createElement(
     "div",
     {
       className: (0, import_clsx.clsx)(
-        "prp-py-4 prp-h-20 prp-px-5 md:prp-px-19.5 prp-bg-purple-900 prp-w-full prp-overflow-hidden",
+        "prp-py-4 prp-px-5 prp-bg-purple-900 prp-w-full prp-overflow-hidden",
         isToggled ? "prp-sticky prp-top-0" : "prp-hidden"
       )
     },
-    /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-wrap prp-justify-between" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement(PreprLogo, null)), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold prp-mr-10" }, "Adaptive Preview")), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-ml-auto prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-pb-0.5" }, "Apply segment"), /* @__PURE__ */ import_react5.default.createElement(
+    /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-max-w-7xl prp-mx-auto prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-wrap" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-6 prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-h-full prp-flex prp-justify-center prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement(PreprLogo, null)), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold" }, "Adaptive Preview")), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-flex-wrap prp-gap-2 md:prp-gap-4 prp-ml-auto md:prp-items-center" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-regular-text prp-text-white prp-flex prp-items-center prp-gap-2" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block" }, "Apply segment"), /* @__PURE__ */ import_react5.default.createElement(
       InfoPopover,
       {
         title: "Adaptive Preview",
@@ -227,24 +236,47 @@ function PreprPreviewBar(props) {
         value: selectedSegment.slug,
         onChange: handleUpdateSegment
       },
-      /* @__PURE__ */ import_react5.default.createElement(import_react6.ListboxButton, { className: "prp-h-10 prp-flex-initial prp-w-[13rem] md:prp-w-[15rem] prp-max-w-[15rem] prp-rounded-md data-[open]:prp-rounded-b-none data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-justify-center prp-px-4 prp-regular-text prp-text-gray-500" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-flex prp-items-center prp-justify-between" }, /* @__PURE__ */ import_react5.default.createElement("span", null, selectedSegment.body), /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-text-gray-900" }, /* @__PURE__ */ import_react5.default.createElement(import_fa62.FaCaretDown, { className: "prp-w-3" })))),
+      /* @__PURE__ */ import_react5.default.createElement(import_react6.ListboxButton, { className: "prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500" }, /* @__PURE__ */ import_react5.default.createElement(
+        "div",
+        {
+          style: {
+            textWrap: "nowrap",
+            textOverflow: "ellipsis",
+            textAlign: "left"
+          },
+          className: "prp-w-full prp-overflow-hidden prp-mr-auto"
+        },
+        selectedSegment.body
+      ), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-text-gray-400" }, /* @__PURE__ */ import_react5.default.createElement(import_fa62.FaCaretDown, { className: "prp-w-3" }))),
       /* @__PURE__ */ import_react5.default.createElement(
         import_react6.ListboxOptions,
         {
-          anchor: "bottom",
-          className: "prp-z-[9999] prp-w-[var(--button-width)] prp-pb-2 prp-rounded-b-md prp-bg-white"
+          anchor: "top start",
+          className: "prp-z-[9999] prp-rounded-md prp-bg-white prp-h-1/3 prp-mt-2 prp-shadow-xl"
         },
         segmentList == null ? void 0 : segmentList.map((segment) => /* @__PURE__ */ import_react5.default.createElement(
           import_react6.ListboxOption,
           {
-            className: "prp-px-4 prp-py-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full",
-            key: segment.reference_id,
-            value: segment
+            key: segment.id,
+            value: segment,
+            className: "prp-group data-[selected]:prp-bg-indigo-50 data-[selected]:prp-text-indigo-700 prp-flex prp-items-center prp-p-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4"
           },
-          segment.body
+          /* @__PURE__ */ import_react5.default.createElement(import_fa62.FaCheck, { className: "prp-invisible prp-size-3 prp-shrink-0  group-data-[selected]:prp-visible prp-mr-1" }),
+          /* @__PURE__ */ import_react5.default.createElement(
+            "div",
+            {
+              style: {
+                textWrap: "nowrap",
+                textOverflow: "ellipsis",
+                textAlign: "left"
+              },
+              className: "prp-w-full prp-overflow-hidden prp-mr-auto"
+            },
+            segment.body
+          )
         ))
       )
-    )), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-gap-4" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-pb-0.5" }, "Show A/B variant"), /* @__PURE__ */ import_react5.default.createElement(
+    )), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-regular-text prp-text-white prp-flex prp-items-center prp-gap-2" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block" }, "Show A/B variant"), /* @__PURE__ */ import_react5.default.createElement(
       InfoPopover,
       {
         title: "A/B Testing",
@@ -253,7 +285,7 @@ function PreprPreviewBar(props) {
     )), /* @__PURE__ */ import_react5.default.createElement(
       import_react6.RadioGroup,
       {
-        className: "prp-rounded-lg prp-p-1 prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center",
+        className: "prp-rounded-lg prp-p-1 prp-mr-auto prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center",
         value: selectedVariant,
         onChange: handleUpdateVariant
       },
@@ -261,7 +293,7 @@ function PreprPreviewBar(props) {
         import_react6.Radio,
         {
           value: "A",
-          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-purple-900 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
+          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
         },
         /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
         "A"
@@ -270,24 +302,24 @@ function PreprPreviewBar(props) {
         import_react6.Radio,
         {
           value: "B",
-          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-purple-900 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
+          className: "prp-py-2 prp-px-3 prp-rounded-md prp-text-gray-900 prp-regular-text data-[checked]:prp-dropshadow\n                                    data-[checked]:prp-bg-indigo-600 data-[checked]:prp-text-white prp-h-8 prp-text-center prp-flex prp-items-center hover:prp-cursor-pointer\n                                "
         },
         /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-hidden md:prp-inline prp-mr-1" }, "Variant", " "),
         "B"
       )
-    )), /* @__PURE__ */ import_react5.default.createElement(
+    )), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-mt-auto md:prp-h-full" }, /* @__PURE__ */ import_react5.default.createElement(
       ResetButton,
       {
         handleClick: handleReset,
         enabled: selectedSegment.reference_id || selectedVariant !== "A"
       }
-    )))
+    ))))
   ), /* @__PURE__ */ import_react5.default.createElement(
     "div",
     {
       className: (0, import_clsx.clsx)(
         "prp-w-full prp-flex",
-        isToggled ? "prp-top-20 prp-absolute" : "prp-top-0 prp-fixed"
+        isToggled ? "-prp-bottom-6 prp-absolute" : "prp-top-0 prp-fixed"
       )
     },
     /* @__PURE__ */ import_react5.default.createElement(

@@ -14,7 +14,7 @@ import {
     Radio,
     RadioGroup,
 } from '@headlessui/react'
-import { FaCaretDown } from 'react-icons/fa6'
+import { FaCaretDown, FaCheck } from 'react-icons/fa6'
 import InfoPopover from './InfoPopover'
 import { clsx } from 'clsx'
 
@@ -127,29 +127,34 @@ export function PreprPreviewBar(props: {
         window.localStorage.setItem('isToggled', String(!isToggled))
     }
 
+    console.log(
+        selectedSegment,
+        selectedVariant,
+        selectedSegment.body !== 'Choose segment' || selectedVariant !== 'A'
+    )
+
     return (
-        <div className="prp-z-[999] prp-isolate prp-flex prp-flex-col prp-base prp-w-full prp-sticky prp-top-0">
+        <div className="prp-z-[999] prp-isolate prp-flex prp-base prp-w-full prp-sticky prp-top-0">
             <div
                 className={clsx(
-                    'prp-py-4 prp-h-20 prp-px-5 md:prp-px-19.5 prp-bg-purple-900 prp-w-full prp-overflow-hidden',
+                    'prp-py-4 prp-px-5 prp-bg-purple-900 prp-w-full prp-overflow-hidden',
                     isToggled ? 'prp-sticky prp-top-0' : 'prp-hidden'
                 )}
             >
-                <div className="prp-flex prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-wrap prp-justify-between">
-                    {/* Logo & Text */}
+                <div className="prp-flex prp-max-w-7xl prp-mx-auto prp-gap-y-4 prp-h-full prp-gap-x-6 prp-flex-wrap">
                     <div className="prp-flex prp-gap-6 prp-items-center">
                         <div className="prp-h-full prp-flex prp-justify-center prp-items-center">
                             <PreprLogo />
                         </div>
-                        <div className="prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold prp-mr-10">
+                        <div className="prp-hidden lg:prp-block prp-pb-0.5 prp-text-white prp-text-lg prp-text-bold">
                             Adaptive Preview
                         </div>
                     </div>
 
-                    <div className="prp-flex prp-ml-auto prp-w-full md:prp-w-auto prp-gap-4 lg:prp-gap-6 prp-items-center">
-                        <div className="prp-flex prp-gap-4">
-                            <div className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
-                                <span className="prp-pb-0.5">
+                    <div className="prp-flex prp-flex-wrap prp-gap-2 md:prp-gap-4 prp-ml-auto md:prp-items-center">
+                        <div className="prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4">
+                            <div className="prp-regular-text prp-text-white prp-flex prp-items-center prp-gap-2">
+                                <span className="prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block">
                                     Apply segment
                                 </span>
                                 <InfoPopover
@@ -159,38 +164,56 @@ export function PreprPreviewBar(props: {
                                     }
                                 />
                             </div>
+
                             <Listbox
                                 value={selectedSegment.slug}
                                 onChange={handleUpdateSegment}
                             >
-                                <ListboxButton className="prp-h-10 prp-flex-initial prp-w-[13rem] md:prp-w-[15rem] prp-max-w-[15rem] prp-rounded-md data-[open]:prp-rounded-b-none data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-justify-center prp-px-4 prp-regular-text prp-text-gray-500">
-                                    <span className="prp-flex prp-items-center prp-justify-between">
-                                        <span>{selectedSegment.body}</span>
-                                        <span className="prp-text-gray-900">
-                                            <FaCaretDown className="prp-w-3" />
-                                        </span>
-                                    </span>
+                                <ListboxButton className="prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500">
+                                    <div
+                                        style={{
+                                            textWrap: 'nowrap',
+                                            textOverflow: 'ellipsis',
+                                            textAlign: 'left',
+                                        }}
+                                        className="prp-w-full prp-overflow-hidden prp-mr-auto"
+                                    >
+                                        {selectedSegment.body}
+                                    </div>
+                                    <div className="prp-text-gray-400">
+                                        <FaCaretDown className="prp-w-3" />
+                                    </div>
                                 </ListboxButton>
                                 <ListboxOptions
-                                    anchor="bottom"
-                                    className="prp-z-[9999] prp-w-[var(--button-width)] prp-pb-2 prp-rounded-b-md prp-bg-white"
+                                    anchor="top start"
+                                    className="prp-z-[9999] prp-rounded-md prp-bg-white prp-h-1/3 prp-mt-2 prp-shadow-xl"
                                 >
                                     {segmentList?.map((segment: any) => (
                                         <ListboxOption
-                                            className="prp-px-4 prp-py-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full"
-                                            key={segment.reference_id}
+                                            key={segment.id}
                                             value={segment}
+                                            className="prp-group data-[selected]:prp-bg-indigo-50 data-[selected]:prp-text-indigo-700 prp-flex prp-items-center prp-p-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4"
                                         >
-                                            {segment.body}
+                                            <FaCheck className="prp-invisible prp-size-3 prp-shrink-0  group-data-[selected]:prp-visible prp-mr-1" />
+                                            <div
+                                                style={{
+                                                    textWrap: 'nowrap',
+                                                    textOverflow: 'ellipsis',
+                                                    textAlign: 'left',
+                                                }}
+                                                className="prp-w-full prp-overflow-hidden prp-mr-auto"
+                                            >
+                                                {segment.body}
+                                            </div>
                                         </ListboxOption>
                                     ))}
                                 </ListboxOptions>
                             </Listbox>
                         </div>
 
-                        <div className="prp-flex prp-gap-4">
-                            <div className="prp-regular-text prp-text-white 2xl:prp-flex prp-items-center prp-gap-2 prp-hidden">
-                                <span className="prp-pb-0.5">
+                        <div className="prp-flex prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4">
+                            <div className="prp-regular-text prp-text-white prp-flex prp-items-center prp-gap-2">
+                                <span className="prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block">
                                     Show A/B variant
                                 </span>
                                 <InfoPopover
@@ -202,7 +225,7 @@ export function PreprPreviewBar(props: {
                             </div>
 
                             <RadioGroup
-                                className="prp-rounded-lg prp-p-1 prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center"
+                                className="prp-rounded-lg prp-p-1 prp-mr-auto prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center"
                                 value={selectedVariant}
                                 onChange={handleUpdateVariant}
                             >
@@ -231,13 +254,15 @@ export function PreprPreviewBar(props: {
                             </RadioGroup>
                         </div>
 
-                        <ResetButton
-                            handleClick={handleReset}
-                            enabled={
-                                selectedSegment.reference_id ||
-                                selectedVariant !== 'A'
-                            }
-                        />
+                        <div className="prp-flex prp-mt-auto md:prp-h-full">
+                            <ResetButton
+                                handleClick={handleReset}
+                                enabled={
+                                    selectedSegment.reference_id ||
+                                    selectedVariant !== 'A'
+                                }
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -245,7 +270,7 @@ export function PreprPreviewBar(props: {
                 className={clsx(
                     'prp-w-full prp-flex',
                     isToggled
-                        ? 'prp-top-20 prp-absolute'
+                        ? '-prp-bottom-6 prp-absolute'
                         : 'prp-top-0 prp-fixed'
                 )}
             >
