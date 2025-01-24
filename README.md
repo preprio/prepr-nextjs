@@ -154,7 +154,7 @@ to your API calls it automatically updates the segments and A/B testing variants
 
 ### Helper functions
 
-#### getPreprUUID()()
+#### getPreprUUID()
 The `getPreprUUID()` function will return the value of the `__prepr_uid` cookie. This can be useful if you want to store the `__prepr_uid` in a cookie or local storage.
 
 #### getActiveSegment()
