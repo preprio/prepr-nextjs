@@ -33,7 +33,7 @@
     "build": "tsup",
     "dev": "tsup --watch"
   },
-  "author": "",
+  "author": "Prepr",
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^18.3.3",

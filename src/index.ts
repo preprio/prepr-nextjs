@@ -1,6 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 
+/**
+ *
+ * @param request NextRequest object
+ * @param response optional NextResponse object
+ */
 export function PreprMiddleware(request: any, response?: NextResponse) {
     const newResponse = response || NextResponse.next()
 

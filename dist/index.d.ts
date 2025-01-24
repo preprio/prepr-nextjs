@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 
+/**
+ *
+ * @param request NextRequest object
+ * @param response optional NextResponse object
+ */
 declare function PreprMiddleware(request: any, response?: NextResponse): NextResponse<unknown>;
 /**
  * Returns the Prepr Customer ID from the headers
