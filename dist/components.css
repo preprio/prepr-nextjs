@@ -1,6 +1,9 @@
 @import "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap";
 
 /* src/main.css */
+.prp-visible {
+  visibility: visible;
+}
 .prp-invisible {
   visibility: hidden;
 }
@@ -189,6 +192,10 @@
   --tw-bg-opacity: 1;
   background-color: rgb(156 163 175 / var(--tw-bg-opacity));
 }
+.prp-bg-indigo-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(238 242 255 / var(--tw-bg-opacity));
+}
 .prp-bg-orange-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(251 146 60 / var(--tw-bg-opacity));
@@ -284,6 +291,10 @@
   --tw-text-opacity: 1;
   color: rgb(165 180 252 / var(--tw-text-opacity));
 }
+.prp-text-indigo-700 {
+  --tw-text-opacity: 1;
+  color: rgb(67 56 202 / var(--tw-text-opacity));
+}
 .prp-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -346,20 +357,9 @@
   --tw-bg-opacity: 1;
   background-color: rgb(79 70 229 / var(--tw-bg-opacity));
 }
-.data-\[selected\]\:prp-bg-indigo-50[data-selected] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(238 242 255 / var(--tw-bg-opacity));
-}
 .data-\[checked\]\:prp-text-white[data-checked] {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-.data-\[selected\]\:prp-text-indigo-700[data-selected] {
-  --tw-text-opacity: 1;
-  color: rgb(67 56 202 / var(--tw-text-opacity));
-}
-.prp-group[data-selected] .group-data-\[selected\]\:prp-visible {
-  visibility: visible;
 }
 @media (min-width: 640px) {
   .sm\:prp-ml-auto {

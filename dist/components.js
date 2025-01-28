@@ -136,12 +136,16 @@ function PreprPreviewBar(props) {
   const [segmentList, setSegmentList] = (0, import_react5.useState)(data == null ? void 0 : data.items);
   const [isToggled, setIsToggled] = (0, import_react5.useState)(false);
   const searchParams = (0, import_navigation.useSearchParams)();
-  if (searchParams.get("prepr_hidebar") === "true") {
+  if (searchParams.get("prepr_hide_bar") === "true") {
+    return null;
+  }
+  if ((window == null ? void 0 : window.parent) !== window.self) {
     return null;
   }
   if (segmentList && segmentList[0].reference_id !== "null") {
     setSegmentList([
       {
+        id: "null",
         reference_id: "null",
         body: "All other users"
       },
@@ -170,31 +174,29 @@ function PreprPreviewBar(props) {
   );
   const router = (0, import_navigation.useRouter)();
   const pathname = (0, import_navigation.usePathname)();
-  const handleUpdateVariant = (variant) => {
-    setSelectedVariant(variant);
-    const params = new URLSearchParams({});
-    params.append("prepr_preview_ab", variant);
+  const handleSearchParams = (key, value) => {
+    const params = new URLSearchParams(window.location.search);
+    if (key === "prepr_preview_ab") {
+      setSelectedVariant(value);
+      params.set(key, value);
+    }
+    if (key === "prepr_preview_segment" && value) {
+      setSelectedSegment(value);
+      params.set(key, value.reference_id);
+    }
+    for (const [key2, value2] of params.entries()) {
+      if (value2 === "null" || value2 === null || value2 === void 0) {
+        params.delete(key2);
+      }
+    }
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false
     });
     router.refresh();
   };
-  const handleUpdateSegment = (value) => {
-    setSelectedSegment(value);
-    const segment = value.reference_id;
-    if (!segment) {
-      return;
-    }
-    const params = new URLSearchParams({});
-    if (segment !== "Choose segment") {
-      params.append("prepr_preview_segment", segment);
-    } else {
-      params.append("prepr_preview_segment", "null");
-    }
-    router.push(`${pathname}?${params.toString()}`, {
-      scroll: false
-    });
-    router.refresh();
+  const handleToggle = () => {
+    setIsToggled(!isToggled);
+    window.localStorage.setItem("isToggled", String(!isToggled));
   };
   const handleReset = () => {
     setSelectedSegment(emptySegment);
@@ -207,15 +209,6 @@ function PreprPreviewBar(props) {
     });
     router.refresh();
   };
-  const handleToggle = () => {
-    setIsToggled(!isToggled);
-    window.localStorage.setItem("isToggled", String(!isToggled));
-  };
-  console.log(
-    selectedSegment,
-    selectedVariant,
-    selectedSegment.body !== "Choose segment" || selectedVariant !== "A"
-  );
   return /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-z-[999] prp-isolate prp-flex prp-base prp-w-full prp-sticky prp-top-0" }, /* @__PURE__ */ import_react5.default.createElement(
     "div",
     {
@@ -234,7 +227,10 @@ function PreprPreviewBar(props) {
       import_react6.Listbox,
       {
         value: selectedSegment.slug,
-        onChange: handleUpdateSegment
+        onChange: (value) => handleSearchParams(
+          "prepr_preview_segment",
+          value
+        )
       },
       /* @__PURE__ */ import_react5.default.createElement(import_react6.ListboxButton, { className: "prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500" }, /* @__PURE__ */ import_react5.default.createElement(
         "div",
@@ -259,9 +255,20 @@ function PreprPreviewBar(props) {
           {
             key: segment.id,
             value: segment,
-            className: "prp-group data-[selected]:prp-bg-indigo-50 data-[selected]:prp-text-indigo-700 prp-flex prp-items-center prp-p-2 hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900 prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4"
+            className: (0, import_clsx.clsx)(
+              "prp-flex prp-items-center prp-p-2  prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4",
+              segment.reference_id === selectedSegment.reference_id ? "prp-bg-indigo-50 prp-text-indigo-700" : "hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900"
+            )
           },
-          /* @__PURE__ */ import_react5.default.createElement(import_fa62.FaCheck, { className: "prp-invisible prp-size-3 prp-shrink-0  group-data-[selected]:prp-visible prp-mr-1" }),
+          /* @__PURE__ */ import_react5.default.createElement(
+            import_fa62.FaCheck,
+            {
+              className: (0, import_clsx.clsx)(
+                "prp-size-3 prp-shrink-0 prp-mr-1",
+                segment.reference_id === selectedSegment.reference_id ? "prp-visible" : "prp-invisible"
+              )
+            }
+          ),
           /* @__PURE__ */ import_react5.default.createElement(
             "div",
             {
@@ -287,7 +294,10 @@ function PreprPreviewBar(props) {
       {
         className: "prp-rounded-lg prp-p-1 prp-mr-auto prp-border prp-border-gray-300 prp-bg-white prp-flex prp-gap-1 prp-h-10 prp-items-center",
         value: selectedVariant,
-        onChange: handleUpdateVariant
+        onChange: (value) => handleSearchParams(
+          "prepr_preview_ab",
+          value
+        )
       },
       /* @__PURE__ */ import_react5.default.createElement(
         import_react6.Radio,
