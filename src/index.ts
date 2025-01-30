@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { ipAddress } from '@vercel/functions'
 import { headers } from 'next/headers'
 
 /**
@@ -15,6 +16,12 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
     const utm_content = request.nextUrl.searchParams.get('utm_content')
     const utm_campaign = request.nextUrl.searchParams.get('utm_campaign')
     const initial_referral = request.headers.get('referer')
+
+    const ip = ipAddress(request)
+
+    if (ip) {
+        newResponse.headers.set('Prepr-Visitor-IP', ip)
+    }
 
     let cookie = request.cookies.get('__prepr_uid')?.value
     const hutkCookie = request.cookies.get('hubspotutk')?.value
