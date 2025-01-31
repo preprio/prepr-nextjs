@@ -23,7 +23,6 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
         newResponse.headers.set('Prepr-Visitor-IP', ip)
     }
 
-    let cookie = request.cookies.get('__prepr_uid')?.value
     const hutkCookie = request.cookies.get('hubspotutk')?.value
 
     if (utm_source) {
@@ -57,11 +56,14 @@ export function PreprMiddleware(request: any, response?: NextResponse) {
         )
     }
 
+    let cookie = request.cookies.get('__prepr_uid')?.value
+
     if (!cookie) {
         cookie = crypto.randomUUID()
         newResponse.cookies.set('__prepr_uid', cookie, {
             maxAge: 1 * 365 * 24 * 60, // Set for one year
         })
+        newResponse.headers.set('Prepr-Customer-Id-Created', 'true')
     }
 
     newResponse.headers.set('Prepr-Customer-Id', cookie)
