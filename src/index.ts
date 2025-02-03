@@ -184,14 +184,33 @@ export type PreprSegmentsResponse = {
 export async function getPreprEnvironmentSegments(
     token: string
 ): Promise<PreprSegmentsResponse> {
-    const response = await fetch('https://api.eu1.prepr.io/segments', {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'User-Agent': 'Prepr-Preview-Bar/1.0',
-        },
-    })
-
-    return response.json()
+    try {
+        const response = await fetch('https://api.eu1.prepr.io/segments', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'User-Agent': 'Prepr-Preview-Bar/1.0',
+            },
+        })
+        try {
+            return await response.json()
+        } catch (jsonError) {
+            console.error('Error parsing JSON, please contact Prepr support')
+            return {
+                total: 0,
+                skip: 0,
+                limit: 0,
+                items: [],
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching segments:', error)
+        return {
+            total: 0,
+            skip: 0,
+            limit: 0,
+            items: [],
+        }
+    }
 }
 
 /**
@@ -204,9 +223,20 @@ export async function getPreviewBarProps(token: string): Promise<{
     activeVariant: string | null
     data: PreprSegmentsResponse
 }> {
-    const data = await getPreprEnvironmentSegments(token)
-    const activeSegment = await getActiveSegment()
-    const activeVariant = await getActiveVariant()
+    let data: PreprSegmentsResponse = {
+        total: 0,
+        skip: 0,
+        limit: 0,
+        items: [],
+    }
+    let activeSegment, activeVariant
+
+    // Prevent unnecessary function calling in production
+    if (process.env.PREPR_ENV === 'preview') {
+        data = await getPreprEnvironmentSegments(token)
+        activeSegment = await getActiveSegment()
+        activeVariant = await getActiveVariant()
+    }
 
     return {
         activeSegment,

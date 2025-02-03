@@ -33,11 +33,15 @@ export function PreprPreviewBar(props: {
     }
 
     // Hide the preview bar if not on the client or if the page is in an iframe
-    if (window?.parent !== window.self) {
+    if (typeof window !== 'undefined' && window?.parent !== window.self) {
         return null
     }
 
-    if (segmentList && segmentList[0].reference_id !== 'null') {
+    if (
+        segmentList &&
+        segmentList[0] &&
+        segmentList[0].reference_id !== 'null'
+    ) {
         setSegmentList([
             {
                 id: 'null',
@@ -163,7 +167,10 @@ export function PreprPreviewBar(props: {
                                     )
                                 }
                             >
-                                <ListboxButton className="prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500">
+                                <ListboxButton
+                                    disabled={!(segmentList.length > 0)}
+                                    className="disabled:prp-cursor-not-allowed disabled:prp-text-gray-400 disabled:prp-bg-gray-200 prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500"
+                                >
                                     <div
                                         style={{
                                             textWrap: 'nowrap',
@@ -172,7 +179,9 @@ export function PreprPreviewBar(props: {
                                         }}
                                         className="prp-w-full prp-overflow-hidden prp-mr-auto"
                                     >
-                                        {selectedSegment.body}
+                                        {segmentList.length > 0
+                                            ? selectedSegment.body
+                                            : 'No segments'}
                                     </div>
                                     <div className="prp-text-gray-400">
                                         <FaCaretDown className="prp-w-3" />

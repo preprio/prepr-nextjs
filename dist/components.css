@@ -349,6 +349,17 @@
     var(--tw-ring-shadow),
     var(--tw-shadow, 0 0 #0000);
 }
+.disabled\:prp-cursor-not-allowed:disabled {
+  cursor: not-allowed;
+}
+.disabled\:prp-bg-gray-200:disabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+.disabled\:prp-text-gray-400:disabled {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
 .data-\[open\]\:prp-border-b-white[data-open] {
   --tw-border-opacity: 1;
   border-bottom-color: rgb(255 255 255 / var(--tw-border-opacity));

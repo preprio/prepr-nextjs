@@ -113,10 +113,10 @@ function PreprPreviewBar(props) {
   if (searchParams.get("prepr_hide_bar") === "true") {
     return null;
   }
-  if ((window == null ? void 0 : window.parent) !== window.self) {
+  if (typeof window !== "undefined" && (window == null ? void 0 : window.parent) !== window.self) {
     return null;
   }
-  if (segmentList && segmentList[0].reference_id !== "null") {
+  if (segmentList && segmentList[0] && segmentList[0].reference_id !== "null") {
     setSegmentList([
       {
         id: "null",
@@ -206,18 +206,26 @@ function PreprPreviewBar(props) {
           value
         )
       },
-      /* @__PURE__ */ React4.createElement(ListboxButton, { className: "prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500" }, /* @__PURE__ */ React4.createElement(
-        "div",
+      /* @__PURE__ */ React4.createElement(
+        ListboxButton,
         {
-          style: {
-            textWrap: "nowrap",
-            textOverflow: "ellipsis",
-            textAlign: "left"
-          },
-          className: "prp-w-full prp-overflow-hidden prp-mr-auto"
+          disabled: !(segmentList.length > 0),
+          className: "disabled:prp-cursor-not-allowed disabled:prp-text-gray-400 disabled:prp-bg-gray-200 prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500"
         },
-        selectedSegment.body
-      ), /* @__PURE__ */ React4.createElement("div", { className: "prp-text-gray-400" }, /* @__PURE__ */ React4.createElement(FaCaretDown, { className: "prp-w-3" }))),
+        /* @__PURE__ */ React4.createElement(
+          "div",
+          {
+            style: {
+              textWrap: "nowrap",
+              textOverflow: "ellipsis",
+              textAlign: "left"
+            },
+            className: "prp-w-full prp-overflow-hidden prp-mr-auto"
+          },
+          segmentList.length > 0 ? selectedSegment.body : "No segments"
+        ),
+        /* @__PURE__ */ React4.createElement("div", { className: "prp-text-gray-400" }, /* @__PURE__ */ React4.createElement(FaCaretDown, { className: "prp-w-3" }))
+      ),
       /* @__PURE__ */ React4.createElement(
         ListboxOptions,
         {

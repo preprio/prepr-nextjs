@@ -64,8 +64,7 @@ function PreprMiddleware(request, response) {
   if (ip) {
     newResponse.headers.set("Prepr-Visitor-IP", ip);
   }
-  let cookie = (_a = request.cookies.get("__prepr_uid")) == null ? void 0 : _a.value;
-  const hutkCookie = (_b = request.cookies.get("hubspotutk")) == null ? void 0 : _b.value;
+  const hutkCookie = (_a = request.cookies.get("hubspotutk")) == null ? void 0 : _a.value;
   if (utm_source) {
     newResponse.headers.set("Prepr-Context-utm_source", utm_source);
   }
@@ -90,12 +89,14 @@ function PreprMiddleware(request, response) {
       initial_referral
     );
   }
+  let cookie = (_b = request.cookies.get("__prepr_uid")) == null ? void 0 : _b.value;
   if (!cookie) {
     cookie = crypto.randomUUID();
     newResponse.cookies.set("__prepr_uid", cookie, {
       maxAge: 1 * 365 * 24 * 60
       // Set for one year
     });
+    newResponse.headers.set("Prepr-Customer-Id-Created", "true");
   }
   newResponse.headers.set("Prepr-Customer-Id", cookie);
   if (process.env.PREPR_ENV === "preview") {
@@ -169,20 +170,49 @@ function getPreprHeaders() {
 }
 function getPreprEnvironmentSegments(token) {
   return __async(this, null, function* () {
-    const response = yield fetch("https://api.eu1.prepr.io/segments", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "User-Agent": "Prepr-Preview-Bar/1.0"
+    try {
+      const response = yield fetch("https://api.eu1.prepr.io/segments", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "User-Agent": "Prepr-Preview-Bar/1.0"
+        }
+      });
+      try {
+        return yield response.json();
+      } catch (jsonError) {
+        console.error("Error parsing JSON, please contact Prepr support");
+        return {
+          total: 0,
+          skip: 0,
+          limit: 0,
+          items: []
+        };
       }
-    });
-    return response.json();
+    } catch (error) {
+      console.error("Error fetching segments:", error);
+      return {
+        total: 0,
+        skip: 0,
+        limit: 0,
+        items: []
+      };
+    }
   });
 }
 function getPreviewBarProps(token) {
   return __async(this, null, function* () {
-    const data = yield getPreprEnvironmentSegments(token);
-    const activeSegment = yield getActiveSegment();
-    const activeVariant = yield getActiveVariant();
+    let data = {
+      total: 0,
+      skip: 0,
+      limit: 0,
+      items: []
+    };
+    let activeSegment, activeVariant;
+    if (process.env.PREPR_ENV === "preview") {
+      data = yield getPreprEnvironmentSegments(token);
+      activeSegment = yield getActiveSegment();
+      activeVariant = yield getActiveVariant();
+    }
     return {
       activeSegment,
       activeVariant,
