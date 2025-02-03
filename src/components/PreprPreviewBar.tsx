@@ -17,16 +17,19 @@ import {
 import { FaCaretDown, FaCheck } from 'react-icons/fa6'
 import InfoPopover from './InfoPopover'
 import { clsx } from 'clsx'
+import { PreprSegment } from '../shared/types'
 
 export function PreprPreviewBar(props: {
     activeSegment?: string | null
     activeVariant?: string | null
-    data?: any
+    data?: PreprSegment[]
 }) {
     const { activeSegment, activeVariant, data } = props
-    const [segmentList, setSegmentList] = useState<any>(data?.items)
+    const [segmentList, setSegmentList] = useState<PreprSegment[]>(data)
     const [isToggled, setIsToggled] = useState<boolean>(false)
     const searchParams = useSearchParams()
+
+    console.log('SEGMENTS:', segmentList)
 
     if (searchParams.get('prepr_hide_bar') === 'true') {
         return null
@@ -37,24 +40,20 @@ export function PreprPreviewBar(props: {
         return null
     }
 
-    if (
-        segmentList &&
-        segmentList[0] &&
-        segmentList[0].reference_id !== 'null'
-    ) {
+    if (segmentList && segmentList[0] && segmentList[0]._id !== 'null') {
         setSegmentList([
             {
-                id: 'null',
-                reference_id: 'null',
-                body: 'All other users',
+                _id: 'null',
+                name: 'All other users',
             },
             ...segmentList,
         ])
     }
 
     const emptyVariant = 'A'
-    const emptySegment = {
-        body: 'Choose segment',
+    const emptySegment: PreprSegment = {
+        name: 'Choose segment',
+        _id: 'null',
     }
 
     useEffect(() => {
@@ -67,10 +66,11 @@ export function PreprPreviewBar(props: {
         }
     })
 
-    const [selectedSegment, setSelectedSegment] = useState(
+    const [selectedSegment, setSelectedSegment] = useState<PreprSegment>(
         (segmentList &&
             segmentList.filter(
-                (segmentData: any) => segmentData === activeSegment
+                (segmentData: PreprSegment) =>
+                    segmentData.name === activeSegment
             )[0]) ||
             emptySegment
     )
@@ -91,7 +91,7 @@ export function PreprPreviewBar(props: {
         }
         if (key === 'prepr_preview_segment' && value) {
             setSelectedSegment(value)
-            params.set(key, value.reference_id as string)
+            params.set(key, value._id as string)
         }
 
         // Remove parameters with value "null"
@@ -159,7 +159,7 @@ export function PreprPreviewBar(props: {
                             </div>
 
                             <Listbox
-                                value={selectedSegment.slug}
+                                value={selectedSegment._id}
                                 onChange={(value: any) =>
                                     handleSearchParams(
                                         'prepr_preview_segment',
@@ -180,7 +180,7 @@ export function PreprPreviewBar(props: {
                                         className="prp-w-full prp-overflow-hidden prp-mr-auto"
                                     >
                                         {segmentList.length > 0
-                                            ? selectedSegment.body
+                                            ? selectedSegment.name
                                             : 'No segments'}
                                     </div>
                                     <div className="prp-text-gray-400">
@@ -191,39 +191,42 @@ export function PreprPreviewBar(props: {
                                     anchor="top start"
                                     className="prp-z-[9999] prp-rounded-md prp-bg-white prp-h-1/3 prp-mt-2 prp-shadow-xl"
                                 >
-                                    {segmentList?.map((segment: any) => (
-                                        <ListboxOption
-                                            key={segment.id}
-                                            value={segment}
-                                            className={clsx(
-                                                'prp-flex prp-items-center prp-p-2  prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4',
-                                                segment.reference_id ===
-                                                    selectedSegment.reference_id
-                                                    ? 'prp-bg-indigo-50 prp-text-indigo-700'
-                                                    : 'hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900'
-                                            )}
-                                        >
-                                            <FaCheck
+                                    {segmentList?.map(
+                                        (segment: PreprSegment) => (
+                                            <ListboxOption
+                                                key={segment._id}
+                                                value={segment}
                                                 className={clsx(
-                                                    'prp-size-3 prp-shrink-0 prp-mr-1',
-                                                    segment.reference_id ===
-                                                        selectedSegment.reference_id
-                                                        ? 'prp-visible'
-                                                        : 'prp-invisible'
+                                                    'prp-flex prp-items-center prp-p-2  prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4',
+                                                    segment._id ===
+                                                        selectedSegment._id
+                                                        ? 'prp-bg-indigo-50 prp-text-indigo-700'
+                                                        : 'hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900'
                                                 )}
-                                            />
-                                            <div
-                                                style={{
-                                                    textWrap: 'nowrap',
-                                                    textOverflow: 'ellipsis',
-                                                    textAlign: 'left',
-                                                }}
-                                                className="prp-w-full prp-overflow-hidden prp-mr-auto"
                                             >
-                                                {segment.body}
-                                            </div>
-                                        </ListboxOption>
-                                    ))}
+                                                <FaCheck
+                                                    className={clsx(
+                                                        'prp-size-3 prp-shrink-0 prp-mr-1',
+                                                        segment._id ===
+                                                            selectedSegment._id
+                                                            ? 'prp-visible'
+                                                            : 'prp-invisible'
+                                                    )}
+                                                />
+                                                <div
+                                                    style={{
+                                                        textWrap: 'nowrap',
+                                                        textOverflow:
+                                                            'ellipsis',
+                                                        textAlign: 'left',
+                                                    }}
+                                                    className="prp-w-full prp-overflow-hidden prp-mr-auto"
+                                                >
+                                                    {segment.name}
+                                                </div>
+                                            </ListboxOption>
+                                        )
+                                    )}
                                 </ListboxOptions>
                             </Listbox>
                         </div>
@@ -280,7 +283,7 @@ export function PreprPreviewBar(props: {
                             <ResetButton
                                 handleClick={handleReset}
                                 enabled={
-                                    selectedSegment.reference_id ||
+                                    selectedSegment._id !== null ||
                                     selectedVariant !== 'A'
                                 }
                             />

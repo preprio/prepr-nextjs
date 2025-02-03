@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { P as PreprSegment } from './types-DmITW6Tn.js';
 
 /**
  *
@@ -24,29 +25,12 @@ declare function getActiveVariant(): Promise<string>;
 declare function getPreprHeaders(): Promise<{
     [key: string]: string;
 }>;
-type PreprSegment = {
-    id: string;
-    created_on: string;
-    changed_on: string;
-    synced_on: string;
-    label: string;
-    reference_id: string;
-    body: string;
-    query: string;
-    count: number;
-};
-type PreprSegmentsResponse = {
-    total: number;
-    skip: number;
-    limit: number;
-    items: PreprSegment[];
-};
 /**
  * Fetches the segments from the Prepr API
  * @param token Prepr access token with scope 'segments'
- * @returns Object with total, skip, limit and items
+ * @returns Array of PreprSegmentResponse
  */
-declare function getPreprEnvironmentSegments(token: string): Promise<PreprSegmentsResponse>;
+declare function getPreprEnvironmentSegments(token: string): Promise<PreprSegment[]>;
 /**
  * Fetches all the necessary previewbar props
  * @param token Prepr access token with scope 'segments'
@@ -55,7 +39,7 @@ declare function getPreprEnvironmentSegments(token: string): Promise<PreprSegmen
 declare function getPreviewBarProps(token: string): Promise<{
     activeSegment: string | null;
     activeVariant: string | null;
-    data: PreprSegmentsResponse;
+    data: PreprSegment[];
 }>;
 
-export { PreprMiddleware, type PreprSegment, type PreprSegmentsResponse, getActiveSegment, getActiveVariant, getPreprEnvironmentSegments, getPreprHeaders, getPreprUUID, getPreviewBarProps };
+export { PreprMiddleware, getActiveSegment, getActiveVariant, getPreprEnvironmentSegments, getPreprHeaders, getPreprUUID, getPreviewBarProps };

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { ipAddress } from '@vercel/functions'
 import { headers } from 'next/headers'
+import { getPackageVersion } from './utils'
+import { PreprSegment } from './shared/types'
 
 /**
  *
@@ -157,59 +159,54 @@ export async function getPreprHeaders() {
     return newHeaders
 }
 
-export type PreprSegment = {
-    id: string
-    created_on: string
-    changed_on: string
-    synced_on: string
-    label: string
-    reference_id: string
-    body: string
-    query: string
-    count: number
-}
-
-export type PreprSegmentsResponse = {
-    total: number
-    skip: number
-    limit: number
-    items: PreprSegment[]
-}
-
 /**
  * Fetches the segments from the Prepr API
  * @param token Prepr access token with scope 'segments'
- * @returns Object with total, skip, limit and items
+ * @returns Array of PreprSegmentResponse
  */
 export async function getPreprEnvironmentSegments(
     token: string
-): Promise<PreprSegmentsResponse> {
+): Promise<PreprSegment[]> {
+    if (!token) {
+        console.error(
+            'No token provided, make sure you are using your Prepr GraphQL URL'
+        )
+        return []
+    }
+
+    if (!token.startsWith('https://')) {
+        console.error(
+            'Invalid token provided, make sure you are using your Prepr GraphQL URL'
+        )
+        return []
+    }
+
     try {
-        const response = await fetch('https://api.eu1.prepr.io/segments', {
+        const response = await fetch(token, {
             headers: {
-                Authorization: `Bearer ${token}`,
-                'User-Agent': 'Prepr-Preview-Bar/1.0',
+                'User-Agent': `Prepr-Preview-Bar/${getPackageVersion()}`,
+                'Content-Type': 'application/json',
             },
+            method: 'POST',
+            body: JSON.stringify({
+                query: `{
+                _Segments {
+                    _id
+                    name
+                }
+            }`,
+            }),
         })
         try {
-            return await response.json()
+            const json = await response.json()
+            return json.data?._Segments as PreprSegment[]
         } catch (jsonError) {
             console.error('Error parsing JSON, please contact Prepr support')
-            return {
-                total: 0,
-                skip: 0,
-                limit: 0,
-                items: [],
-            }
+            return []
         }
     } catch (error) {
         console.error('Error fetching segments:', error)
-        return {
-            total: 0,
-            skip: 0,
-            limit: 0,
-            items: [],
-        }
+        return []
     }
 }
 
@@ -221,14 +218,9 @@ export async function getPreprEnvironmentSegments(
 export async function getPreviewBarProps(token: string): Promise<{
     activeSegment: string | null
     activeVariant: string | null
-    data: PreprSegmentsResponse
+    data: PreprSegment[]
 }> {
-    let data: PreprSegmentsResponse = {
-        total: 0,
-        skip: 0,
-        limit: 0,
-        items: [],
-    }
+    let data: PreprSegment[] = []
     let activeSegment, activeVariant
 
     // Prevent unnecessary function calling in production

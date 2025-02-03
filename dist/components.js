@@ -133,28 +133,29 @@ function InfoPopover({ title, text }) {
 var import_clsx = require("clsx");
 function PreprPreviewBar(props) {
   const { activeSegment, activeVariant, data } = props;
-  const [segmentList, setSegmentList] = (0, import_react5.useState)(data == null ? void 0 : data.items);
+  const [segmentList, setSegmentList] = (0, import_react5.useState)(data);
   const [isToggled, setIsToggled] = (0, import_react5.useState)(false);
   const searchParams = (0, import_navigation.useSearchParams)();
+  console.log("SEGMENTS:", segmentList);
   if (searchParams.get("prepr_hide_bar") === "true") {
     return null;
   }
   if (typeof window !== "undefined" && (window == null ? void 0 : window.parent) !== window.self) {
     return null;
   }
-  if (segmentList && segmentList[0] && segmentList[0].reference_id !== "null") {
+  if (segmentList && segmentList[0] && segmentList[0]._id !== "null") {
     setSegmentList([
       {
-        id: "null",
-        reference_id: "null",
-        body: "All other users"
+        _id: "null",
+        name: "All other users"
       },
       ...segmentList
     ]);
   }
   const emptyVariant = "A";
   const emptySegment = {
-    body: "Choose segment"
+    name: "Choose segment",
+    _id: "null"
   };
   (0, import_react5.useEffect)(() => {
     if (!window) {
@@ -166,7 +167,7 @@ function PreprPreviewBar(props) {
   });
   const [selectedSegment, setSelectedSegment] = (0, import_react5.useState)(
     segmentList && segmentList.filter(
-      (segmentData) => segmentData === activeSegment
+      (segmentData) => segmentData.name === activeSegment
     )[0] || emptySegment
   );
   const [selectedVariant, setSelectedVariant] = (0, import_react5.useState)(
@@ -182,7 +183,7 @@ function PreprPreviewBar(props) {
     }
     if (key === "prepr_preview_segment" && value) {
       setSelectedSegment(value);
-      params.set(key, value.reference_id);
+      params.set(key, value._id);
     }
     for (const [key2, value2] of params.entries()) {
       if (value2 === "null" || value2 === null || value2 === void 0) {
@@ -226,7 +227,7 @@ function PreprPreviewBar(props) {
     )), /* @__PURE__ */ import_react5.default.createElement(
       import_react6.Listbox,
       {
-        value: selectedSegment.slug,
+        value: selectedSegment._id,
         onChange: (value) => handleSearchParams(
           "prepr_preview_segment",
           value
@@ -248,7 +249,7 @@ function PreprPreviewBar(props) {
             },
             className: "prp-w-full prp-overflow-hidden prp-mr-auto"
           },
-          segmentList.length > 0 ? selectedSegment.body : "No segments"
+          segmentList.length > 0 ? selectedSegment.name : "No segments"
         ),
         /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-text-gray-400" }, /* @__PURE__ */ import_react5.default.createElement(import_fa62.FaCaretDown, { className: "prp-w-3" }))
       ),
@@ -258,38 +259,40 @@ function PreprPreviewBar(props) {
           anchor: "top start",
           className: "prp-z-[9999] prp-rounded-md prp-bg-white prp-h-1/3 prp-mt-2 prp-shadow-xl"
         },
-        segmentList == null ? void 0 : segmentList.map((segment) => /* @__PURE__ */ import_react5.default.createElement(
-          import_react6.ListboxOption,
-          {
-            key: segment.id,
-            value: segment,
-            className: (0, import_clsx.clsx)(
-              "prp-flex prp-items-center prp-p-2  prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4",
-              segment.reference_id === selectedSegment.reference_id ? "prp-bg-indigo-50 prp-text-indigo-700" : "hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900"
-            )
-          },
-          /* @__PURE__ */ import_react5.default.createElement(
-            import_fa62.FaCheck,
+        segmentList == null ? void 0 : segmentList.map(
+          (segment) => /* @__PURE__ */ import_react5.default.createElement(
+            import_react6.ListboxOption,
             {
+              key: segment._id,
+              value: segment,
               className: (0, import_clsx.clsx)(
-                "prp-size-3 prp-shrink-0 prp-mr-1",
-                segment.reference_id === selectedSegment.reference_id ? "prp-visible" : "prp-invisible"
+                "prp-flex prp-items-center prp-p-2  prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4",
+                segment._id === selectedSegment._id ? "prp-bg-indigo-50 prp-text-indigo-700" : "hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900"
               )
-            }
-          ),
-          /* @__PURE__ */ import_react5.default.createElement(
-            "div",
-            {
-              style: {
-                textWrap: "nowrap",
-                textOverflow: "ellipsis",
-                textAlign: "left"
-              },
-              className: "prp-w-full prp-overflow-hidden prp-mr-auto"
             },
-            segment.body
+            /* @__PURE__ */ import_react5.default.createElement(
+              import_fa62.FaCheck,
+              {
+                className: (0, import_clsx.clsx)(
+                  "prp-size-3 prp-shrink-0 prp-mr-1",
+                  segment._id === selectedSegment._id ? "prp-visible" : "prp-invisible"
+                )
+              }
+            ),
+            /* @__PURE__ */ import_react5.default.createElement(
+              "div",
+              {
+                style: {
+                  textWrap: "nowrap",
+                  textOverflow: "ellipsis",
+                  textAlign: "left"
+                },
+                className: "prp-w-full prp-overflow-hidden prp-mr-auto"
+              },
+              segment.name
+            )
           )
-        ))
+        )
       )
     )), /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-flex prp-flex-initial prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "prp-regular-text prp-text-white prp-items-center prp-gap-2 prp-hidden lg:prp-flex" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block" }, "Show A/B variant"), /* @__PURE__ */ import_react5.default.createElement(
       InfoPopover,
@@ -329,7 +332,7 @@ function PreprPreviewBar(props) {
       ResetButton,
       {
         handleClick: handleReset,
-        enabled: selectedSegment.reference_id || selectedVariant !== "A"
+        enabled: selectedSegment._id !== null || selectedVariant !== "A"
       }
     ))))
   ), /* @__PURE__ */ import_react5.default.createElement(
