@@ -332,7 +332,7 @@ function PreprPreviewBar(props) {
       ResetButton,
       {
         handleClick: handleReset,
-        enabled: selectedSegment._id !== null || selectedVariant !== "A"
+        enabled: selectedSegment._id !== "null" || selectedVariant !== "A"
       }
     ))))
   ), /* @__PURE__ */ import_react5.default.createElement(

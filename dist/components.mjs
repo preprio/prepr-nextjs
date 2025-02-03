@@ -306,7 +306,7 @@ function PreprPreviewBar(props) {
       ResetButton,
       {
         handleClick: handleReset,
-        enabled: selectedSegment._id !== null || selectedVariant !== "A"
+        enabled: selectedSegment._id !== "null" || selectedVariant !== "A"
       }
     ))))
   ), /* @__PURE__ */ React4.createElement(

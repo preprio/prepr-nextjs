@@ -283,7 +283,7 @@ export function PreprPreviewBar(props: {
                             <ResetButton
                                 handleClick={handleReset}
                                 enabled={
-                                    selectedSegment._id !== null ||
+                                    selectedSegment._id !== 'null' ||
                                     selectedVariant !== 'A'
                                 }
                             />
