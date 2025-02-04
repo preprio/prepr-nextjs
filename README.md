@@ -105,17 +105,9 @@ const getData = async () => {
 The preview bar component fetches all segments from the Prepr API. So, you need to give it access to do this as follows:
 
 1. In your Prepr environment, go to the  **Settings → Access tokens** page to view all the access tokens.
-2. Click the **Add access token** button to create a new access token, give it a name and choose the segments scope like in the image below.
+2. Click the *GraphQL Preview* access token to open it and tick the **Enable edit mode** checkbox and click the **Save** button.
 
-![Segments access token](https://assets-site.prepr.io//2mcoy87hhmfz-segments-access-token.png)
-
-3. Click the **Save** button and copy the generated *Access token*.
-
-4. Add a new variable `PREPR_SEGMENTS_ACCESS_TOKEN` to the `.env` file and paste the value you just copied.
-
-```bash
-PREPR_SEGMENTS_ACCESS_TOKEN=<YOUR-SEGMENTS-ACCESS-TOKEN>
-```
+![Preview access token](https://assets-site.prepr.io/229kaekn7m96//preview-access-token-enable-edit-mode.png)
 
 To implement the *Adaptive Preview Bar* component, navigate to your root layout file, this is usually `layout.tsx`.
 
@@ -132,7 +124,7 @@ import '@preprio/prepr-nextjs/dist/components.css'
 
 export default async function RootLayout({children}: {children: React.ReactNode}) {
     // Get the props for the PreviewBar component, pass the access token as an argument
-    const previewBarProps = await getPreviewBarProps(process.env.PREPR_SEGMENTS_ACCESS_TOKEN)
+    const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL)
 
     return (
         <html>

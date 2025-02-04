@@ -15,6 +15,7 @@
     "noImplicitAny": true,
     "strictNullChecks": false,
     "noUnusedLocals": false,
+    "resolveJsonModule": true,
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true
   },

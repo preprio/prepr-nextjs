@@ -6,6 +6,87 @@ import {
 import { NextResponse } from "next/server";
 import { ipAddress } from "@vercel/functions";
 import { headers } from "next/headers";
+
+// package.json
+var package_default = {
+  name: "@preprio/prepr-nextjs",
+  version: "1.1.0",
+  description: "A next.js package containing helper functions and a preview bar to use in combination with Prepr",
+  main: "./dist/index.js",
+  types: "./dist/index.d.ts",
+  module: "./dist/index.mjs",
+  files: [
+    "dist",
+    "package.json"
+  ],
+  exports: {
+    ".": {
+      types: "./dist/index.d.ts",
+      import: "./dist/index.js",
+      require: "./dist/index.js"
+    },
+    "./components": {
+      types: "./dist/components.d.ts",
+      import: "./dist/components.js",
+      require: "./dist/components.js"
+    },
+    "./dist/components.css": {
+      import: "./dist/components.css",
+      require: "./dist/components.css"
+    },
+    "./dist/main.css": {
+      import: "./dist/main.css",
+      require: "./dist/main.css"
+    }
+  },
+  scripts: {
+    build: "tsup",
+    dev: "tsup --watch"
+  },
+  author: "Prepr",
+  license: "ISC",
+  devDependencies: {
+    "@types/react": "^18.3.3",
+    autoprefixer: "^10.4.20",
+    postcss: "^8.4.47",
+    prettier: "3.3.3",
+    tailwindcss: "^3.4.13",
+    "ts-node": "^10.9.2",
+    tsup: "^8.2.4",
+    typescript: "^5.5.4"
+  },
+  dependencies: {
+    "@headlessui/react": "^2.1.8",
+    "@vercel/functions": "^1.6.0",
+    classnames: "^2.5.1",
+    clsx: "^2.1.1",
+    micromatch: "^4.0.8",
+    next: "^14.2.10",
+    react: "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    rollup: "^4.22.4"
+  },
+  repository: {
+    type: "git",
+    url: "git+https://github.com/preprio/prepr-nextjs.git"
+  },
+  keywords: [
+    "prepr",
+    "nextjs"
+  ],
+  bugs: {
+    url: "https://github.com/preprio/prepr-nextjs/issues"
+  },
+  homepage: "https://github.com/preprio/prepr-nextjs#readme"
+};
+
+// src/utils.ts
+function getPackageVersion() {
+  return package_default.version;
+}
+
+// src/index.ts
 function PreprMiddleware(request, response) {
   var _a, _b, _c, _d;
   const newResponse = response || NextResponse.next();
@@ -125,43 +206,51 @@ function getPreprHeaders() {
 }
 function getPreprEnvironmentSegments(token) {
   return __async(this, null, function* () {
+    var _a;
+    if (!token) {
+      console.error(
+        "No token provided, make sure you are using your Prepr GraphQL URL"
+      );
+      return [];
+    }
+    if (!token.startsWith("https://")) {
+      console.error(
+        "Invalid token provided, make sure you are using your Prepr GraphQL URL"
+      );
+      return [];
+    }
     try {
-      const response = yield fetch("https://api.eu1.prepr.io/segments", {
+      const response = yield fetch(token, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "User-Agent": "Prepr-Preview-Bar/1.0"
-        }
+          "User-Agent": `Prepr-Preview-Bar/${getPackageVersion()}`,
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          query: `{
+                _Segments {
+                    _id
+                    name
+                }
+            }`
+        })
       });
       try {
-        return yield response.json();
+        const json = yield response.json();
+        return (_a = json.data) == null ? void 0 : _a._Segments;
       } catch (jsonError) {
         console.error("Error parsing JSON, please contact Prepr support");
-        return {
-          total: 0,
-          skip: 0,
-          limit: 0,
-          items: []
-        };
+        return [];
       }
     } catch (error) {
       console.error("Error fetching segments:", error);
-      return {
-        total: 0,
-        skip: 0,
-        limit: 0,
-        items: []
-      };
+      return [];
     }
   });
 }
 function getPreviewBarProps(token) {
   return __async(this, null, function* () {
-    let data = {
-      total: 0,
-      skip: 0,
-      limit: 0,
-      items: []
-    };
+    let data = [];
     let activeSegment, activeVariant;
     if (process.env.PREPR_ENV === "preview") {
       data = yield getPreprEnvironmentSegments(token);

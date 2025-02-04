@@ -107,28 +107,29 @@ function InfoPopover({ title, text }) {
 import { clsx } from "clsx";
 function PreprPreviewBar(props) {
   const { activeSegment, activeVariant, data } = props;
-  const [segmentList, setSegmentList] = useState(data == null ? void 0 : data.items);
+  const [segmentList, setSegmentList] = useState(data);
   const [isToggled, setIsToggled] = useState(false);
   const searchParams = useSearchParams();
+  console.log("SEGMENTS:", segmentList);
   if (searchParams.get("prepr_hide_bar") === "true") {
     return null;
   }
   if (typeof window !== "undefined" && (window == null ? void 0 : window.parent) !== window.self) {
     return null;
   }
-  if (segmentList && segmentList[0] && segmentList[0].reference_id !== "null") {
+  if (segmentList && segmentList[0] && segmentList[0]._id !== "null") {
     setSegmentList([
       {
-        id: "null",
-        reference_id: "null",
-        body: "All other users"
+        _id: "null",
+        name: "All other users"
       },
       ...segmentList
     ]);
   }
   const emptyVariant = "A";
   const emptySegment = {
-    body: "Choose segment"
+    name: "Choose segment",
+    _id: "null"
   };
   useEffect(() => {
     if (!window) {
@@ -140,7 +141,7 @@ function PreprPreviewBar(props) {
   });
   const [selectedSegment, setSelectedSegment] = useState(
     segmentList && segmentList.filter(
-      (segmentData) => segmentData === activeSegment
+      (segmentData) => segmentData.name === activeSegment
     )[0] || emptySegment
   );
   const [selectedVariant, setSelectedVariant] = useState(
@@ -156,7 +157,7 @@ function PreprPreviewBar(props) {
     }
     if (key === "prepr_preview_segment" && value) {
       setSelectedSegment(value);
-      params.set(key, value.reference_id);
+      params.set(key, value._id);
     }
     for (const [key2, value2] of params.entries()) {
       if (value2 === "null" || value2 === null || value2 === void 0) {
@@ -200,7 +201,7 @@ function PreprPreviewBar(props) {
     )), /* @__PURE__ */ React4.createElement(
       Listbox,
       {
-        value: selectedSegment.slug,
+        value: selectedSegment._id,
         onChange: (value) => handleSearchParams(
           "prepr_preview_segment",
           value
@@ -222,7 +223,7 @@ function PreprPreviewBar(props) {
             },
             className: "prp-w-full prp-overflow-hidden prp-mr-auto"
           },
-          segmentList.length > 0 ? selectedSegment.body : "No segments"
+          segmentList.length > 0 ? selectedSegment.name : "No segments"
         ),
         /* @__PURE__ */ React4.createElement("div", { className: "prp-text-gray-400" }, /* @__PURE__ */ React4.createElement(FaCaretDown, { className: "prp-w-3" }))
       ),
@@ -232,38 +233,40 @@ function PreprPreviewBar(props) {
           anchor: "top start",
           className: "prp-z-[9999] prp-rounded-md prp-bg-white prp-h-1/3 prp-mt-2 prp-shadow-xl"
         },
-        segmentList == null ? void 0 : segmentList.map((segment) => /* @__PURE__ */ React4.createElement(
-          ListboxOption,
-          {
-            key: segment.id,
-            value: segment,
-            className: clsx(
-              "prp-flex prp-items-center prp-p-2  prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4",
-              segment.reference_id === selectedSegment.reference_id ? "prp-bg-indigo-50 prp-text-indigo-700" : "hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900"
-            )
-          },
-          /* @__PURE__ */ React4.createElement(
-            FaCheck,
+        segmentList == null ? void 0 : segmentList.map(
+          (segment) => /* @__PURE__ */ React4.createElement(
+            ListboxOption,
             {
+              key: segment._id,
+              value: segment,
               className: clsx(
-                "prp-size-3 prp-shrink-0 prp-mr-1",
-                segment.reference_id === selectedSegment.reference_id ? "prp-visible" : "prp-invisible"
+                "prp-flex prp-items-center prp-p-2  prp-regular-text prp-z-[100] hover:prp-cursor-pointer prp-w-full prp-pr-4",
+                segment._id === selectedSegment._id ? "prp-bg-indigo-50 prp-text-indigo-700" : "hover:prp-bg-gray-100 prp-bg-white prp-text-gray-900"
               )
-            }
-          ),
-          /* @__PURE__ */ React4.createElement(
-            "div",
-            {
-              style: {
-                textWrap: "nowrap",
-                textOverflow: "ellipsis",
-                textAlign: "left"
-              },
-              className: "prp-w-full prp-overflow-hidden prp-mr-auto"
             },
-            segment.body
+            /* @__PURE__ */ React4.createElement(
+              FaCheck,
+              {
+                className: clsx(
+                  "prp-size-3 prp-shrink-0 prp-mr-1",
+                  segment._id === selectedSegment._id ? "prp-visible" : "prp-invisible"
+                )
+              }
+            ),
+            /* @__PURE__ */ React4.createElement(
+              "div",
+              {
+                style: {
+                  textWrap: "nowrap",
+                  textOverflow: "ellipsis",
+                  textAlign: "left"
+                },
+                className: "prp-w-full prp-overflow-hidden prp-mr-auto"
+              },
+              segment.name
+            )
           )
-        ))
+        )
       )
     )), /* @__PURE__ */ React4.createElement("div", { className: "prp-flex prp-flex-initial prp-flex-col md:prp-flex-row prp-gap-2 md:prp-gap-4" }, /* @__PURE__ */ React4.createElement("div", { className: "prp-regular-text prp-text-white prp-items-center prp-gap-2 prp-hidden lg:prp-flex" }, /* @__PURE__ */ React4.createElement("span", { className: "prp-pb-0.5 prp-text-xs md:prp-text-base prp-block md:prp-hidden xl:prp-block" }, "Show A/B variant"), /* @__PURE__ */ React4.createElement(
       InfoPopover,
@@ -303,7 +306,7 @@ function PreprPreviewBar(props) {
       ResetButton,
       {
         handleClick: handleReset,
-        enabled: selectedSegment.reference_id || selectedVariant !== "A"
+        enabled: selectedSegment._id !== "null" || selectedVariant !== "A"
       }
     ))))
   ), /* @__PURE__ */ React4.createElement(
