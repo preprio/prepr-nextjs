@@ -136,17 +136,16 @@ function PreprPreviewBar(props) {
   const [segmentList, setSegmentList] = (0, import_react5.useState)(data);
   const [isToggled, setIsToggled] = (0, import_react5.useState)(false);
   const searchParams = (0, import_navigation.useSearchParams)();
-  console.log("SEGMENTS:", segmentList);
   if (searchParams.get("prepr_hide_bar") === "true") {
     return null;
   }
   if (typeof window !== "undefined" && (window == null ? void 0 : window.parent) !== window.self) {
     return null;
   }
-  if (segmentList && segmentList[0] && segmentList[0]._id !== "null") {
+  if (segmentList && segmentList[0] && segmentList[0]._id !== "all_other_users") {
     setSegmentList([
       {
-        _id: "null",
+        _id: "all_other_users",
         name: "All other users"
       },
       ...segmentList
@@ -158,7 +157,7 @@ function PreprPreviewBar(props) {
     _id: "null"
   };
   (0, import_react5.useEffect)(() => {
-    if (!window) {
+    if (false) {
       return;
     }
     if (window.localStorage.getItem("isToggled")) {
@@ -185,11 +184,6 @@ function PreprPreviewBar(props) {
       setSelectedSegment(value);
       params.set(key, value._id);
     }
-    for (const [key2, value2] of params.entries()) {
-      if (value2 === "null" || value2 === null || value2 === void 0) {
-        params.delete(key2);
-      }
-    }
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false
     });
@@ -205,6 +199,12 @@ function PreprPreviewBar(props) {
     const params = new URLSearchParams({});
     params.append("prepr_preview_segment", "null");
     params.append("prepr_preview_ab", "null");
+    router.push(`${pathname}?${params.toString()}`, {
+      scroll: false
+    });
+    router.refresh();
+    params.delete("prepr_preview_segment");
+    params.delete("prepr_preview_ab");
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false
     });
@@ -236,7 +236,7 @@ function PreprPreviewBar(props) {
       /* @__PURE__ */ import_react5.default.createElement(
         import_react6.ListboxButton,
         {
-          disabled: !(segmentList.length > 0),
+          disabled: !(segmentList && segmentList.length > 0),
           className: "disabled:prp-cursor-not-allowed disabled:prp-text-gray-400 disabled:prp-bg-gray-200 prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500"
         },
         /* @__PURE__ */ import_react5.default.createElement(
@@ -257,7 +257,7 @@ function PreprPreviewBar(props) {
         import_react6.ListboxOptions,
         {
           anchor: "top start",
-          className: "prp-z-[9999] prp-rounded-md prp-bg-white prp-h-1/3 prp-mt-2 prp-shadow-xl"
+          className: "prp-z-[9999] prp-rounded-md !prp-max-h-[300px] prp-bg-white prp-mt-2 prp-shadow-xl"
         },
         segmentList == null ? void 0 : segmentList.map(
           (segment) => /* @__PURE__ */ import_react5.default.createElement(

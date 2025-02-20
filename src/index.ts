@@ -9,8 +9,8 @@ import { PreprSegment } from './shared/types'
  * @param request NextRequest object
  * @param response optional NextResponse object
  */
-export function PreprMiddleware(request: any, response?: NextResponse) {
-    const newResponse = response || NextResponse.next()
+export function PreprMiddleware(request: any) {
+    const newResponse = NextResponse.next()
 
     const utm_source = request.nextUrl.searchParams.get('utm_source')
     const utm_medium = request.nextUrl.searchParams.get('utm_medium')

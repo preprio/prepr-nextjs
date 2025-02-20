@@ -10,7 +10,7 @@ import { headers } from "next/headers";
 // package.json
 var package_default = {
   name: "@preprio/prepr-nextjs",
-  version: "1.1.0",
+  version: "1.1.1",
   description: "A next.js package containing helper functions and a preview bar to use in combination with Prepr",
   main: "./dist/index.js",
   types: "./dist/index.d.ts",
@@ -87,9 +87,9 @@ function getPackageVersion() {
 }
 
 // src/index.ts
-function PreprMiddleware(request, response) {
+function PreprMiddleware(request) {
   var _a, _b, _c, _d;
-  const newResponse = response || NextResponse.next();
+  const newResponse = NextResponse.next();
   const utm_source = request.nextUrl.searchParams.get("utm_source");
   const utm_medium = request.nextUrl.searchParams.get("utm_medium");
   const utm_term = request.nextUrl.searchParams.get("utm_term");

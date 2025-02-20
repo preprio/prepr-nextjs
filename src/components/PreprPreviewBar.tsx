@@ -29,8 +29,6 @@ export function PreprPreviewBar(props: {
     const [isToggled, setIsToggled] = useState<boolean>(false)
     const searchParams = useSearchParams()
 
-    console.log('SEGMENTS:', segmentList)
-
     if (searchParams.get('prepr_hide_bar') === 'true') {
         return null
     }
@@ -40,10 +38,14 @@ export function PreprPreviewBar(props: {
         return null
     }
 
-    if (segmentList && segmentList[0] && segmentList[0]._id !== 'null') {
+    if (
+        segmentList &&
+        segmentList[0] &&
+        segmentList[0]._id !== 'all_other_users'
+    ) {
         setSegmentList([
             {
-                _id: 'null',
+                _id: 'all_other_users',
                 name: 'All other users',
             },
             ...segmentList,
@@ -57,7 +59,7 @@ export function PreprPreviewBar(props: {
     }
 
     useEffect(() => {
-        if (!window) {
+        if (!typeof window) {
             return
         }
 
@@ -94,13 +96,6 @@ export function PreprPreviewBar(props: {
             params.set(key, value._id as string)
         }
 
-        // Remove parameters with value "null"
-        for (const [key, value] of params.entries()) {
-            if (value === 'null' || value === null || value === undefined) {
-                params.delete(key)
-            }
-        }
-
         router.push(`${pathname}?${params.toString()}`, {
             scroll: false,
         })
@@ -120,6 +115,14 @@ export function PreprPreviewBar(props: {
         params.append('prepr_preview_segment', 'null')
         params.append('prepr_preview_ab', 'null')
 
+        router.push(`${pathname}?${params.toString()}`, {
+            scroll: false,
+        })
+        router.refresh()
+
+        // Remove parameters with value "null"
+        params.delete('prepr_preview_segment')
+        params.delete('prepr_preview_ab')
         router.push(`${pathname}?${params.toString()}`, {
             scroll: false,
         })
@@ -168,7 +171,9 @@ export function PreprPreviewBar(props: {
                                 }
                             >
                                 <ListboxButton
-                                    disabled={!(segmentList.length > 0)}
+                                    disabled={
+                                        !(segmentList && segmentList.length > 0)
+                                    }
                                     className="disabled:prp-cursor-not-allowed disabled:prp-text-gray-400 disabled:prp-bg-gray-200 prp-h-10 prp-flex prp-gap-2 prp-w-full md:prp-w-48 prp-flex-nowrap prp-text-nowrap prp-overflow-hidden prp-text-ellipsis prp-rounded-lg data-[open]:prp-border-b-white prp-border prp-border-gray-300 prp-items-center prp-bg-white prp-px-2 md:prp-px-4 prp-regular-text prp-text-gray-500"
                                 >
                                     <div
@@ -189,7 +194,7 @@ export function PreprPreviewBar(props: {
                                 </ListboxButton>
                                 <ListboxOptions
                                     anchor="top start"
-                                    className="prp-z-[9999] prp-rounded-md prp-bg-white prp-h-1/3 prp-mt-2 prp-shadow-xl"
+                                    className="prp-z-[9999] prp-rounded-md !prp-max-h-[300px] prp-bg-white prp-mt-2 prp-shadow-xl"
                                 >
                                     {segmentList?.map(
                                         (segment: PreprSegment) => (
