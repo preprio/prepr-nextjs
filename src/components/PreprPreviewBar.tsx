@@ -72,7 +72,7 @@ export function PreprPreviewBar(props: {
         (segmentList &&
             segmentList.filter(
                 (segmentData: PreprSegment) =>
-                    segmentData.name === activeSegment
+                    segmentData._id === activeSegment
             )[0]) ||
             emptySegment
     )

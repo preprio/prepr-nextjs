@@ -166,7 +166,7 @@ function PreprPreviewBar(props) {
   });
   const [selectedSegment, setSelectedSegment] = (0, import_react5.useState)(
     segmentList && segmentList.filter(
-      (segmentData) => segmentData.name === activeSegment
+      (segmentData) => segmentData._id === activeSegment
     )[0] || emptySegment
   );
   const [selectedVariant, setSelectedVariant] = (0, import_react5.useState)(

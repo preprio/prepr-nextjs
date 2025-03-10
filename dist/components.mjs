@@ -140,7 +140,7 @@ function PreprPreviewBar(props) {
   });
   const [selectedSegment, setSelectedSegment] = useState(
     segmentList && segmentList.filter(
-      (segmentData) => segmentData.name === activeSegment
+      (segmentData) => segmentData._id === activeSegment
     )[0] || emptySegment
   );
   const [selectedVariant, setSelectedVariant] = useState(
