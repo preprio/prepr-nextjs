@@ -133,7 +133,13 @@ function InfoPopover({ title, text }) {
 var import_clsx = require("clsx");
 function PreprPreviewBar(props) {
   const { activeSegment, activeVariant, data } = props;
-  const [segmentList, setSegmentList] = (0, import_react5.useState)(data);
+  const [segmentList, setSegmentList] = (0, import_react5.useState)([
+    {
+      _id: "all_other_users",
+      name: "All other users"
+    },
+    ...data
+  ]);
   const [isToggled, setIsToggled] = (0, import_react5.useState)(false);
   const searchParams = (0, import_navigation.useSearchParams)();
   if (searchParams.get("prepr_hide_bar") === "true") {
@@ -141,15 +147,6 @@ function PreprPreviewBar(props) {
   }
   if (typeof window !== "undefined" && (window == null ? void 0 : window.parent) !== window.self) {
     return null;
-  }
-  if (segmentList && segmentList[0] && segmentList[0]._id !== "all_other_users") {
-    setSegmentList([
-      {
-        _id: "all_other_users",
-        name: "All other users"
-      },
-      ...segmentList
-    ]);
   }
   const emptyVariant = "A";
   const emptySegment = {

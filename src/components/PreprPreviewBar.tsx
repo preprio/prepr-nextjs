@@ -25,7 +25,13 @@ export function PreprPreviewBar(props: {
     data?: PreprSegment[]
 }) {
     const { activeSegment, activeVariant, data } = props
-    const [segmentList, setSegmentList] = useState<PreprSegment[]>(data)
+    const [segmentList, setSegmentList] = useState<PreprSegment[]>([
+        {
+            _id: 'all_other_users',
+            name: 'All other users',
+        },
+        ...data,
+    ])
     const [isToggled, setIsToggled] = useState<boolean>(false)
     const searchParams = useSearchParams()
 
@@ -36,20 +42,6 @@ export function PreprPreviewBar(props: {
     // Hide the preview bar if not on the client or if the page is in an iframe
     if (typeof window !== 'undefined' && window?.parent !== window.self) {
         return null
-    }
-
-    if (
-        segmentList &&
-        segmentList[0] &&
-        segmentList[0]._id !== 'all_other_users'
-    ) {
-        setSegmentList([
-            {
-                _id: 'all_other_users',
-                name: 'All other users',
-            },
-            ...segmentList,
-        ])
     }
 
     const emptyVariant = 'A'

@@ -10,7 +10,7 @@ import { headers } from "next/headers";
 // package.json
 var package_default = {
   name: "@preprio/prepr-nextjs",
-  version: "1.1.2",
+  version: "1.1.3",
   description: "A next.js package containing helper functions and a preview bar to use in combination with Prepr",
   main: "./dist/index.js",
   types: "./dist/index.d.ts",
