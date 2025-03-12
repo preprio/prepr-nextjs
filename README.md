@@ -124,7 +124,7 @@ import '@preprio/prepr-nextjs/dist/components.css'
 
 export default async function RootLayout({children}: {children: React.ReactNode}) {
     // Get the props for the PreviewBar component, pass the access token as an argument
-    const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL)
+    const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
 
     return (
         <html>

@@ -133,6 +133,12 @@ function InfoPopover({ title, text }) {
 var import_clsx = require("clsx");
 function PreprPreviewBar(props) {
   const { activeSegment, activeVariant, data } = props;
+  if (!data) {
+    console.error(
+      "No data provided, make sure you are using your Prepr GraphQL URL"
+    );
+    return null;
+  }
   const [segmentList, setSegmentList] = (0, import_react5.useState)([
     {
       _id: "all_other_users",

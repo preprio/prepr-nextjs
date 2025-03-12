@@ -25,6 +25,13 @@ export function PreprPreviewBar(props: {
     data?: PreprSegment[]
 }) {
     const { activeSegment, activeVariant, data } = props
+
+    if (!data) {
+        console.error(
+            'No data provided, make sure you are using your Prepr GraphQL URL')
+        return null
+    }
+
     const [segmentList, setSegmentList] = useState<PreprSegment[]>([
         {
             _id: 'all_other_users',
