@@ -25,6 +25,7 @@ export function PreprPreviewBar(props: {
     data?: PreprSegment[]
 }) {
     const { activeSegment, activeVariant, data } = props
+    const [isIframe, setIsIframe] = useState<boolean>(false)
 
     if (!data) {
         console.error(
@@ -46,10 +47,36 @@ export function PreprPreviewBar(props: {
         return null
     }
 
-    // Hide the preview bar if not on the client or if the page is in an iframe
-    if (typeof window !== 'undefined' && window?.parent !== window.self) {
-        return null
-    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+        const key = event.key.toLowerCase();
+
+        // Check for the blocked shortcuts
+        const isSaveShortcut = (event.ctrlKey || event.metaKey) && key === 's';
+        const isPrintShortcut = (event.ctrlKey || event.metaKey) && key === 'p';
+        const isAddressBarShortcut = (event.ctrlKey || event.metaKey) && key === 'l';
+
+        if (isSaveShortcut || isPrintShortcut || isAddressBarShortcut) {
+            event.preventDefault(); // Prevent the browser's default action
+        }
+    };
+
+
+    useEffect(() => {
+        const isIframe = typeof window !== 'undefined' && window?.parent !== window.self;
+        // Hide the preview bar if not on the client or if the page is in an iframe
+        if (isIframe) {
+            setIsIframe(true)
+
+            window.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            if (isIframe) {
+                window.removeEventListener('keydown', handleKeyDown);
+            }
+        };
+    }, [])
+
 
     const emptyVariant = 'A'
     const emptySegment: PreprSegment = {
@@ -126,6 +153,10 @@ export function PreprPreviewBar(props: {
             scroll: false,
         })
         router.refresh()
+    }
+
+    if (isIframe) {
+        return null
     }
 
     return (

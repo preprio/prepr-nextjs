@@ -107,6 +107,7 @@ function InfoPopover({ title, text }) {
 import { clsx } from "clsx";
 function PreprPreviewBar(props) {
   const { activeSegment, activeVariant, data } = props;
+  const [isIframe, setIsIframe] = useState(false);
   if (!data) {
     console.error(
       "No data provided, make sure you are using your Prepr GraphQL URL"
@@ -125,9 +126,27 @@ function PreprPreviewBar(props) {
   if (searchParams.get("prepr_hide_bar") === "true") {
     return null;
   }
-  if (typeof window !== "undefined" && (window == null ? void 0 : window.parent) !== window.self) {
-    return null;
-  }
+  const handleKeyDown = (event) => {
+    const key = event.key.toLowerCase();
+    const isSaveShortcut = (event.ctrlKey || event.metaKey) && key === "s";
+    const isPrintShortcut = (event.ctrlKey || event.metaKey) && key === "p";
+    const isAddressBarShortcut = (event.ctrlKey || event.metaKey) && key === "l";
+    if (isSaveShortcut || isPrintShortcut || isAddressBarShortcut) {
+      event.preventDefault();
+    }
+  };
+  useEffect(() => {
+    const isIframe2 = typeof window !== "undefined" && (window == null ? void 0 : window.parent) !== window.self;
+    if (isIframe2) {
+      setIsIframe(true);
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      if (isIframe2) {
+        window.removeEventListener("keydown", handleKeyDown);
+      }
+    };
+  }, []);
   const emptyVariant = "A";
   const emptySegment = {
     name: "Choose segment",
@@ -187,6 +206,9 @@ function PreprPreviewBar(props) {
     });
     router.refresh();
   };
+  if (isIframe) {
+    return null;
+  }
   return /* @__PURE__ */ React4.createElement("div", { className: "prp-z-[999] prp-isolate prp-flex prp-base prp-w-full prp-sticky prp-top-0" }, /* @__PURE__ */ React4.createElement(
     "div",
     {

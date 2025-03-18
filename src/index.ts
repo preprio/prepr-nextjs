@@ -199,6 +199,11 @@ export async function getPreprEnvironmentSegments(
         })
         try {
             const json = await response.json()
+
+            if (!json || !json.data || !json.data._Segments) {
+                return []
+            }
+
             return json.data?._Segments as PreprSegment[]
         } catch (jsonError) {
             console.error('Error parsing JSON, please contact Prepr support')

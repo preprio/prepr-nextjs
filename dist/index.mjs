@@ -237,6 +237,9 @@ function getPreprEnvironmentSegments(token) {
       });
       try {
         const json = yield response.json();
+        if (!json || !json.data || !json.data._Segments) {
+          return [];
+        }
         return (_a = json.data) == null ? void 0 : _a._Segments;
       } catch (jsonError) {
         console.error("Error parsing JSON, please contact Prepr support");
