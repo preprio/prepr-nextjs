@@ -67,6 +67,12 @@ export function PreprPreviewBar(props: {
         if (isIframe) {
             setIsIframe(true)
 
+            const previewBarMessage = {
+                name: 'prepr_preview_bar',
+                event: 'loaded',
+            }
+            window.parent.postMessage(previewBarMessage, '*')
+
             window.addEventListener('keydown', handleKeyDown);
         }
 
