@@ -165,6 +165,11 @@ function PreprPreviewBar(props) {
     const isIframe2 = typeof window !== "undefined" && (window == null ? void 0 : window.parent) !== window.self;
     if (isIframe2) {
       setIsIframe(true);
+      const previewBarMessage = {
+        name: "prepr_preview_bar",
+        event: "loaded"
+      };
+      window.parent.postMessage(previewBarMessage, "*");
       window.addEventListener("keydown", handleKeyDown);
     }
     return () => {
