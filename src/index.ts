@@ -73,6 +73,16 @@ export function PreprMiddleware(request: any) {
     if (process.env.PREPR_ENV === 'preview') {
         newResponse.headers.set('Prepr-Preview-Bar', 'true')
 
+        const segmentCookie = request.cookies.get('Prepr-Segments')?.value
+        if (segmentCookie) {
+            newResponse.headers.set('Prepr-Segments', segmentCookie)
+        }
+
+        const abCookie = request.cookies.get('Prepr-ABtesting')?.value
+        if (abCookie) {
+            newResponse.headers.set('Prepr-ABtesting', abCookie)
+        }
+
         if (request.nextUrl.searchParams.has('prepr_preview_segment')) {
             const segments = request.nextUrl.searchParams.get(
                 'prepr_preview_segment'
@@ -100,16 +110,6 @@ export function PreprMiddleware(request: any) {
             newResponse.cookies.set('Prepr-ABtesting', value, {
                 maxAge: 60, // Set for one year
             })
-        }
-
-        const segmentCookie = request.cookies.get('Prepr-Segments')?.value
-        if (segmentCookie) {
-            newResponse.headers.set('Prepr-Segments', segmentCookie)
-        }
-
-        const abCookie = request.cookies.get('Prepr-ABtesting')?.value
-        if (abCookie) {
-            newResponse.headers.set('Prepr-ABtesting', abCookie)
         }
     }
 
