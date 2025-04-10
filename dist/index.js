@@ -55,7 +55,7 @@ var import_headers = require("next/headers");
 // package.json
 var package_default = {
   name: "@preprio/prepr-nextjs",
-  version: "1.2.0",
+  version: "1.3.2",
   description: "A next.js package containing helper functions and a preview bar to use in combination with Prepr",
   main: "./dist/index.js",
   types: "./dist/index.d.ts",
@@ -182,6 +182,14 @@ function PreprMiddleware(request) {
   newResponse.headers.set("Prepr-Customer-Id", cookie);
   if (process.env.PREPR_ENV === "preview") {
     newResponse.headers.set("Prepr-Preview-Bar", "true");
+    const segmentCookie = (_c = request.cookies.get("Prepr-Segments")) == null ? void 0 : _c.value;
+    if (segmentCookie) {
+      newResponse.headers.set("Prepr-Segments", segmentCookie);
+    }
+    const abCookie = (_d = request.cookies.get("Prepr-ABtesting")) == null ? void 0 : _d.value;
+    if (abCookie) {
+      newResponse.headers.set("Prepr-ABtesting", abCookie);
+    }
     if (request.nextUrl.searchParams.has("prepr_preview_segment")) {
       const segments = request.nextUrl.searchParams.get(
         "prepr_preview_segment"
@@ -207,14 +215,6 @@ function PreprMiddleware(request) {
         maxAge: 60
         // Set for one year
       });
-    }
-    const segmentCookie = (_c = request.cookies.get("Prepr-Segments")) == null ? void 0 : _c.value;
-    if (segmentCookie) {
-      newResponse.headers.set("Prepr-Segments", segmentCookie);
-    }
-    const abCookie = (_d = request.cookies.get("Prepr-ABtesting")) == null ? void 0 : _d.value;
-    if (abCookie) {
-      newResponse.headers.set("Prepr-ABtesting", abCookie);
     }
   }
   return newResponse;
