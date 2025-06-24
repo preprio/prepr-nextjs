@@ -2,9 +2,9 @@ import { useEffect, useRef, useCallback, useMemo } from 'react';
 import { DOMService } from '../../utils/dom';
 import { createScopedLogger } from '../../utils/debug';
 import { throttle } from '../../utils/performance';
-import { useStegaOverlay } from './useStegaOverlay';
-import { useStegaProximity } from './useStegaProximity';
-import { useStegaElements } from './useStegaElements';
+import { useStegaOverlay } from './use-stega-overlay';
+import { useStegaProximity } from './use-stega-proximity';
+import { useStegaElements } from './use-stega-elements';
 
 export default function useStegaScan(editMode: boolean): void {
   const debug = createScopedLogger('useStegaScan');

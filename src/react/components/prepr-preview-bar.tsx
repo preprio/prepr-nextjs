@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useEditModeContext } from '../contexts';
-import useStegaScan from '../hooks/useStegaScan';
+import useStegaScan from '../hooks/use-stega-scan';
 import PreviewBarWrapper from './preview-bar-wrapper';
 import PreviewBarIndicatorWrapper from './preview-bar-indicator-wrapper';
 

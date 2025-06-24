@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../../../utils';
 import { useEditModeContext } from '../../contexts';
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '../../hooks/use-modal';
 import { PreviewBarContent } from './preview-bar-content';
 import { PreviewBarButton } from './preview-bar-button';
 

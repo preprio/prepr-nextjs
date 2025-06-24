@@ -12,12 +12,12 @@ export { default as PreprPreviewBar } from './components/prepr-preview-bar';
 export * from './contexts';
 
 // Hook exports
-export { default as useStegaScan } from './hooks/useStegaScan';
-export { useStegaOverlay } from './hooks/useStegaOverlay';
-export { useStegaProximity } from './hooks/useStegaProximity';
-export { useStegaElements } from './hooks/useStegaElements';
-export { useModal } from './hooks/useModal';
-export { default as useScrollPosition } from './hooks/useScrollPosition';
+export { default as useStegaScan } from './hooks/use-stega-scan';
+export { useStegaOverlay } from './hooks/use-stega-overlay';
+export { useStegaProximity } from './hooks/use-stega-proximity';
+export { useStegaElements } from './hooks/use-stega-elements';
+export { useModal } from './hooks/use-modal';
+export { default as useScrollPosition } from './hooks/use-scroll-position';
 
 // Debug utilities
 export {
