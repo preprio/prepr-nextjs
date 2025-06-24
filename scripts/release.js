@@ -87,11 +87,6 @@ const release = () => {
     
     console.log(`📦 Version updated: ${currentVersion} → ${newVersion}`);
     
-    // Commit changes
-    console.log('💾 Committing changes...');
-    execSync('git add .', { stdio: 'inherit' });
-    execSync(`git commit -m "chore: release ${newVersion}"`, { stdio: 'inherit' });
-    
     // Note: npm version already creates the git tag, so we don't need to create it again
     
     // Push changes and tag
