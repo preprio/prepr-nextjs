@@ -12,18 +12,15 @@
     "dev:css": "postcss ./src/globals.css -o ./src/output.css --watch",
     "build:css": "NODE_ENV=production postcss ./src/globals.css -o ./dist/index.css",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublishOnly": "npm run build && npm run type-check",
+    "clean": "rm -rf dist",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "release": "node scripts/release.js",
+    "check": "npm run type-check && npm run lint:check && npm run format:check",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx --fix",
     "lint:check": "eslint src --ext .ts,.tsx",
-    "clean": "rm -rf dist",
-    "analyze": "node scripts/analyze-bundle.js",
-    "analyze:simple": "npm run build && npx tsup --analyze",
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
-    "setup-dev": "node scripts/setup-dev.js",
-    "release": "node scripts/release.js",
-    "check-all": "npm run type-check && npm run lint:check && npm run format:check"
+    "prepublishOnly": "npm run check && npm run build"
   },
   "exports": {
     "./middleware": {
@@ -96,8 +93,8 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "next": "15.3.1",
     "postcss": "^8",
-    "postcss-cli": "^11.0.1",
     "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.5.12",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwindcss": "^3.4.17",
@@ -111,7 +108,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
-    "@tailwindcss/cli": "^4.1.5",
     "@vercel/functions": "^2.0.0",
     "@vercel/stega": "^0.1.2",
     "clsx": "^2.1.1",

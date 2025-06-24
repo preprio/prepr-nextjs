@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'fs';
 
 const releaseTypes = ['patch', 'minor', 'major', 'prerelease'];
 const prereleaseTypes = ['alpha', 'beta', 'rc'];
@@ -12,22 +11,6 @@ const getCurrentVersion = () => {
   return packageJson.version;
 };
 
-const updateChangelog = (version, type) => {
-  const changelogPath = 'CHANGELOG.md';
-  const changelog = readFileSync(changelogPath, 'utf8');
-  
-  const date = new Date().toISOString().split('T')[0];
-  const newEntry = `## [${version}] - ${date}
-
-### ${type === 'prerelease' ? 'Pre-release' : 'Release'}
-- Automated release ${version}
-
-`;
-  
-  const updatedChangelog = changelog.replace('## [Unreleased]', newEntry);
-  writeFileSync(changelogPath, updatedChangelog);
-};
-
 const release = () => {
   const args = process.argv.slice(2);
   const type = args[0];
@@ -35,11 +18,10 @@ const release = () => {
   
   if (!releaseTypes.includes(type)) {
     console.error('❌ Invalid release type. Use: patch, minor, major, or prerelease');
-    console.error('Usage: node scripts/release.js <type> [prerelease-type]');
+    console.error('Usage: npm run release <type> [prerelease-type]');
     console.error('Examples:');
-    console.error('  node scripts/release.js patch');
-    console.error('  node scripts/release.js prerelease alpha');
-    console.error('  node scripts/release.js prerelease beta');
+    console.error('  npm run release patch');
+    console.error('  npm run release prerelease alpha');
     process.exit(1);
   }
   
@@ -58,11 +40,12 @@ const release = () => {
       process.exit(1);
     }
     
-    // Run tests and checks
+    // Run all checks
     console.log('🔍 Running pre-release checks...');
-    execSync('npm run type-check', { stdio: 'inherit' });
-    execSync('npm run lint:check', { stdio: 'inherit' });
-    execSync('npm run format:check', { stdio: 'inherit' });
+    execSync('npm run check', { stdio: 'inherit' });
+    
+    // Build the package
+    console.log('📦 Building package...');
     execSync('npm run build', { stdio: 'inherit' });
     
     // Update version
@@ -77,10 +60,6 @@ const release = () => {
     }
     
     console.log(`📦 Version updated: ${currentVersion} → ${newVersion}`);
-    
-    // Update changelog
-    console.log('📝 Updating changelog...');
-    updateChangelog(newVersion, type);
     
     // Commit changes
     console.log('💾 Committing changes...');
@@ -100,7 +79,6 @@ const release = () => {
     console.log(`\n📋 Next steps:`);
     console.log(`  1. Check the GitHub Actions workflow for automated publishing`);
     console.log(`  2. Verify the package was published to npm`);
-    console.log(`  3. Update documentation if needed`);
     
     if (type === 'prerelease') {
       console.log(`\n📦 To install this prerelease:`);
