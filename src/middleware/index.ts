@@ -92,7 +92,6 @@ export default function createPreprMiddleware(request: NextRequest) {
         response.cookies.set('Prepr-Segments', value);
       }
     });
-    console.log(response.headers.getSetCookie());
   }
 
   return response;
