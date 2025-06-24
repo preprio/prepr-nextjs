@@ -33,6 +33,23 @@ export function EditModeProvider({ children }: EditModeProviderProps) {
     }
   }, []);
 
+  // Handle escape key to turn off edit mode
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && editMode) {
+        setEditMode(false);
+      }
+    };
+
+    if (editMode) {
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [editMode]);
+
   const value: EditModeContextValue = {
     editMode,
     setEditMode,

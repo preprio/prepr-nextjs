@@ -8,19 +8,14 @@ import Rotate from './icons/rotate';
 
 export default function ResetButton() {
   const router = useRouter();
-  const {
-    resetSelected,
-    selectedVariant,
-    selectedSegment,
-    setEditMode,
-    editMode,
-  } = usePreprPreviewBar();
+  const { resetAll, selectedVariant, selectedSegment, setEditMode, editMode } =
+    usePreprPreviewBar();
   const pathname = usePathname();
   const enabled =
     selectedSegment._id !== 'null' || selectedVariant !== 'null' || editMode;
 
   const handleClick = () => {
-    resetSelected();
+    resetAll();
 
     // Push null values to the URL to reset the preview
     const params = new URLSearchParams({});

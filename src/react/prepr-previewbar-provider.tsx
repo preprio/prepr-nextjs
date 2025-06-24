@@ -64,7 +64,11 @@ export const usePreprPreviewBar = () => {
     editMode: editModeContext.editMode,
     setEditMode: editModeContext.setEditMode,
     isIframe: editModeContext.isIframe,
-    resetSelected: () => {
+    resetPersonalization: () => {
+      segmentContext.setSelectedSegment(segmentContext.emptySegment);
+      variantContext.setSelectedVariant(variantContext.emptyVariant);
+    },
+    resetAll: () => {
       segmentContext.setSelectedSegment(segmentContext.emptySegment);
       variantContext.setSelectedVariant(variantContext.emptyVariant);
       editModeContext.setEditMode(false);
