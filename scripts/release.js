@@ -11,6 +11,15 @@ const getCurrentVersion = () => {
   return packageJson.version;
 };
 
+const checkTagExists = (tag) => {
+  try {
+    execSync(`git rev-parse ${tag}`, { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const release = () => {
   const args = process.argv.slice(2);
   const type = args[0];
@@ -54,8 +63,25 @@ const release = () => {
     
     let newVersion;
     if (type === 'prerelease') {
+      // Check if the tag already exists
+      const expectedTag = `v${currentVersion.replace(/\d+$/, (match) => parseInt(match) + 1)}-${prereleaseType}.0`;
+      if (checkTagExists(expectedTag)) {
+        console.error(`❌ Tag ${expectedTag} already exists. Please delete it or use a different version.`);
+        process.exit(1);
+      }
       newVersion = execSync(`npm version prerelease --preid=${prereleaseType}`, { encoding: 'utf8' }).trim();
     } else {
+      // Check if the tag already exists
+      const expectedTag = `v${currentVersion.replace(/(\d+)\.(\d+)\.(\d+)/, (match, major, minor, patch) => {
+        if (type === 'patch') return `${major}.${minor}.${parseInt(patch) + 1}`;
+        if (type === 'minor') return `${major}.${parseInt(minor) + 1}.0`;
+        if (type === 'major') return `${parseInt(major) + 1}.0.0`;
+        return match;
+      })}`;
+      if (checkTagExists(expectedTag)) {
+        console.error(`❌ Tag ${expectedTag} already exists. Please delete it or use a different version.`);
+        process.exit(1);
+      }
       newVersion = execSync(`npm version ${type}`, { encoding: 'utf8' }).trim();
     }
     
@@ -66,9 +92,7 @@ const release = () => {
     execSync('git add .', { stdio: 'inherit' });
     execSync(`git commit -m "chore: release ${newVersion}"`, { stdio: 'inherit' });
     
-    // Create tag
-    console.log('🏷️ Creating tag...');
-    execSync(`git tag ${newVersion}`, { stdio: 'inherit' });
+    // Note: npm version already creates the git tag, so we don't need to create it again
     
     // Push changes and tag
     console.log('📤 Pushing changes...');
