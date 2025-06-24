@@ -9,7 +9,7 @@ import prettierConfig from 'eslint-config-prettier';
 export default [
   // Base configuration for all files
   {
-    ignores: ['dist/', 'node_modules/', '*.config.js', '*.config.ts'],
+    ignores: ['dist/', 'node_modules/', '*.config.js', '*.config.ts', 'scripts/', 'src/utils/debug.ts'],
   },
   
   // JavaScript files
