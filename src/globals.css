@@ -1,0 +1,128 @@
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties for consistent theming */
+:root {
+  --prepr-shadow-sm: 0px 0px 12px 0px rgba(195, 195, 195, 0.8);
+  --prepr-shadow-lg: 0px 0px 40px 0px rgba(31, 41, 55, 0.24);
+  --prepr-border-radius: 4px;
+  --prepr-transition: all 0.2s ease;
+  --prepr-z-overlay: 10000;
+  --prepr-z-tooltip: 10001;
+  --prepr-proximity-distance: 300px;
+}
+
+/* Utility Classes */
+.p-regular-text {
+  @apply p-text-sm p-font-medium p-leading-normal;
+}
+
+.p-box-shadow {
+  box-shadow: var(--prepr-shadow-lg);
+}
+
+.p-drop-shadow-3 {
+  box-shadow: var(--prepr-shadow-sm);
+}
+
+/* Scrollbar Utilities */
+.p-no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.p-no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Prepr Edit Mode Styles */
+[data-prepr-encoded] {
+  position: relative;
+}
+
+/* Original overlay styling - positioned by JavaScript */
+.prepr-overlay {
+  position: absolute;
+  pointer-events: none;
+  border: 2px solid #4f46e5;
+  border-radius: 4px 0px 4px 4px;
+  transition: all 0.2s ease-in-out;
+  z-index: var(--prepr-z-overlay);
+}
+
+/* Original tooltip styling - positioned by JavaScript */
+.prepr-tooltip {
+  position: absolute;
+  background-color: #4f46e5;
+  color: white;
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 4px 4px 0 0;
+  white-space: nowrap;
+  z-index: var(--prepr-z-tooltip);
+  min-width: 80px;
+  text-align: center;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.prepr-tooltip:hover {
+  background-color: #4338ca;
+}
+
+/* Ensure proximity highlights are not clipped by parent containers */
+.prepr-proximity-highlight {
+  position: relative;
+  z-index: 1;
+}
+
+/* Temporarily override parent overflow to show proximity highlight */
+.prepr-proximity-highlight,
+.prepr-proximity-highlight * {
+  overflow: visible !important;
+}
+
+.prepr-proximity-highlight::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -4px;
+  right: -4px;
+  bottom: -2px;
+  pointer-events: none;
+  overflow: visible;
+  background: radial-gradient(
+    circle var(--gradient-size) at var(--cursor-x) var(--cursor-y),
+    rgba(79, 70, 229, 0.15) 0%,
+    rgba(37, 99, 235, 0) 70%
+  );
+  border: 2px solid rgba(79, 70, 229, 0.15);
+  border-radius: var(--prepr-border-radius);
+  transition: var(--prepr-transition);
+  z-index: 9999;
+}
+
+/* Hide proximity highlight when overlay is active */
+[data-prepr-encoded]:has(+ .prepr-overlay[style*='display: block'])
+  .prepr-proximity-highlight::before {
+  display: none;
+}
+
+/* Component-specific styles */
+.preview-bar-container {
+  @apply p-fixed p-ml-auto p-right-0 p-z-[999] p-top-[calc(50%-64px)] p-flex p-justify-end p-items-center;
+}
+
+.preview-bar-content {
+  @apply p-p-6 sm:p-p-10 p-right-0 p-gap-y-10 p-z-[101] p-w-full sm:p-w-[502px] p-bg-primary-50 p-box-shadow p-rounded-lg p-flex p-flex-col;
+}
+
+.preview-bar-backdrop {
+  @apply p-fixed p-inset-0 p-w-screen p-h-screen p-bg-black/10 p-z-50;
+}
+
+.preview-bar-popup {
+  @apply p-absolute p-w-full p-p-3 sm:p-p-0 sm:p-mr-16 p-flex p-justify-end p-z-[60] p-transition-all p-duration-200 p-ease-in-out;
+}
