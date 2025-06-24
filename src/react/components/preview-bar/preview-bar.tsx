@@ -67,7 +67,7 @@ export default function PreviewBar({ children }: PreviewBarProps) {
       {isBarVisible && <div className="preview-bar-backdrop" />}
       <div className={cn('preview-bar-container')}>
         {/* Button holder*/}
-        <div className="p-pr-4" ref={triggerRef}>
+        <div className="p-pr-2" ref={triggerRef}>
           <PreviewBarButton onClick={handleClick} />
         </div>
 
