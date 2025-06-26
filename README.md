@@ -13,7 +13,7 @@ To install the Prepr Next.js package, run the following command:
 npm install @preprio/prepr-nextjs
 ```
 
-Next, add the `PREPR_ENV` variable to the `.env` file. You can enable the *Adaptive Preview Bar* for a staging environment by setting the value to `preview`.
+Next, add the `PREPR_ENV` variable to the `.env` file. You can enable the Prepr preview toolbar for a staging environment by setting the value to `preview`.
 
 ```bash
 PREPR_ENV=preview
