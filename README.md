@@ -2,7 +2,7 @@
 
 ## Getting Started
 <hr>
-The Prepr Next.js package offers some helper functions and the Adaptive Preview Bar component for an
+The Prepr Next.js package offers some helper functions and a preview toolbar component for an
 easier personalization & A/B testing implementation in your Next.js project.
 
 ## Installation
@@ -19,7 +19,7 @@ Next, add the `PREPR_ENV` variable to the `.env` file. You can enable the *Adapt
 PREPR_ENV=preview
 ```
 
-When you're launching your project to production, then set the `PREPR_ENV` environment variable to `production`. This way, the  *Adaptive Preview Bar* doesn't get displayed on a live web app.
+When you're launching your project to production, then set the `PREPR_ENV` environment variable to `production`.
 
 Next, implement the `PreprMiddleware` function. Go to your `middleware.js` or the `middleware.ts`
 file. If you don't have this file, you can create it in the root of your project.
@@ -27,19 +27,19 @@ file. If you don't have this file, you can create it in the root of your project
 Then add the following code to the `middleware.ts` file:
 ```javascript
 import type { NextRequest } from 'next/server'
-import { PreprMiddleware } from '@preprio/prepr-nextjs'
+import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
 
 export function middleware(request: NextRequest) {
-    return PreprMiddleware(request)
+    return createPreprMiddleware(request)
 }
 ```
 
 Or add the following code to the `middleware.js` file:
 ```javascript
-import { PreprMiddleware } from '@preprio/prepr-nextjs'
+import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
 
-export function middleware(request) {
-    return PreprMiddleware(request)
+export async function middleware(request: NextRequest) {
+    return createPreprMiddleware(request)
 }
 ```
 
@@ -59,7 +59,7 @@ See the example code below in the `page.tsx` file.
 ```javascript
 import { getClient } from '@/lib/client'
 import { GetPageBySlugDocument, GetPageBySlugQuery } from '@/gql/graphql'
-import { getPreprHeaders } from '@preprio/prepr-nextjs'
+import { getPreprHeaders } from '@preprio/prepr-nextjs/server'
 
 const getData = async () => {
     // Fetching the data using Apollo Client
@@ -81,7 +81,7 @@ See the JavaScript example code below in the `page.js`file.
 ```javascript
 import { getClient } from '@/lib/client'
 import { GetPageBySlug } from '@/queries/get-page-by-slug';
-import { getPreprHeaders } from '@preprio/prepr-nextjs'
+import { getPreprHeaders } from '@preprio/prepr-nextjs/server'
 
 const getData = async () => {
     // Fetching the data using Apollo Client
@@ -100,26 +100,31 @@ const getData = async () => {
 }
 ```
 
-### Installing the Adaptive Preview Bar component
+### Installing the Prepr preview toolbar component
 
-The preview bar component fetches all segments from the Prepr API. So, you need to give it access to do this as follows:
+The Prepr preview toolbar component fetches all segments from the Prepr API. So, you need to give it access to do this as follows:
 
 1. In your Prepr environment, go to the  **Settings → Access tokens** page to view all the access tokens.
 2. Click the *GraphQL Preview* access token to open it and tick the **Enable edit mode** checkbox and click the **Save** button.
 
 ![Preview access token](https://assets-site.prepr.io/229kaekn7m96//preview-access-token-enable-edit-mode.png)
 
-To implement the *Adaptive Preview Bar* component, navigate to your root layout file, this is usually `layout.tsx`.
+To implement the toolbar component, navigate to your root layout file, this is usually `layout.tsx`.
 
 Then add the following code to the `layout.tsx` file:
 
 ```javascript
 // Helper function to get all the props for the PreviewBar component (this needs a server component)
-import { getPreviewBarProps } from '@preprio/prepr-nextjs'
-// Import the PreviewBar component
-import { PreprPreviewBar } from '@preprio/prepr-nextjs/components'
+import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+
+// Import the PreviewBar component & proivder
+import {
+  PreprPreviewBar,
+  PreprPreviewBarProvider,
+} from '@preprio/prepr-nextjs/react'
+
 // Import the PreviewBar CSS
-import '@preprio/prepr-nextjs/dist/components.css'
+import '@preprio/prepr-nextjs/index.css'
 
 
 export default async function RootLayout({children}: {children: React.ReactNode}) {
@@ -132,17 +137,17 @@ export default async function RootLayout({children}: {children: React.ReactNode}
                 {/*...*/}
             </head>
             <body>
-                {/* Render the PreviewBar component and spread the previewBarProps */}
-                <PreprPreviewBar {...previewBarProps} />
-                {children}
+                <PreprPreviewBarProvider props={previewBarProps}>
+                    <PreprPreviewBar />
+                    {children}
+                </PreprPreviewBarProvider>    
             </body>    
         </html>
     )
 }
 ```
 
-Now the *Adaptive Preview Bar* is rendered on every page of your website. This component shows the segments in a dropdown list and a switch for A and B variants for an A/B test.  If you have added the `getPreprHeaders()` function 
-to your API calls it automatically updates the segments and A/B testing variants when you select a new segment or variant.
+Now the Prepr preview toolbar is rendered on every page of your website. This component shows the segments in a dropdown list and a switch for A and B variants for an A/B test.  If you have added the `getPreprHeaders()` function to your API calls it automatically updates the segments and A/B testing variants when you select a new segment or variant.
 
 ### Helper functions
 
