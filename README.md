@@ -168,3 +168,10 @@ Helper function that will either return the customer id header or the preview he
 
 #### getPreviewBarProps()
 Helper function to get the props for the PreviewBar component. Will return the segments and A/B testing variants aswell as an aray of all the segments.
+
+## 📌 Upgrade from v1 to v2
+
+If you’re upgrading from **Prepr Next.js v1** to **v2**,  
+please follow the [Upgrade Guide](./UPGRADE_GUIDE.mdx) for step-by-step instructions.
+
+This guide will help you update your middleware, helper imports, and preview toolbar usage.
