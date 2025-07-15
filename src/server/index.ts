@@ -1,9 +1,11 @@
 import { headers } from 'next/headers';
 import { PreprPreviewBarProps, PreprSegment } from '../types';
 import pjson from '../../package.json';
+import createPreprMiddleware from '../middleware';
 
 /**
  * Returns the Prepr Customer ID from the headers
+ * @returns Prepr Customer ID
  */
 export async function getPreprUUID() {
   const headersList = await headers();
@@ -12,6 +14,7 @@ export async function getPreprUUID() {
 
 /**
  * Retuns the active segment from the headers
+ * @returns Active segment
  */
 export async function getActiveSegment() {
   const headersList = await headers();
@@ -20,6 +23,7 @@ export async function getActiveSegment() {
 
 /**
  * Returns the active variant from the headers
+ * @returns Active variant
  */
 export async function getActiveVariant() {
   const headersList = await headers();
@@ -28,6 +32,7 @@ export async function getActiveVariant() {
 
 /**
  * Helper function to retrieve Prepr headers (will filter out customer ID if in preview mode)
+ * @returns Object with Prepr headers
  */
 export async function getPreprHeaders() {
   const newHeaders: {
@@ -130,3 +135,5 @@ export async function getPreviewBarProps(
 function getPackageVersion() {
   return pjson.version;
 }
+
+export { createPreprMiddleware };
