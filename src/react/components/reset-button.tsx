@@ -1,6 +1,4 @@
 import React from 'react';
-// import classNames from 'classnames';
-// import { FaRotate } from 'react-icons/fa6';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '../../utils';
 import { usePreprPreviewBar } from '../prepr-previewbar-provider';
@@ -16,25 +14,19 @@ export default function ResetButton() {
 
   const handleClick = () => {
     resetAll();
-
-    // Push null values to the URL to reset the preview
-    const params = new URLSearchParams({});
-    params.append('prepr_preview_segment', 'null');
-    params.append('prepr_preview_ab', 'null');
-
     setEditMode(false);
 
-    router.push(`${pathname}?${params.toString()}`, {
-      scroll: false,
-    });
+    // Set preview params to 'null' in the URL, then remove them for a clean URL
+    const params = new URLSearchParams();
+    params.set('prepr_preview_segment', 'null');
+    params.set('prepr_preview_ab', 'null');
+
+    // First, push the URL with reset params to trigger any listeners
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
     router.refresh();
 
-    // Remove the params from the URL
-    params.delete('prepr_preview_segment');
-    params.delete('prepr_preview_ab');
-    router.push(`${pathname}?${params.toString()}`, {
-      scroll: false,
-    });
+    // Then, push the clean URL (without the reset params)
+    router.push(pathname, { scroll: false });
     router.refresh();
   };
 
