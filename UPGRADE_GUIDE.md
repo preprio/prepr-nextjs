@@ -13,7 +13,7 @@ npm install @preprio/prepr-nextjs@latest
 ```
 
 ## 2. Update your Prepr middleware
-The middleware function has been updated to use a new default export.  
+The middleware function has been updated to use a new default export with improved API design.  
 Update your `middleware.ts` or `middleware.js` file as shown below.
 
 **Previous implementation:**
@@ -26,18 +26,45 @@ export function middleware(request: NextRequest) {
 }
 ```
 
-**New implementation:**
+**New implementation (v2.0.0-alpha.9+):**
 
 ```ts
 import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
 
 export function middleware(request: NextRequest) {
-  return createPreprMiddleware(request)
+  return createPreprMiddleware(request, {
+    preview: process.env.PREPR_ENV === 'preview'
+  })
 }
 ```
 
-**Note:**  
-Use `createPreprMiddleware` instead of `PreprMiddleware`.
+**Key improvements:**
+- Use `createPreprMiddleware` instead of `PreprMiddleware`
+- **Better TypeScript support**: Function overloads for different usage patterns
+- **Options parameter**: Configure preview mode explicitly
+
+### Middleware Chaining (New Feature)
+If you need to chain with other middleware (like `next-intl`), you can now do so cleanly:
+
+```ts
+import createIntlMiddleware from 'next-intl/middleware'
+import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
+
+const intlMiddleware = createIntlMiddleware({
+  locales: ['en', 'de', 'fr'],
+  defaultLocale: 'en'
+})
+
+export function middleware(request: NextRequest) {
+  // First run internationalization middleware
+  const intlResponse = intlMiddleware(request)
+  
+  // Then chain with Prepr middleware
+  return createPreprMiddleware(request, intlResponse, {
+    preview: process.env.PREPR_ENV === 'preview'
+  })
+}
+```
 
 ## 3. Update your helper imports
 Helper functions like `getPreprHeaders` now have dedicated paths.  
@@ -111,22 +138,44 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 - Wrap your application with `<PreprPreviewBarProvider>`.
 - Update the CSS import to `@preprio/prepr-nextjs/index.css`.
 
-## 5. Verify environment variables
-Your environment variables remain the same — check your `.env` file to confirm:
 
-```env
-PREPR_ENV=preview    # For staging and preview mode
-PREPR_ENV=production # For production
-```
-
-## 6. Confirm your GraphQL Preview token
+## 5. Confirm your GraphQL Preview token
 In your Prepr environment:
 1. Go to **Settings → Access tokens**.
 2. Open your *GraphQL Preview* token.
 3. Make sure **Enable edit mode** is checked.
 4. Click **Save**.
 
-## ✅ You’re ready!
-Your project is now upgraded to **Prepr Next.js package v2.0** and ready for personalization and A/B testing in **Next.js 15**.
+## 6. Performance and API improvements (Optional)
+Version 2.0.0-alpha.9+ includes several performance improvements and API refinements:
+
+### Enhanced TypeScript Support
+- **Stricter typing**: Better IntelliSense and type safety
+- **Readonly interfaces**: Prevents accidental mutations
+- **Improved error types**: Better error handling with typed error codes
+
+### Performance Optimizations
+- **Improved throttling**: Better memory management for mouse events
+- **React hook optimizations**: Reduced re-renders in `usePreprPreviewBar`
+- **Caching improvements**: Better element caching for DOM operations
+
+### Streamlined Public API
+The package now exposes only essential functions for end users:
+- `getPreprHeaders()` - Main integration function
+- `getPreprUUID()`, `getActiveSegment()`, `getActiveVariant()` - Individual header access
+- `getPreviewBarProps()` - Preview bar initialization
+- `validatePreprToken()`, `isPreviewMode()` - Utility functions
+
+Internal functions are still available but not prominently documented.
+
+## ✅ You're ready!
+Your project is now upgraded to **Prepr Next.js package v2.0** with all the latest performance improvements and API enhancements.
+
+### What's New in v2.0.0-alpha.9+
+- ✅ **Cleaner middleware API** with function overloads
+- ✅ **Better middleware chaining** support
+- ✅ **Improved performance** with optimized hooks and throttling
+- ✅ **Stricter TypeScript** support
+- ✅ **Streamlined public API** for better developer experience
 
 For more information, visit the [Prepr documentation](https://docs.prepr.io) or reach out to the team for support.
