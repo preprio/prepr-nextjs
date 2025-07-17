@@ -110,8 +110,6 @@ PREPR_ENV=preview    # Use 'preview' for staging/development
 
 > **Important**: Replace `{YOUR_ACCESS_TOKEN}` with your actual Prepr access token from Settings → Access tokens.
 
-  ![preview API URL](https://assets-site.prepr.io//35k5a4g45wuy-preview-access-token.png)
-
 ### 3. Middleware Setup
 
 The middleware handles personalization headers, customer ID tracking, and preview mode functionality.
