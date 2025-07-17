@@ -1,75 +1,121 @@
 import { headers } from 'next/headers';
-import { PreprPreviewBarProps, PreprSegment } from '../types';
+import {
+  PreprPreviewBarProps,
+  PreprSegment,
+  PreprHeaderName,
+  PreprErrorCode,
+} from '../types';
 import pjson from '../../package.json';
 import createPreprMiddleware from '../middleware';
+
+/**
+ * Custom error class for Prepr-related errors
+ */
+export class PreprError extends Error {
+  constructor(
+    message: string,
+    public readonly code: PreprErrorCode,
+    public readonly context?: string,
+    public readonly originalError?: Error
+  ) {
+    super(message);
+    this.name = 'PreprError';
+  }
+}
+
+/**
+ * Internal helper to get a specific Prepr header value
+ * @param name - The header name to retrieve
+ * @returns The header value or null if not found
+ */
+async function getPreprHeader(name: PreprHeaderName): Promise<string | null> {
+  const headersList = await headers();
+  return headersList.get(name);
+}
 
 /**
  * Returns the Prepr Customer ID from the headers
  * @returns Prepr Customer ID
  */
-export async function getPreprUUID() {
-  const headersList = await headers();
-  return headersList.get('prepr-customer-id');
+export async function getPreprUUID(): Promise<string | null> {
+  return getPreprHeader('prepr-customer-id');
 }
 
 /**
- * Retuns the active segment from the headers
+ * Returns the active segment from the headers
  * @returns Active segment
  */
-export async function getActiveSegment() {
-  const headersList = await headers();
-  return headersList.get('Prepr-Segments');
+export async function getActiveSegment(): Promise<string | null> {
+  return getPreprHeader('Prepr-Segments');
 }
 
 /**
  * Returns the active variant from the headers
  * @returns Active variant
  */
-export async function getActiveVariant() {
-  const headersList = await headers();
-  return headersList.get('Prepr-ABtesting');
+export async function getActiveVariant(): Promise<string | null> {
+  return getPreprHeader('Prepr-ABtesting');
 }
 
 /**
- * Helper function to retrieve Prepr headers (will filter out customer ID if in preview mode)
+ * Helper function to retrieve all Prepr headers
  * @returns Object with Prepr headers
  */
-export async function getPreprHeaders() {
-  const newHeaders: {
-    [key: string]: string;
-  } = {};
-
+export async function getPreprHeaders(): Promise<Record<string, string>> {
+  const preprHeaders: Record<string, string> = {};
   const headersList = await headers();
 
   headersList.forEach((value, key) => {
-    if (key.startsWith('prepr')) {
-      newHeaders[key] = value;
+    if (key.startsWith('prepr') || key.startsWith('Prepr')) {
+      preprHeaders[key] = value;
     }
   });
 
-  return newHeaders;
+  return preprHeaders;
+}
+
+/**
+ * Validates a Prepr GraphQL token
+ * @param token - The token to validate
+ * @returns Validation result with error details if invalid
+ */
+export function validatePreprToken(token: string): {
+  valid: boolean;
+  error?: string;
+} {
+  if (!token) {
+    return { valid: false, error: 'Token is required' };
+  }
+  if (!token.startsWith('https://')) {
+    return { valid: false, error: 'Token must be a valid HTTPS URL' };
+  }
+  return { valid: true };
+}
+
+/**
+ * Checks if the current environment is in preview mode
+ * @returns True if in preview mode
+ */
+export function isPreviewMode(): boolean {
+  return process.env.PREPR_ENV === 'preview';
 }
 
 /**
  * Fetches the segments from the Prepr API
- * @param token Prepr access token with scope 'segments'
- * @returns Array of PreprSegmentResponse
+ * @param token Prepr GraphQL URL with scope 'segments'
+ * @returns Array of PreprSegment
+ * @throws PreprError if the request fails
  */
 export async function getPreprEnvironmentSegments(
   token: string
 ): Promise<PreprSegment[]> {
-  if (!token) {
-    console.error(
-      'No token provided, make sure you are using your Prepr GraphQL URL'
+  const validation = validatePreprToken(token);
+  if (!validation.valid) {
+    throw new PreprError(
+      validation.error!,
+      'INVALID_TOKEN',
+      'getPreprEnvironmentSegments'
     );
-    return [];
-  }
-
-  if (!token.startsWith('https://')) {
-    console.error(
-      'Invalid token provided, make sure you are using your Prepr GraphQL URL'
-    );
-    return [];
   }
 
   try {
@@ -88,27 +134,42 @@ export async function getPreprEnvironmentSegments(
             }`,
       }),
     });
-    try {
-      const json = await response.json();
 
-      if (!json || !json.data || !json.data._Segments) {
-        return [];
-      }
-
-      return json.data?._Segments as PreprSegment[];
-    } catch {
-      console.error('Error parsing JSON, please contact Prepr support');
-      return [];
+    if (!response.ok) {
+      throw new PreprError(
+        `HTTP ${response.status}: ${response.statusText}`,
+        'HTTP_ERROR',
+        'getPreprEnvironmentSegments'
+      );
     }
+
+    const json = await response.json();
+
+    if (!json || !json.data || !json.data._Segments) {
+      throw new PreprError(
+        'Invalid response format from Prepr API',
+        'INVALID_RESPONSE',
+        'getPreprEnvironmentSegments'
+      );
+    }
+
+    return json.data._Segments as PreprSegment[];
   } catch (error) {
-    console.error('Error fetching segments:', error);
-    return [];
+    if (error instanceof PreprError) {
+      throw error;
+    }
+    throw new PreprError(
+      'Failed to fetch segments from Prepr API',
+      'FETCH_ERROR',
+      'getPreprEnvironmentSegments',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
 /**
  * Fetches all the necessary previewbar props
- * @param token Prepr access token with scope 'segments'
+ * @param token Prepr GraphQL URL with scope 'segments'
  * @returns Object with activeSegment, activeVariant and data
  */
 export async function getPreviewBarProps(
@@ -119,10 +180,17 @@ export async function getPreviewBarProps(
   let activeVariant: string | null = null;
 
   // Prevent unnecessary function calling in production
-  if (process.env.PREPR_ENV === 'preview') {
-    data = await getPreprEnvironmentSegments(token);
-    activeSegment = await getActiveSegment();
-    activeVariant = await getActiveVariant();
+  if (isPreviewMode()) {
+    try {
+      data = await getPreprEnvironmentSegments(token);
+      activeSegment = await getActiveSegment();
+      activeVariant = await getActiveVariant();
+    } catch (error) {
+      // In preview mode, we should still return props even if API fails
+      console.error('Failed to fetch preview bar props:', error);
+      // Return empty data to prevent preview bar from crashing
+      data = [];
+    }
   }
 
   return {

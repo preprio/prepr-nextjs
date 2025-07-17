@@ -17,7 +17,7 @@ const SegmentContext = createContext<SegmentContextValue | undefined>(
 
 interface SegmentProviderProps {
   children: ReactNode;
-  initialSegments: PreprSegment[];
+  initialSegments: readonly PreprSegment[];
   activeSegment?: string | null;
 }
 
@@ -26,7 +26,7 @@ export function SegmentProvider({
   initialSegments,
   activeSegment,
 }: SegmentProviderProps) {
-  const segmentList = [
+  const segmentList: PreprSegment[] = [
     {
       _id: 'all_other_users',
       name: 'All other users',

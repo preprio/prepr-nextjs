@@ -1,177 +1,580 @@
-# The Prepr Next.js package
+# Prepr Next.js Package
 
-## Getting Started
-<hr>
-The Prepr Next.js package offers some helper functions and a preview toolbar component for an
-easier personalization & A/B testing implementation in your Next.js project.
+A powerful TypeScript library that provides preview functionality, visual editing capabilities, and A/B testing for [Prepr CMS](https://prepr.io) integrated with Next.js applications.
 
-## Installation
-<hr>
-To install the Prepr Next.js package, run the following command:
+## ⚡ Quick Start
 
 ```bash
+# Install the package
 npm install @preprio/prepr-nextjs
+# or
+pnpm add @preprio/prepr-nextjs
 ```
 
-Next, add the `PREPR_ENV` variable to the `.env` file. You can enable the Prepr preview toolbar for a staging environment by setting the value to `preview`.
+Add environment variables to your `.env`:
 
 ```bash
+PREPR_GRAPHQL_URL=https://graphql.prepr.io/{YOUR_ACCESS_TOKEN}
 PREPR_ENV=preview
 ```
 
-When you're launching your project to production, then set the `PREPR_ENV` environment variable to `production`.
+Set up middleware in `middleware.ts`:
 
-Next, implement the `PreprMiddleware` function. Go to your `middleware.js` or the `middleware.ts`
-file. If you don't have this file, you can create it in the root of your project.
-
-Then add the following code to the `middleware.ts` file:
-```javascript
+```typescript
 import type { NextRequest } from 'next/server'
 import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
 
 export function middleware(request: NextRequest) {
-    return createPreprMiddleware(request)
+  return createPreprMiddleware(request, { preview: true })
 }
 ```
 
-Or add the following code to the `middleware.js` file:
+Add preview bar to your layout:
+
+```typescript
+import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+import { PreprPreviewBar, PreprPreviewBarProvider } from '@preprio/prepr-nextjs/react'
+import '@preprio/prepr-nextjs/index.css'
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
+  
+  return (
+    <html>
+      <body>
+        <PreprPreviewBarProvider props={previewBarProps}>
+          <PreprPreviewBar />
+          {children}
+        </PreprPreviewBarProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+## 📋 Prerequisites
+
+Before installing, ensure you have:
+
+- **Next.js 13.0.0 or later** (supports App Router)
+- **React 17.0.0 or later** (React 18+ recommended)
+- **Node.js 16.0.0 or later**
+- **A Prepr account** 
+- **Prepr GraphQL URL** (found in Settings → Access tokens)
+
+### Prepr Account Setup
+
+1. **Create a Prepr account** at [prepr.io](https://prepr.io)
+2. **Get your GraphQL URL**:
+   - Go to Settings → Access tokens
+   - Find your GraphQL Preview access token
+   - Copy the full GraphQL URL (e.g., `https://graphql.prepr.io/e6f7a0521f11e5149ce65b0e9f372ced2dfc923490890e7f225da1db84cxxxxx`)
+   - The URL format is always `https://graphql.prepr.io/{YOUR_ACCESS_TOKEN}`
+3. **Enable edit mode** (for preview bar):
+   - Open your GraphQL Preview access token
+   - Check "Enable edit mode"
+   - Save the token
+
+## 🔧 Installation & Setup
+
+### 1. Install the Package
+
+```bash
+npm install @preprio/prepr-nextjs
+# or
+pnpm add @preprio/prepr-nextjs
+# or
+yarn add @preprio/prepr-nextjs
+```
+
+### 2. Environment Configuration
+
+Create or update your `.env` file:
+
+```bash
+# Required: Your Prepr GraphQL endpoint
+PREPR_GRAPHQL_URL=https://graphql.prepr.io/{YOUR_ACCESS_TOKEN}
+
+# Required: Environment mode
+PREPR_ENV=preview    # Use 'preview' for staging/development
+# PREPR_ENV=production # Use 'production' for live sites
+
+# Optional: Enable debug logging (development only)
+# PREPR_DEBUG=true
+```
+
+> **Important**: Replace `{YOUR_ACCESS_TOKEN}` with your actual Prepr access token from Settings → Access tokens.
+
+### 3. Middleware Setup
+
+The middleware handles personalization headers, customer ID tracking, and preview mode functionality.
+
+#### TypeScript Setup
+
+Create or update `middleware.ts` in your project root:
+
+```typescript
+import type { NextRequest } from 'next/server'
+import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
+
+export function middleware(request: NextRequest) {
+  return createPreprMiddleware(request, { 
+    preview: process.env.PREPR_ENV === 'preview' 
+  })
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+}
+```
+
+#### JavaScript Setup
+
+Create or update `middleware.js` in your project root:
+
 ```javascript
 import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
 
-export async function middleware(request: NextRequest) {
-    return createPreprMiddleware(request)
+export async function middleware(request) {
+  return createPreprMiddleware(request, { 
+    preview: process.env.PREPR_ENV === 'preview' 
+  })
+}
+
+export const config = {
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 }
 ```
 
-### Middleware functionality
-The `PreprMiddleware` accepts a request and optional response property and returns a `NextRequest` object. 
-This is done so you are able to chain your own middleware to it.
+#### Chaining with Existing Middleware
 
-The `PreprMiddleware` function checks every request if the `__prepr_uid` cookie is set. If it isn't, the function generates a new UUID and sets it as a cookie. Then it returns a `Prepr-Customer-Id` header with the value of the `__prepr_uid` cookie to simplify your personalization and A/B testing implementation.
+##### Basic Chaining Pattern
 
-If the `PREPR_ENV` environment variable is set to `preview`, the `PreprMiddleware` function also checks for searchParams `segments` and `a-b-testing` in the URL.
-If these searchParams are set, the PreprMiddleware sets the `Prepr-Segments` and `Prepr-AB-Testing` headers with the values of the searchParams, and stores its value in a cookie.
+```typescript
+import type { NextRequest, NextResponse } from 'next/server'
+import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
 
-## Usage
-To set your API request headers to query adaptive content or A/B testing content, you can call the `getPreprHeaders()` helper function. It returns an array of headers that you can spread in your fetch call.
-See the example code below in the `page.tsx` file. 
-
-```javascript
-import { getClient } from '@/lib/client'
-import { GetPageBySlugDocument, GetPageBySlugQuery } from '@/gql/graphql'
-import { getPreprHeaders } from '@preprio/prepr-nextjs/server'
-
-const getData = async () => {
-    // Fetching the data using Apollo Client
-    const {data} = await getClient().query < GetPageBySlugQuery > ({
-        query: GetPageBySlugDocument,
-        variables: {
-            slug: '/',
-        },
-        context: {
-            // Call the getPreprHeaders function to get the appropriate headers
-            headers: getPreprHeaders(),
-        },
-        fetchPolicy: 'no-cache',
-    })
-}
-```
-See the JavaScript example code below in the `page.js`file.
-
-```javascript
-import { getClient } from '@/lib/client'
-import { GetPageBySlug } from '@/queries/get-page-by-slug';
-import { getPreprHeaders } from '@preprio/prepr-nextjs/server'
-
-const getData = async () => {
-    // Fetching the data using Apollo Client
-    const { data } = await client.query({
-    query: GetPageBySlug,
-    variables: {
-        slug: '/',
-    },
-    context: {
-            // Call the getPreprHeaders function to get the appropriate headers
-            headers: getPreprHeaders(),
-        },
-        fetchPolicy: 'no-cache',
-    })
-    return data;
+export function middleware(request: NextRequest) {
+  // Start with your existing middleware
+  let response = NextResponse.next()
+  
+  // Add your custom logic
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    response.headers.set('x-admin-route', 'true')
+  }
+  
+  // Chain with Prepr middleware
+  return createPreprMiddleware(request, response, { 
+    preview: process.env.PREPR_ENV === 'preview' 
+  })
 }
 ```
 
-### Installing the Prepr preview toolbar component
+##### With next-intl Integration
 
-The Prepr preview toolbar component fetches all segments from the Prepr API. So, you need to give it access to do this as follows:
+```typescript
+import type { NextRequest } from 'next/server'
+import createIntlMiddleware from 'next-intl/middleware'
+import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
 
-1. In your Prepr environment, go to the  **Settings → Access tokens** page to view all the access tokens.
-2. Click the *GraphQL Preview* access token to open it and tick the **Enable edit mode** checkbox and click the **Save** button.
+const intlMiddleware = createIntlMiddleware({
+  locales: ['en', 'de', 'fr'],
+  defaultLocale: 'en'
+})
 
-![Preview access token](https://assets-site.prepr.io/229kaekn7m96//preview-access-token-enable-edit-mode.png)
+export function middleware(request: NextRequest) {
+  // First run internationalization middleware
+  const intlResponse = intlMiddleware(request)
+  
+  // Then chain with Prepr middleware
+  return createPreprMiddleware(request, intlResponse, {
+    preview: process.env.PREPR_ENV === 'preview'
+  })
+}
 
-To implement the toolbar component, navigate to your root layout file, this is usually `layout.tsx`.
+export const config = {
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+}
+```
 
-Then add the following code to the `layout.tsx` file:
+##### Advanced Chaining with Multiple Middlewares
 
-```javascript
-// Helper function to get all the props for the PreviewBar component (this needs a server component)
+```typescript
+import type { NextRequest, NextResponse } from 'next/server'
+import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
+import { authMiddleware } from '@/lib/auth'
+import { rateLimitMiddleware } from '@/lib/rate-limit'
+
+export function middleware(request: NextRequest) {
+  let response = NextResponse.next()
+  
+  // 1. Rate limiting
+  response = rateLimitMiddleware(request, response)
+  
+  // 2. Authentication (if needed)
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    response = authMiddleware(request, response)
+  }
+  
+  // 3. Custom headers
+  response.headers.set('x-custom-header', 'my-value')
+  
+  // 4. Finally, Prepr middleware
+  return createPreprMiddleware(request, response, {
+    preview: process.env.PREPR_ENV === 'preview'
+  })
+}
+```
+
+##### Conditional Chaining
+
+```typescript
+import type { NextRequest, NextResponse } from 'next/server'
+import createPreprMiddleware from '@preprio/prepr-nextjs/middleware'
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+  
+  // Skip Prepr middleware for API routes
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.next()
+  }
+  
+  // Apply different logic based on route
+  let response = NextResponse.next()
+  
+  if (pathname.startsWith('/blog')) {
+    response.headers.set('x-content-type', 'blog')
+  } else if (pathname.startsWith('/product')) {
+    response.headers.set('x-content-type', 'product')
+  }
+  
+  // Always apply Prepr middleware for content routes
+  return createPreprMiddleware(request, response, {
+    preview: process.env.PREPR_ENV === 'preview'
+  })
+}
+```
+
+### 4. Layout Integration
+
+#### App Router (Next.js 13+)
+
+Update your `app/layout.tsx`:
+
+```typescript
 import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
-
-// Import the PreviewBar component & proivder
-import {
-  PreprPreviewBar,
-  PreprPreviewBarProvider,
+import { 
+  PreprPreviewBar, 
+  PreprPreviewBarProvider 
 } from '@preprio/prepr-nextjs/react'
-
-// Import the PreviewBar CSS
 import '@preprio/prepr-nextjs/index.css'
 
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
 
-export default async function RootLayout({children}: {children: React.ReactNode}) {
-    // Get the props for the PreviewBar component, pass the access token as an argument
-    const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
-
-    return (
-        <html>
-            <head>
-                {/*...*/}
-            </head>
-            <body>
-                <PreprPreviewBarProvider props={previewBarProps}>
-                    <PreprPreviewBar />
-                    {children}
-                </PreprPreviewBarProvider>    
-            </body>    
-        </html>
-    )
+  return (
+    <html lang="en">
+      <body>
+        <PreprPreviewBarProvider props={previewBarProps}>
+          <PreprPreviewBar />
+          {children}
+        </PreprPreviewBarProvider>
+      </body>
+    </html>
+  )
 }
 ```
 
-Now the Prepr preview toolbar is rendered on every page of your website. This component shows the segments in a dropdown list and a switch for A and B variants for an A/B test.  If you have added the `getPreprHeaders()` function to your API calls it automatically updates the segments and A/B testing variants when you select a new segment or variant.
+### 5. API Integration
 
-### Helper functions
+Use the `getPreprHeaders()` helper function in your data fetching to enable personalization and A/B testing:
 
-#### getPreprUUID()
-The `getPreprUUID()` function will return the value of the `__prepr_uid` cookie. This can be useful if you want to store the `__prepr_uid` in a cookie or local storage.
+#### With Apollo Client
 
-#### getActiveSegment()
-Returns the active segment from the `Prepr-Segments` header.
+```typescript
+import { getClient } from '@/lib/client'
+import { GetPageBySlugDocument } from '@/gql/graphql'
+import { getPreprHeaders } from '@preprio/prepr-nextjs/server'
 
-#### getActiveVariant()
-Returns the active variant from the `Prepr-ABTesting` header.
+const getData = async (slug: string) => {
+  const { data } = await getClient().query({
+    query: GetPageBySlugDocument,
+    variables: { slug },
+    context: {
+      headers: await getPreprHeaders(),
+    },
+    fetchPolicy: 'no-cache',
+  })
+  return data
+}
+```
 
-#### getPreviewHeaders()
-Helper function to only get the preview headers.
+#### With Fetch API
 
-#### getPreprHeaders()
-Helper function that will either return the customer id header or the preview headers depending on the `PREPR_ENV` environment variable.
+```typescript
+import { getPreprHeaders } from '@preprio/prepr-nextjs/server'
 
-#### getPreviewBarProps()
-Helper function to get the props for the PreviewBar component. Will return the segments and A/B testing variants aswell as an aray of all the segments.
+const getData = async (slug: string) => {
+  const headers = await getPreprHeaders()
+  
+  const response = await fetch(process.env.PREPR_GRAPHQL_URL!, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers,
+    },
+    body: JSON.stringify({
+      query: `
+        query GetPageBySlug($slug: String!) {
+          Page(slug: $slug) {
+            title
+            content
+          }
+        }
+      `,
+      variables: { slug },
+    }),
+  })
+  
+  return response.json()
+}
+```
 
-## 📌 Upgrade from v1 to v2
+## 🎛️ API Reference
 
-If you’re upgrading from **Prepr Next.js v1** to **v2**,  
-please follow the [Upgrade Guide](./UPGRADE_GUIDE.mdx) for step-by-step instructions.
+### Server Functions
 
-This guide will help you update your middleware, helper imports, and preview toolbar usage.
+#### `getPreprHeaders()`
+Returns all Prepr headers for API requests.
+
+```typescript
+import { getPreprHeaders } from '@preprio/prepr-nextjs/server'
+
+const headers = await getPreprHeaders()
+// Returns: { 'prepr-customer-id': 'uuid', 'Prepr-Segments': 'segment-id', ... }
+```
+
+#### `getPreprUUID()`
+Returns the current customer ID from headers.
+
+```typescript
+import { getPreprUUID } from '@preprio/prepr-nextjs/server'
+
+const customerId = await getPreprUUID()
+// Returns: 'uuid-string' or null
+```
+
+#### `getActiveSegment()`
+Returns the currently active segment.
+
+```typescript
+import { getActiveSegment } from '@preprio/prepr-nextjs/server'
+
+const segment = await getActiveSegment()
+// Returns: 'segment-id' or null
+```
+
+#### `getActiveVariant()`
+Returns the currently active A/B testing variant.
+
+```typescript
+import { getActiveVariant } from '@preprio/prepr-nextjs/server'
+
+const variant = await getActiveVariant()
+// Returns: 'A' | 'B' | null
+```
+
+#### `getPreviewBarProps()`
+Fetches all necessary props for the preview bar component.
+
+```typescript
+import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+
+const props = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
+// Returns: { activeSegment, activeVariant, data }
+```
+
+#### `validatePreprToken()`
+Validates a Prepr GraphQL URL format.
+
+```typescript
+import { validatePreprToken } from '@preprio/prepr-nextjs/server'
+
+const result = validatePreprToken('https://graphql.prepr.io/YOUR_ACCESS_TOKEN')
+// Returns: { valid: boolean, error?: string }
+```
+
+#### `isPreviewMode()`
+Checks if the current environment is in preview mode.
+
+```typescript
+import { isPreviewMode } from '@preprio/prepr-nextjs/server'
+
+const isPreview = isPreviewMode()
+// Returns: boolean
+```
+
+### React Components
+
+#### `PreprPreviewBarProvider`
+Context provider that wraps your app with preview bar functionality.
+
+```typescript
+import { PreprPreviewBarProvider } from '@preprio/prepr-nextjs/react'
+
+<PreprPreviewBarProvider props={previewBarProps}>
+  {children}
+</PreprPreviewBarProvider>
+```
+
+#### `PreprPreviewBar`
+The main preview bar component.
+
+```typescript
+import { PreprPreviewBar } from '@preprio/prepr-nextjs/react'
+
+<PreprPreviewBar />
+```
+
+## 🔧 Configuration Options
+
+### Environment Variables
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `PREPR_GRAPHQL_URL` | Yes | - | Your Prepr GraphQL endpoint URL |
+| `PREPR_ENV` | Yes | - | Environment mode (`preview` or `production`) |
+
+### Middleware Options
+
+```typescript
+// Simple usage (creates new NextResponse)
+createPreprMiddleware(request, {
+  preview: boolean // Enable preview mode functionality
+})
+
+// Chaining usage (uses existing NextResponse)
+createPreprMiddleware(request, response, {
+  preview: boolean // Enable preview mode functionality
+})
+```
+
+### Preview Bar Options
+
+```typescript
+<PreprPreviewBarProvider 
+  props={previewBarProps}
+  options={{
+    debug: true // Enable debug logging
+  }}
+>
+```
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+#### Preview Bar Not Showing
+- **Check environment**: Ensure `PREPR_ENV=preview` is set
+- **Verify GraphQL URL**: Make sure `PREPR_GRAPHQL_URL` is correct and follows the format `https://graphql.prepr.io/YOUR_ACCESS_TOKEN`
+- **Check token permissions**: Ensure "Enable edit mode" is checked in Prepr
+
+#### Headers Not Working
+- **Middleware setup**: Verify middleware is properly configured
+- **API calls**: Ensure you're using `getPreprHeaders()` in your API calls
+- **Environment**: Check that environment variables are loaded
+
+#### TypeScript Errors
+- **Version compatibility**: Ensure you're using compatible versions of Next.js and React
+- **Type imports**: Import types from `@preprio/prepr-nextjs/types`
+
+#### Build Issues
+- **CSS imports**: Make sure to import the CSS file in your layout
+- **Server components**: Ensure server functions are only called in server components
+
+### Error Handling
+
+The package includes comprehensive error handling:
+
+```typescript
+import { PreprError } from '@preprio/prepr-nextjs/server'
+
+try {
+  const segments = await getPreprEnvironmentSegments(process.env.PREPR_GRAPHQL_URL!)
+} catch (error) {
+  if (error instanceof PreprError) {
+    console.log('Error code:', error.code)
+    console.log('Context:', error.context)
+  }
+}
+```
+
+### Debug Mode
+
+Enable debug logging in development:
+
+```typescript
+<PreprPreviewBarProvider 
+  props={previewBarProps}
+  options={{ debug: true }}
+>
+```
+
+## 📊 How It Works
+
+### Middleware Functionality
+
+The middleware automatically:
+1. **Generates customer IDs**: Creates unique visitor identifiers
+2. **Tracks UTM parameters**: Captures marketing campaign data
+3. **Manages segments**: Handles audience segmentation
+4. **Processes A/B tests**: Manages variant assignments
+5. **Sets headers**: Adds necessary headers for API calls
+
+### Preview Bar Features
+
+The preview bar provides:
+- **Segment selection**: Switch between different audience segments
+- **A/B testing**: Toggle between variants A and B
+- **Edit mode**: Visual content editing capabilities
+- **Reset functionality**: Clear personalization settings
+
+### Visual Editing
+
+When edit mode is enabled, the package:
+1. **Scans content**: Identifies editable content using Stega encoding
+2. **Highlights elements**: Shows proximity-based highlighting
+3. **Provides overlays**: Click-to-edit functionality
+4. **Syncs with Prepr**: Direct integration with Prepr's editing interface
+
+## 🔄 Upgrading from v1 to v2
+
+If you're upgrading from v1, please follow the [Upgrade Guide](./UPGRADE_GUIDE.md) for detailed migration instructions.
+
+## 📜 License
+
+MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: [Prepr Documentation](https://docs.prepr.io)
+- **Issues**: [GitHub Issues](https://github.com/preprio/prepr-nextjs/issues)
+- **Community**: [Prepr Community](https://community.prepr.io)

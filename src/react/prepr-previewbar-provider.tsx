@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useCallback, useMemo } from 'react';
 import { PreprPreviewBarOptions, PreprPreviewBarProps } from '../types';
 import {
   SegmentProvider,
@@ -49,29 +49,49 @@ export const usePreprPreviewBar = () => {
   const variantContext = useVariantContext();
   const editModeContext = useEditModeContext();
 
-  return {
-    isPreviewMode: false,
-    activeSegment: segmentContext.selectedSegment._id,
-    activeVariant: variantContext.selectedVariant,
-    data: segmentContext.segments,
-    emptySegment: segmentContext.emptySegment,
-    segmentList: segmentContext.segments,
-    selectedSegment: segmentContext.selectedSegment,
-    setSelectedSegment: segmentContext.setSelectedSegment,
-    emptyVariant: variantContext.emptyVariant,
-    selectedVariant: variantContext.selectedVariant,
-    setSelectedVariant: variantContext.setSelectedVariant,
-    editMode: editModeContext.editMode,
-    setEditMode: editModeContext.setEditMode,
-    isIframe: editModeContext.isIframe,
-    resetPersonalization: () => {
-      segmentContext.setSelectedSegment(segmentContext.emptySegment);
-      variantContext.setSelectedVariant(variantContext.emptyVariant);
-    },
-    resetAll: () => {
-      segmentContext.setSelectedSegment(segmentContext.emptySegment);
-      variantContext.setSelectedVariant(variantContext.emptyVariant);
-      editModeContext.setEditMode(false);
-    },
-  };
+  const resetPersonalization = useCallback(() => {
+    segmentContext.setSelectedSegment(segmentContext.emptySegment);
+    variantContext.setSelectedVariant(variantContext.emptyVariant);
+  }, [segmentContext, variantContext]);
+
+  const resetAll = useCallback(() => {
+    segmentContext.setSelectedSegment(segmentContext.emptySegment);
+    variantContext.setSelectedVariant(variantContext.emptyVariant);
+    editModeContext.setEditMode(false);
+  }, [segmentContext, variantContext, editModeContext]);
+
+  return useMemo(
+    () => ({
+      isPreviewMode: false,
+      activeSegment: segmentContext.selectedSegment._id,
+      activeVariant: variantContext.selectedVariant,
+      data: segmentContext.segments,
+      emptySegment: segmentContext.emptySegment,
+      segmentList: segmentContext.segments,
+      selectedSegment: segmentContext.selectedSegment,
+      setSelectedSegment: segmentContext.setSelectedSegment,
+      emptyVariant: variantContext.emptyVariant,
+      selectedVariant: variantContext.selectedVariant,
+      setSelectedVariant: variantContext.setSelectedVariant,
+      editMode: editModeContext.editMode,
+      setEditMode: editModeContext.setEditMode,
+      isIframe: editModeContext.isIframe,
+      resetPersonalization,
+      resetAll,
+    }),
+    [
+      segmentContext.selectedSegment,
+      segmentContext.segments,
+      segmentContext.emptySegment,
+      segmentContext.setSelectedSegment,
+      variantContext.selectedVariant,
+      variantContext.emptyVariant,
+      variantContext.setSelectedVariant,
+      editModeContext.editMode,
+      editModeContext.setEditMode,
+      editModeContext.isIframe,
+      resetPersonalization,
+      resetAll,
+    ]
+  );
 };

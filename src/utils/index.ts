@@ -1,5 +1,6 @@
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { PreprEventType } from '../types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -7,18 +8,31 @@ export function cn(...inputs: ClassValue[]) {
 
 // Define specific types for Prepr events
 export interface PreprEventData {
-  segment?: string;
-  variant?: string;
-  editMode?: boolean;
-  [key: string]: string | boolean | number | undefined;
+  readonly segment?: string;
+  readonly variant?: string;
+  readonly editMode?: boolean;
+  readonly [key: string]: string | boolean | number | undefined;
 }
 
-export function sendPreprEvent(event: string, data?: PreprEventData) {
-  window.parent.postMessage({
-    name: 'prepr_preview_bar',
-    event,
-    ...data,
-  });
+/**
+ * Sends a Prepr event to the parent window
+ * @param event - The event type to send
+ * @param data - Optional event data
+ */
+export function sendPreprEvent(
+  event: PreprEventType,
+  data?: PreprEventData
+): void {
+  if (typeof window !== 'undefined' && window.parent) {
+    window.parent.postMessage(
+      {
+        name: 'prepr_preview_bar',
+        event,
+        ...data,
+      },
+      '*'
+    );
+  }
 }
 
 // Export error handling utilities

@@ -1,21 +1,59 @@
 import { ipAddress } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
 
+export interface PreprMiddlewareOptions {
+  preview?: boolean;
+}
+
 /**
  * Middleware to set Prepr headers for personalization.
- * @param request - NextRequest object.
- * @param response - NextResponse object.
- * @param options - Options object.
- * @param options.preview - Boolean indicating if preview mode is enabled.
+ *
+ * @overload
+ * @param request - NextRequest object
+ * @param options - Options object
+ * @returns NextResponse with Prepr headers set
  */
 export default function createPreprMiddleware(
   request: NextRequest,
-  response?: NextResponse,
-  options?: {
-    preview?: boolean;
+  options?: PreprMiddlewareOptions
+): NextResponse;
+
+/**
+ * Middleware to set Prepr headers for personalization.
+ *
+ * @overload
+ * @param request - NextRequest object
+ * @param response - NextResponse object to chain with
+ * @param options - Options object
+ * @returns NextResponse with Prepr headers set
+ */
+export default function createPreprMiddleware(
+  request: NextRequest,
+  response: NextResponse,
+  options?: PreprMiddlewareOptions
+): NextResponse;
+
+/**
+ * Implementation of createPreprMiddleware with function overloads
+ */
+export default function createPreprMiddleware(
+  request: NextRequest,
+  responseOrOptions?: NextResponse | PreprMiddlewareOptions,
+  options?: PreprMiddlewareOptions
+): NextResponse {
+  let response: NextResponse;
+  let finalOptions: PreprMiddlewareOptions | undefined;
+
+  // Handle overloads
+  if (responseOrOptions && 'headers' in responseOrOptions) {
+    // Second parameter is NextResponse
+    response = responseOrOptions;
+    finalOptions = options;
+  } else {
+    // Second parameter is options or undefined
+    response = NextResponse.next();
+    finalOptions = responseOrOptions as PreprMiddlewareOptions | undefined;
   }
-) {
-  response = response || NextResponse.next();
 
   if (!process.env.PREPR_GRAPHQL_URL) {
     console.error('PREPR_GRAPHQL_URL is not set');
@@ -74,7 +112,7 @@ export default function createPreprMiddleware(
   response.headers.set('Prepr-Customer-Id', cookie);
 
   // If preview mode is not enabled, return the response
-  if (!options?.preview || process.env.PREPR_ENV !== 'preview') {
+  if (!finalOptions?.preview || process.env.PREPR_ENV !== 'preview') {
     return response;
   }
 
