@@ -1,6 +1,10 @@
 import React from 'react';
 import { Logo } from '../ui';
-import { SegmentSelector, VariantSelector, EditModeSelector } from '../selectors';
+import {
+  SegmentSelector,
+  VariantSelector,
+  EditModeSelector,
+} from '../selectors';
 import { ResetButton } from '../ui';
 
 interface ToolbarContentProps {

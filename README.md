@@ -29,20 +29,24 @@ export function middleware(request: NextRequest) {
 }
 ```
 
-Add toolbar to your layout:
+Add toolbar and tracking to your layout:
 
 ```typescript
-import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
-import { PreprToolbar, PreprToolbarProvider } from '@preprio/prepr-nextjs/react'
+import { getToolbarProps, extractAccessToken } from '@preprio/prepr-nextjs/server'
+import { PreprToolbar, PreprToolbarProvider, PreprTrackingPixel } from '@preprio/prepr-nextjs/react'
 import '@preprio/prepr-nextjs/index.css'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
+  const toolbarProps = await getToolbarProps(process.env.PREPR_GRAPHQL_URL!)
+  const accessToken = extractAccessToken(process.env.PREPR_GRAPHQL_URL!)
   
   return (
     <html>
+      <head>
+        {accessToken && <PreprTrackingPixel accessToken={accessToken!} />}
+      </head>
       <body>
-        <PreprToolbarProvider props={previewBarProps}>
+        <PreprToolbarProvider props={toolbarProps}>
           <PreprToolbar />
           {children}
         </PreprToolbarProvider>
@@ -283,14 +287,14 @@ export function middleware(request: NextRequest) {
 
 #### App Router (Next.js 13+)
 
-The preview bar should only be rendered in preview environments to avoid showing development tools in production. Here are several approaches for conditional rendering:
+The toolbar should only be rendered in preview environments to avoid showing development tools in production. Here are several approaches for conditional rendering:
 
 ##### Basic Conditional Rendering
 
 Update your `app/layout.tsx`:
 
 ```typescript
-import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+import { getToolbarProps } from '@preprio/prepr-nextjs/server'
 import { 
   PreprToolbar, 
   PreprToolbarProvider 
@@ -303,13 +307,13 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const isPreview = process.env.PREPR_ENV === 'preview'
-  const previewBarProps = isPreview ? await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!) : null
+  const toolbarProps = isPreview ? await getToolbarProps(process.env.PREPR_GRAPHQL_URL!) : null
 
   return (
     <html lang="en">
       <body>
-        {isPreview && previewBarProps ? (
-          <PreprToolbarProvider props={previewBarProps}>
+        {isPreview && toolbarProps ? (
+          <PreprToolbarProvider props={toolbarProps}>
             <PreprToolbar />
             {children}
           </PreprToolbarProvider>
@@ -327,7 +331,7 @@ export default async function RootLayout({
 For production applications, you may want more robust error handling:
 
 ```typescript
-import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+import { getToolbarProps } from '@preprio/prepr-nextjs/server'
 import { 
   PreprToolbar, 
   PreprToolbarProvider 
@@ -342,11 +346,11 @@ export default async function RootLayout({
   const isPreview = process.env.PREPR_ENV === 'preview'
   const graphqlUrl = process.env.PREPR_GRAPHQL_URL
   
-  // Only fetch preview bar props in preview mode with valid URL
-  let previewBarProps = null
+  // Only fetch toolbar props in preview mode with valid URL
+  let toolbarProps = null
   if (isPreview && graphqlUrl) {
     try {
-      previewBarProps = await getPreviewBarProps(graphqlUrl)
+      toolbarProps = await getToolbarProps(graphqlUrl)
     } catch (error) {
       console.error('Failed to load toolbar:', error)
       // Continue without toolbar instead of breaking the app
@@ -356,8 +360,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        {isPreview && previewBarProps ? (
-          <PreprToolbarProvider props={previewBarProps}>
+        {isPreview && toolbarProps ? (
+          <PreprToolbarProvider props={toolbarProps}>
             <PreprToolbar />
             {children}
           </PreprToolbarProvider>
@@ -376,7 +380,7 @@ For better separation of concerns, create a dedicated component:
 
 ```typescript
 // components/PreviewWrapper.tsx
-import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+import { getToolbarProps } from '@preprio/prepr-nextjs/server'
 import { 
   PreprToolbar, 
   PreprToolbarProvider 
@@ -393,10 +397,10 @@ export default async function PreviewWrapper({ children }: PreviewWrapperProps) 
     return <>{children}</>
   }
 
-  const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
+  const toolbarProps = await getToolbarProps(process.env.PREPR_GRAPHQL_URL!)
   
   return (
-    <PreprToolbarProvider props={previewBarProps}>
+    <PreprToolbarProvider props={toolbarProps}>
       <PreprToolbar />
       {children}
     </PreprToolbarProvider>
@@ -428,21 +432,21 @@ export default function RootLayout({
 
 1. **Performance**: Prevents unnecessary API calls in production
 2. **Security**: Avoids exposing preview functionality to end users
-3. **Bundle Size**: Excludes preview bar code from production builds
+3. **Bundle Size**: Excludes toolbar code from production builds
 4. **User Experience**: Ensures clean production UI without development tools
 
 #### Best Practices for Conditional Rendering
 
 - **Environment Variables**: Always use environment variables to control preview mode
 - **Error Boundaries**: Wrap preview components in error boundaries to prevent crashes
-- **Fallback UI**: Always provide a fallback when preview bar fails to load
+- **Fallback UI**: Always provide a fallback when toolbar fails to load
 - **TypeScript Safety**: Use proper type guards when checking conditions
 - **Bundle Optimization**: Consider dynamic imports for preview-only code
 
 ```typescript
 // Dynamic import example for advanced optimization
-const PreviewBarDynamic = dynamic(
-  () => import('@preprio/prepr-nextjs/react').then(mod => mod.PreprPreviewBar),
+const ToolbarDynamic = dynamic(
+  () => import('@preprio/prepr-nextjs/react').then(mod => mod.PreprToolbar),
   { 
     ssr: false,
     loading: () => <div>Loading preview tools...</div>
@@ -450,7 +454,63 @@ const PreviewBarDynamic = dynamic(
 )
 ```
 
-### 5. API Integration
+### 5. User Tracking Setup
+
+The tracking pixel is essential for collecting user interaction data and enabling personalization features. It should be included in all environments (both preview and production).
+
+#### Basic Setup
+
+Add the tracking pixel to your layout's `<head>` section:
+
+```typescript
+import { extractAccessToken } from '@preprio/prepr-nextjs/server'
+import { PreprTrackingPixel } from '@preprio/prepr-nextjs/react'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const accessToken = extractAccessToken(process.env.PREPR_GRAPHQL_URL!)
+  
+  return (
+    <html>
+      <head>
+        {accessToken && <PreprTrackingPixel accessToken={accessToken!} />}
+      </head>
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+#### Alternative: Body Placement
+
+You can also place the tracking pixel in the body if needed:
+
+```typescript
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const accessToken = extractAccessToken(process.env.PREPR_GRAPHQL_URL!)
+  
+  return (
+    <html>
+      <body>
+        {accessToken && <PreprTrackingPixel accessToken={accessToken!} />}
+        {children}
+      </body>
+    </html>
+  )
+}
+```
+
+#### Manual Token Extraction
+
+If you prefer to extract the token manually:
+
+```typescript
+// Extract token from PREPR_GRAPHQL_URL
+const accessToken = process.env.PREPR_GRAPHQL_URL?.split('/').pop() || ''
+
+<PreprTrackingPixel accessToken={accessToken} />
+```
+
+### 6. API Integration
 
 Use the `getPreprHeaders()` helper function in your data fetching to enable personalization and A/B testing:
 
@@ -549,13 +609,13 @@ const variant = await getActiveVariant()
 // Returns: 'A' | 'B' | null
 ```
 
-#### `getPreviewBarProps()`
-Fetches all necessary props for the preview bar component.
+#### `getToolbarProps()`
+Fetches all necessary props for the toolbar component.
 
 ```typescript
-import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+import { getToolbarProps } from '@preprio/prepr-nextjs/server'
 
-const props = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
+const props = await getToolbarProps(process.env.PREPR_GRAPHQL_URL!)
 // Returns: { activeSegment, activeVariant, data }
 ```
 
@@ -579,6 +639,16 @@ const isPreview = isPreviewMode()
 // Returns: boolean
 ```
 
+#### `extractAccessToken()`
+Extracts the access token from a Prepr GraphQL URL.
+
+```typescript
+import { extractAccessToken } from '@preprio/prepr-nextjs/server'
+
+const token = extractAccessToken('https://graphql.prepr.io/abc123')
+// Returns: 'abc123' or null
+```
+
 ### React Components
 
 #### `PreprToolbarProvider`
@@ -587,7 +657,7 @@ Context provider that wraps your app with toolbar functionality.
 ```typescript
 import { PreprToolbarProvider } from '@preprio/prepr-nextjs/react'
 
-<PreprToolbarProvider props={previewBarProps}>
+<PreprToolbarProvider props={toolbarProps}>
   {children}
 </PreprToolbarProvider>
 ```
@@ -599,6 +669,15 @@ The main toolbar component.
 import { PreprToolbar } from '@preprio/prepr-nextjs/react'
 
 <PreprToolbar />
+```
+
+#### `PreprTrackingPixel`
+User tracking component that loads the Prepr tracking script.
+
+```typescript
+import { PreprTrackingPixel } from '@preprio/prepr-nextjs/react'
+
+<PreprTrackingPixel accessToken="your-access-token" />
 ```
 
 ## 🔧 Configuration Options
@@ -628,7 +707,7 @@ createPreprMiddleware(request, response, {
 
 ```typescript
 <PreprToolbarProvider 
-  props={previewBarProps}
+  props={toolbarProps}
   options={{
     debug: true // Enable debug logging
   }}
@@ -680,7 +759,7 @@ Enable debug logging in development:
 
 ```typescript
 <PreprToolbarProvider 
-  props={previewBarProps}
+  props={toolbarProps}
   options={{ debug: true }}
 >
 ```

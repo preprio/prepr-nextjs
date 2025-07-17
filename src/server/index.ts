@@ -101,6 +101,32 @@ export function isPreviewMode(): boolean {
 }
 
 /**
+ * Extracts the access token from a Prepr GraphQL URL
+ * @param graphqlUrl - The full Prepr GraphQL URL
+ * @returns The access token or null if invalid
+ * @example
+ * ```typescript
+ * const token = extractAccessToken('https://graphql.prepr.io/abc123')
+ * // Returns: 'abc123'
+ * ```
+ */
+export function extractAccessToken(graphqlUrl: string): string | null {
+  if (!graphqlUrl) return null;
+
+  try {
+    const url = new URL(graphqlUrl);
+    if (url.hostname !== 'graphql.prepr.io') return null;
+
+    const pathParts = url.pathname.split('/');
+    const token = pathParts[pathParts.length - 1];
+
+    return token && token.length > 0 ? token : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Fetches the segments from the Prepr API
  * @param token Prepr GraphQL URL with scope 'segments'
  * @returns Array of PreprSegment
@@ -172,7 +198,7 @@ export async function getPreprEnvironmentSegments(
  * @param token Prepr GraphQL URL with scope 'segments'
  * @returns Object with activeSegment, activeVariant and data
  */
-export async function getPreviewBarProps(
+export async function getToolbarProps(
   token: string
 ): Promise<PreprToolbarProps> {
   let data: PreprSegment[] = [];
@@ -187,8 +213,8 @@ export async function getPreviewBarProps(
       activeVariant = await getActiveVariant();
     } catch (error) {
       // In preview mode, we should still return props even if API fails
-      console.error('Failed to fetch preview bar props:', error);
-      // Return empty data to prevent preview bar from crashing
+      console.error('Failed to fetch toolbar props:', error);
+      // Return empty data to prevent toolbar from crashing
       data = [];
     }
   }
