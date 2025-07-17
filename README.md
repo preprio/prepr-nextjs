@@ -68,12 +68,17 @@ Before installing, ensure you have:
 2. **Get your GraphQL URL**:
    - Go to Settings → Access tokens
    - Find your GraphQL Preview access token
+
+       ![preview API URL](https://assets-site.prepr.io//35k5a4g45wuy-preview-access-token.png)
+     
    - Copy the full GraphQL URL (e.g., `https://graphql.prepr.io/e6f7a0521f11e5149ce65b0e9f372ced2dfc923490890e7f225da1db84cxxxxx`)
    - The URL format is always `https://graphql.prepr.io/{YOUR_ACCESS_TOKEN}`
 3. **Enable edit mode** (for preview bar):
    - Open your GraphQL Preview access token
    - Check "Enable edit mode"
    - Save the token
+     
+     ![Preview access token](https://assets-site.prepr.io/229kaekn7m96//preview-access-token-enable-edit-mode.png)
 
 ## 🔧 Installation & Setup
 
@@ -104,6 +109,8 @@ PREPR_ENV=preview    # Use 'preview' for staging/development
 ```
 
 > **Important**: Replace `{YOUR_ACCESS_TOKEN}` with your actual Prepr access token from Settings → Access tokens.
+
+  ![preview API URL](https://assets-site.prepr.io//35k5a4g45wuy-preview-access-token.png)
 
 ### 3. Middleware Setup
 
