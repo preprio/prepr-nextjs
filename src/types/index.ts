@@ -3,7 +3,7 @@ export interface PreprSegment {
   readonly name: string;
 }
 
-export interface PreprPreviewBarOptions {
+export interface PreprToolbarOptions {
   readonly debug?: boolean;
   // Future options can be added here:
   // readonly enableProximityHighlight?: boolean;
@@ -11,7 +11,7 @@ export interface PreprPreviewBarOptions {
   // readonly enableTooltip?: boolean;
 }
 
-export interface PreprPreviewBarProps {
+export interface PreprToolbarProps {
   readonly activeSegment: string | null;
   readonly activeVariant: string | null;
   readonly data: readonly PreprSegment[];

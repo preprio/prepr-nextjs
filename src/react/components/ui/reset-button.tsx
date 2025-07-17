@@ -1,8 +1,8 @@
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { cn } from '../../utils';
-import { usePreprToolbar } from '../prepr-toolbar-provider';
-import Rotate from './icons/rotate';
+import { cn } from '../../../utils';
+import { usePreprToolbar } from '../toolbar/toolbar-provider';
+import Rotate from '../icons/rotate';
 
 export default function ResetButton() {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEditModeContext } from '../contexts';
+import { useEditModeContext } from '../../contexts';
 import RadioSelector from './radio-selector';
 
 export default function EditModeSelector() {

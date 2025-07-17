@@ -1,6 +1,5 @@
 import React from 'react';
-import StatusIndicatorPill from './status-indicator-pill';
-import CloseEditModePill from './close-edit-mode-pill';
+import { StatusIndicatorPill, CloseEditModePill } from '../ui';
 
 export default function ToolbarIndicatorWrapper() {
   return (

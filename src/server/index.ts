@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import {
-  PreprPreviewBarProps,
+  PreprToolbarProps,
   PreprSegment,
   PreprHeaderName,
   PreprErrorCode,
@@ -174,7 +174,7 @@ export async function getPreprEnvironmentSegments(
  */
 export async function getPreviewBarProps(
   token: string
-): Promise<PreprPreviewBarProps> {
+): Promise<PreprToolbarProps> {
   let data: PreprSegment[] = [];
   let activeSegment: string | null = null;
   let activeVariant: string | null = null;

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { ReactNode, useEffect, useCallback, useMemo } from 'react';
-import { PreprToolbarOptions, PreprToolbarProps } from '../types';
+import { PreprToolbarOptions, PreprToolbarProps } from '../../../types';
 import {
   SegmentProvider,
   VariantProvider,
@@ -9,9 +9,9 @@ import {
   useSegmentContext,
   useVariantContext,
   useEditModeContext,
-} from './contexts';
-import { StegaErrorBoundary } from './components/error-boundary';
-import { initDebugLogger } from '../utils/debug';
+} from '../../contexts';
+import { StegaErrorBoundary } from '../error-boundary';
+import { initDebugLogger } from '../../../utils/debug';
 
 interface PreprToolbarProviderProps {
   children: ReactNode;

@@ -1,9 +1,7 @@
 import React from 'react';
-import Logo from '../logo';
-import SegmentDropdown from '../segment-dropdown';
-import VariantSelector from '../variant-selector';
-import EditModeSelector from '../edit-mode-selector';
-import ResetButton from '../reset-button';
+import { Logo } from '../ui';
+import { SegmentSelector, VariantSelector, EditModeSelector } from '../selectors';
+import { ResetButton } from '../ui';
 
 interface ToolbarContentProps {
   onClose: () => void;
@@ -48,7 +46,7 @@ export function ToolbarContent({ onClose, contentRef }: ToolbarContentProps) {
         <span className="p-text-sm p-text-grey-400">Personalized content</span>
         <div className="p-gap p-flex p-flex-wrap p-items-center p-justify-between p-gap-x-6 p-gap-y-2">
           <h2 className="p-text-grey-800 p-font-semibold">Apply segment</h2>
-          <SegmentDropdown />
+          <SegmentSelector />
         </div>
         <div className="p-gap p-flex p-flex-wrap p-items-center p-justify-between p-gap-x-6 p-gap-y-2">
           <h2 className="p-text-grey-800 p-font-semibold">Show A/B variant</h2>

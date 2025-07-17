@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Toolbar } from './toolbar';
+import Toolbar from './toolbar';
 
 export default function ToolbarWrapper() {
   const searchParams = useSearchParams();

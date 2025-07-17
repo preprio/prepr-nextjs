@@ -1,6 +1,6 @@
 import React from 'react';
-import { usePreprToolbar } from '../prepr-toolbar-provider';
-import XMark from './icons/xmark';
+import { usePreprToolbar } from '../toolbar/toolbar-provider';
+import XMark from '../icons/xmark';
 
 export default function CloseEditModePill() {
   const { editMode, setEditMode, isIframe } = usePreprToolbar();

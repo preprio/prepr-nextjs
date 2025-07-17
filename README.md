@@ -29,11 +29,11 @@ export function middleware(request: NextRequest) {
 }
 ```
 
-Add preview bar to your layout:
+Add toolbar to your layout:
 
 ```typescript
 import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
-import { PreprPreviewBar, PreprPreviewBarProvider } from '@preprio/prepr-nextjs/react'
+import { PreprToolbar, PreprToolbarProvider } from '@preprio/prepr-nextjs/react'
 import '@preprio/prepr-nextjs/index.css'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -42,10 +42,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html>
       <body>
-        <PreprPreviewBarProvider props={previewBarProps}>
-          <PreprPreviewBar />
+        <PreprToolbarProvider props={previewBarProps}>
+          <PreprToolbar />
           {children}
-        </PreprPreviewBarProvider>
+        </PreprToolbarProvider>
       </body>
     </html>
   )
@@ -73,7 +73,7 @@ Before installing, ensure you have:
      
    - Copy the full GraphQL URL (e.g., `https://graphql.prepr.io/e6f7a0521f11e5149ce65b0e9f372ced2dfc923490890e7f225da1db84cxxxxx`)
    - The URL format is always `https://graphql.prepr.io/{YOUR_ACCESS_TOKEN}`
-3. **Enable edit mode** (for preview bar):
+3. **Enable edit mode** (for toolbar):
    - Open your GraphQL Preview access token
    - Check "Enable edit mode"
    - Save the token
@@ -292,8 +292,8 @@ Update your `app/layout.tsx`:
 ```typescript
 import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
 import { 
-  PreprPreviewBar, 
-  PreprPreviewBarProvider 
+  PreprToolbar, 
+  PreprToolbarProvider 
 } from '@preprio/prepr-nextjs/react'
 import '@preprio/prepr-nextjs/index.css'
 
@@ -309,10 +309,10 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         {isPreview && previewBarProps ? (
-          <PreprPreviewBarProvider props={previewBarProps}>
-            <PreprPreviewBar />
+          <PreprToolbarProvider props={previewBarProps}>
+            <PreprToolbar />
             {children}
-          </PreprPreviewBarProvider>
+          </PreprToolbarProvider>
         ) : (
           children
         )}
@@ -329,8 +329,8 @@ For production applications, you may want more robust error handling:
 ```typescript
 import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
 import { 
-  PreprPreviewBar, 
-  PreprPreviewBarProvider 
+  PreprToolbar, 
+  PreprToolbarProvider 
 } from '@preprio/prepr-nextjs/react'
 import '@preprio/prepr-nextjs/index.css'
 
@@ -348,8 +348,8 @@ export default async function RootLayout({
     try {
       previewBarProps = await getPreviewBarProps(graphqlUrl)
     } catch (error) {
-      console.error('Failed to load preview bar:', error)
-      // Continue without preview bar instead of breaking the app
+      console.error('Failed to load toolbar:', error)
+      // Continue without toolbar instead of breaking the app
     }
   }
 
@@ -357,10 +357,10 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         {isPreview && previewBarProps ? (
-          <PreprPreviewBarProvider props={previewBarProps}>
-            <PreprPreviewBar />
+          <PreprToolbarProvider props={previewBarProps}>
+            <PreprToolbar />
             {children}
-          </PreprPreviewBarProvider>
+          </PreprToolbarProvider>
         ) : (
           children
         )}
@@ -378,8 +378,8 @@ For better separation of concerns, create a dedicated component:
 // components/PreviewWrapper.tsx
 import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
 import { 
-  PreprPreviewBar, 
-  PreprPreviewBarProvider 
+  PreprToolbar, 
+  PreprToolbarProvider 
 } from '@preprio/prepr-nextjs/react'
 
 interface PreviewWrapperProps {
@@ -396,10 +396,10 @@ export default async function PreviewWrapper({ children }: PreviewWrapperProps) 
   const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
   
   return (
-    <PreprPreviewBarProvider props={previewBarProps}>
-      <PreprPreviewBar />
+    <PreprToolbarProvider props={previewBarProps}>
+      <PreprToolbar />
       {children}
-    </PreprPreviewBarProvider>
+    </PreprToolbarProvider>
   )
 }
 
@@ -581,24 +581,24 @@ const isPreview = isPreviewMode()
 
 ### React Components
 
-#### `PreprPreviewBarProvider`
-Context provider that wraps your app with preview bar functionality.
+#### `PreprToolbarProvider`
+Context provider that wraps your app with toolbar functionality.
 
 ```typescript
-import { PreprPreviewBarProvider } from '@preprio/prepr-nextjs/react'
+import { PreprToolbarProvider } from '@preprio/prepr-nextjs/react'
 
-<PreprPreviewBarProvider props={previewBarProps}>
+<PreprToolbarProvider props={previewBarProps}>
   {children}
-</PreprPreviewBarProvider>
+</PreprToolbarProvider>
 ```
 
-#### `PreprPreviewBar`
-The main preview bar component.
+#### `PreprToolbar`
+The main toolbar component.
 
 ```typescript
-import { PreprPreviewBar } from '@preprio/prepr-nextjs/react'
+import { PreprToolbar } from '@preprio/prepr-nextjs/react'
 
-<PreprPreviewBar />
+<PreprToolbar />
 ```
 
 ## 🔧 Configuration Options
@@ -624,10 +624,10 @@ createPreprMiddleware(request, response, {
 })
 ```
 
-### Preview Bar Options
+### Toolbar Options
 
 ```typescript
-<PreprPreviewBarProvider 
+<PreprToolbarProvider 
   props={previewBarProps}
   options={{
     debug: true // Enable debug logging
@@ -639,7 +639,7 @@ createPreprMiddleware(request, response, {
 
 ### Common Issues
 
-#### Preview Bar Not Showing
+#### Toolbar Not Showing
 - **Check environment**: Ensure `PREPR_ENV=preview` is set
 - **Verify GraphQL URL**: Make sure `PREPR_GRAPHQL_URL` is correct and follows the format `https://graphql.prepr.io/YOUR_ACCESS_TOKEN`
 - **Check token permissions**: Ensure "Enable edit mode" is checked in Prepr
@@ -679,7 +679,7 @@ try {
 Enable debug logging in development:
 
 ```typescript
-<PreprPreviewBarProvider 
+<PreprToolbarProvider 
   props={previewBarProps}
   options={{ debug: true }}
 >
@@ -696,9 +696,9 @@ The middleware automatically:
 4. **Processes A/B tests**: Manages variant assignments
 5. **Sets headers**: Adds necessary headers for API calls
 
-### Preview Bar Features
+### Toolbar Features
 
-The preview bar provides:
+The toolbar provides:
 - **Segment selection**: Switch between different audience segments
 - **A/B testing**: Toggle between variants A and B
 - **Edit mode**: Visual content editing capabilities

@@ -1,6 +1,6 @@
 import React from 'react';
-import { PreprSegment } from '../../types';
-import { useSegmentContext } from '../contexts';
+import { PreprSegment } from '../../../types';
+import { useSegmentContext } from '../../contexts';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Listbox,
@@ -8,10 +8,10 @@ import {
   ListboxOption,
   ListboxOptions,
 } from '@headlessui/react';
-import SortDown from './icons/sort-down';
-import { cn } from '../../utils';
+import SortDown from '../icons/sort-down';
+import { cn } from '../../../utils';
 
-export default function SegmentDropdown() {
+export default function SegmentSelector() {
   const { segments, setSelectedSegment, selectedSegment } = useSegmentContext();
 
   const pathname = usePathname();

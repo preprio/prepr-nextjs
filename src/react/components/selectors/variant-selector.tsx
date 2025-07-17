@@ -1,5 +1,5 @@
 import React from 'react';
-import { useVariantContext } from '../contexts';
+import { useVariantContext } from '../../contexts';
 import { usePathname, useRouter } from 'next/navigation';
 import RadioSelector from './radio-selector';
 

@@ -3,6 +3,6 @@
 export {
   PreprToolbarProvider,
   usePreprToolbar,
-} from './prepr-toolbar-provider';
+} from './components/toolbar/toolbar-provider';
 
-export { default as PreprPreviewBar } from './components/prepr-toolbar';
+export { default as PreprToolbar } from './components/toolbar/prepr-toolbar';
