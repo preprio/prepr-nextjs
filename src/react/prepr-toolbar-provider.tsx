@@ -13,15 +13,17 @@ import {
 import { StegaErrorBoundary } from './components/error-boundary';
 import { initDebugLogger } from '../utils/debug';
 
-interface PreprPreviewBarProviderProps {
+interface PreprToolbarProviderProps {
   children: ReactNode;
   props: PreprPreviewBarProps;
   options?: PreprPreviewBarOptions;
 }
 
-export const PreprPreviewBarProvider: React.FC<
-  PreprPreviewBarProviderProps
-> = ({ children, props, options }) => {
+export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
+  children,
+  props,
+  options,
+}) => {
   const { activeSegment, activeVariant, data } = props;
 
   // Initialize debug logger with options
@@ -42,7 +44,7 @@ export const PreprPreviewBarProvider: React.FC<
 };
 
 // Legacy hook for backward compatibility
-export const usePreprPreviewBar = () => {
+export const usePreprToolbar = () => {
   // This will be deprecated in favor of specific context hooks
   // but kept for backward compatibility
   const segmentContext = useSegmentContext();

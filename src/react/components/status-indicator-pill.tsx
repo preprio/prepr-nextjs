@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePreprPreviewBar } from '../prepr-previewbar-provider';
+import { usePreprToolbar } from '../prepr-toolbar-provider';
 import XMark from './icons/xmark';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -11,7 +11,7 @@ export default function StatusIndicatorPill() {
     emptyVariant,
     isIframe,
     resetPersonalization,
-  } = usePreprPreviewBar();
+  } = usePreprToolbar();
 
   // Only show if a segment or variant is applied (not empty/null)
   const show =

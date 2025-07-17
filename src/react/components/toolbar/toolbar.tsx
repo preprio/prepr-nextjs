@@ -3,14 +3,14 @@ import { createPortal } from 'react-dom';
 import { cn } from '../../../utils';
 import { useEditModeContext } from '../../contexts';
 import { useModal } from '../../hooks/use-modal';
-import { PreviewBarContent } from './preview-bar-content';
-import { PreviewBarButton } from './preview-bar-button';
+import { ToolbarContent } from './toolbar-content';
+import { ToolbarButton } from './toolbar-button';
 
-interface PreviewBarProps {
+interface ToolbarProps {
   children?: React.ReactNode;
 }
 
-export default function PreviewBar({ children }: PreviewBarProps) {
+export default function Toolbar({ children }: ToolbarProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isBarVisible, setIsBarVisible] = React.useState(false);
   const { editMode } = useEditModeContext();
@@ -68,7 +68,7 @@ export default function PreviewBar({ children }: PreviewBarProps) {
       <div className={cn('preview-bar-container')}>
         {/* Button holder*/}
         <div className="p-pr-2" ref={triggerRef}>
-          <PreviewBarButton onClick={handleClick} />
+          <ToolbarButton onClick={handleClick} />
         </div>
 
         {/* Box holder */}
@@ -87,7 +87,7 @@ export default function PreviewBar({ children }: PreviewBarProps) {
           )}
         >
           {children || (
-            <PreviewBarContent onClose={handleClick} contentRef={contentRef} />
+            <ToolbarContent onClose={handleClick} contentRef={contentRef} />
           )}
         </div>
       </div>
@@ -100,5 +100,5 @@ export default function PreviewBar({ children }: PreviewBarProps) {
 }
 
 // Compound component pattern
-PreviewBar.Content = PreviewBarContent;
-PreviewBar.Button = PreviewBarButton;
+Toolbar.Content = ToolbarContent;
+Toolbar.Button = ToolbarButton;

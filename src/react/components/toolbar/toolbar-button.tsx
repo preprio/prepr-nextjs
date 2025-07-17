@@ -2,15 +2,12 @@ import React from 'react';
 import { cn } from '../../../utils';
 import Icon from '../icon';
 
-interface PreviewBarButtonProps {
+interface ToolbarButtonProps {
   onClick: () => void;
   className?: string;
 }
 
-export function PreviewBarButton({
-  onClick,
-  className,
-}: PreviewBarButtonProps) {
+export function ToolbarButton({ onClick, className }: ToolbarButtonProps) {
   return (
     <button
       onClick={onClick}

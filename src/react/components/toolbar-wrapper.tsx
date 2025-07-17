@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { PreviewBar } from './preview-bar';
 import { useSearchParams } from 'next/navigation';
+import { Toolbar } from './toolbar';
 
-export default function PreviewBarWrapper() {
+export default function ToolbarWrapper() {
   const searchParams = useSearchParams();
   const [isIframe, setIsIframe] = useState<boolean>(false);
 
@@ -41,5 +41,5 @@ export default function PreviewBarWrapper() {
     return null;
   }
 
-  return <PreviewBar />;
+  return <Toolbar />;
 }

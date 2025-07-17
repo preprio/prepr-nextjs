@@ -1,13 +1,13 @@
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '../../utils';
-import { usePreprPreviewBar } from '../prepr-previewbar-provider';
+import { usePreprToolbar } from '../prepr-toolbar-provider';
 import Rotate from './icons/rotate';
 
 export default function ResetButton() {
   const router = useRouter();
   const { resetAll, selectedVariant, selectedSegment, setEditMode, editMode } =
-    usePreprPreviewBar();
+    usePreprToolbar();
   const pathname = usePathname();
   const enabled =
     selectedSegment._id !== 'null' || selectedVariant !== 'null' || editMode;

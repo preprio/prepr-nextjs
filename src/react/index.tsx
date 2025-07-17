@@ -1,8 +1,8 @@
 'use client';
 
 export {
-  PreprPreviewBarProvider,
-  usePreprPreviewBar,
-} from './prepr-previewbar-provider';
+  PreprToolbarProvider,
+  usePreprToolbar,
+} from './prepr-toolbar-provider';
 
-export { default as PreprPreviewBar } from './components/prepr-preview-bar';
+export { default as PreprPreviewBar } from './components/prepr-toolbar';

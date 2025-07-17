@@ -5,15 +5,12 @@ import VariantSelector from '../variant-selector';
 import EditModeSelector from '../edit-mode-selector';
 import ResetButton from '../reset-button';
 
-interface PreviewBarContentProps {
+interface ToolbarContentProps {
   onClose: () => void;
   contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export function PreviewBarContent({
-  onClose,
-  contentRef,
-}: PreviewBarContentProps) {
+export function ToolbarContent({ onClose, contentRef }: ToolbarContentProps) {
   return (
     <div
       ref={contentRef}
