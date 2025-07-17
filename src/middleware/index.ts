@@ -1,5 +1,6 @@
 import { ipAddress } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
+import { version } from '../../package.json';
 
 export interface PreprMiddlewareOptions {
   preview?: boolean;
@@ -85,6 +86,9 @@ export default function createPreprMiddleware(
   if (referrer) {
     response.headers.set('Prepr-Context-initial_referral', referrer);
   }
+
+  // Set Prepr version header
+  response.headers.set('Prepr-Package', version);
 
   // Set IP address header
   const ip = ipAddress(request);
