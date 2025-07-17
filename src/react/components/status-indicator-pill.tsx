@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePreprPreviewBar } from '../prepr-previewbar-provider';
 import XMark from './icons/xmark';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function StatusIndicatorPill() {
   const {
@@ -18,6 +19,25 @@ export default function StatusIndicatorPill() {
       selectedSegment._id !== (emptySegment?._id ?? 'null')) ||
     (selectedVariant && selectedVariant !== (emptyVariant ?? 'null'));
 
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleReset = () => {
+    resetPersonalization();
+    // Set preview params to 'null' in the URL, then remove them for a clean URL
+    const params = new URLSearchParams();
+    params.set('prepr_preview_segment', 'null');
+    params.set('prepr_preview_ab', 'null');
+
+    // First, push the URL with reset params to trigger any listeners
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    router.refresh();
+
+    // Then, push the clean URL (without the reset params)
+    router.push(pathname, { scroll: false });
+    router.refresh();
+  };
+
   if (isIframe) {
     return null;
   }
@@ -27,7 +47,7 @@ export default function StatusIndicatorPill() {
       {show && (
         <button
           type="button"
-          onClick={resetPersonalization}
+          onClick={handleReset}
           className="p-flex p-cursor-pointer p-items-center p-gap-2 p-rounded-full p-bg-primary-700 p-px-4 p-py-2 p-text-xs p-font-medium p-text-white p-shadow-lg p-transition-colors p-duration-150 hover:p-bg-primary-800"
         >
           <span className="p-text-[10px] p-text-white/60">viewing as</span>
