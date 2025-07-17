@@ -197,7 +197,12 @@ export function middleware(request: NextRequest) {
   // First run internationalization middleware
   const intlResponse = intlMiddleware(request)
   
-  // Then chain with Prepr middleware
+  // If next-intl returns a redirect, return it immediately
+  if (intlResponse.status >= 300 && intlResponse.status < 400) {
+    return intlResponse
+  }
+  
+  // Otherwise, chain with Prepr middleware
   return createPreprMiddleware(request, intlResponse, {
     preview: process.env.PREPR_ENV === 'preview'
   })
