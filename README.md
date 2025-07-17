@@ -724,4 +724,4 @@ MIT License - see the [LICENSE](./LICENSE) file for details.
 
 - **Documentation**: [Prepr Documentation](https://docs.prepr.io)
 - **Issues**: [GitHub Issues](https://github.com/preprio/prepr-nextjs/issues)
-- **Community**: [Prepr Community](https://community.prepr.io)
+- **Support**: [Prepr Support](https://prepr.io/support)
