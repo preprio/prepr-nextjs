@@ -283,6 +283,10 @@ export function middleware(request: NextRequest) {
 
 #### App Router (Next.js 13+)
 
+The preview bar should only be rendered in preview environments to avoid showing development tools in production. Here are several approaches for conditional rendering:
+
+##### Basic Conditional Rendering
+
 Update your `app/layout.tsx`:
 
 ```typescript
@@ -298,19 +302,152 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
+  const isPreview = process.env.PREPR_ENV === 'preview'
+  const previewBarProps = isPreview ? await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!) : null
 
   return (
     <html lang="en">
       <body>
-        <PreprPreviewBarProvider props={previewBarProps}>
-          <PreprPreviewBar />
-          {children}
-        </PreprPreviewBarProvider>
+        {isPreview && previewBarProps ? (
+          <PreprPreviewBarProvider props={previewBarProps}>
+            <PreprPreviewBar />
+            {children}
+          </PreprPreviewBarProvider>
+        ) : (
+          children
+        )}
       </body>
     </html>
   )
 }
+```
+
+##### Advanced Conditional Rendering with Error Handling
+
+For production applications, you may want more robust error handling:
+
+```typescript
+import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+import { 
+  PreprPreviewBar, 
+  PreprPreviewBarProvider 
+} from '@preprio/prepr-nextjs/react'
+import '@preprio/prepr-nextjs/index.css'
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const isPreview = process.env.PREPR_ENV === 'preview'
+  const graphqlUrl = process.env.PREPR_GRAPHQL_URL
+  
+  // Only fetch preview bar props in preview mode with valid URL
+  let previewBarProps = null
+  if (isPreview && graphqlUrl) {
+    try {
+      previewBarProps = await getPreviewBarProps(graphqlUrl)
+    } catch (error) {
+      console.error('Failed to load preview bar:', error)
+      // Continue without preview bar instead of breaking the app
+    }
+  }
+
+  return (
+    <html lang="en">
+      <body>
+        {isPreview && previewBarProps ? (
+          <PreprPreviewBarProvider props={previewBarProps}>
+            <PreprPreviewBar />
+            {children}
+          </PreprPreviewBarProvider>
+        ) : (
+          children
+        )}
+      </body>
+    </html>
+  )
+}
+```
+
+##### Component-Level Conditional Rendering
+
+For better separation of concerns, create a dedicated component:
+
+```typescript
+// components/PreviewWrapper.tsx
+import { getPreviewBarProps } from '@preprio/prepr-nextjs/server'
+import { 
+  PreprPreviewBar, 
+  PreprPreviewBarProvider 
+} from '@preprio/prepr-nextjs/react'
+
+interface PreviewWrapperProps {
+  children: React.ReactNode
+}
+
+export default async function PreviewWrapper({ children }: PreviewWrapperProps) {
+  const isPreview = process.env.PREPR_ENV === 'preview'
+  
+  if (!isPreview) {
+    return <>{children}</>
+  }
+
+  const previewBarProps = await getPreviewBarProps(process.env.PREPR_GRAPHQL_URL!)
+  
+  return (
+    <PreprPreviewBarProvider props={previewBarProps}>
+      <PreprPreviewBar />
+      {children}
+    </PreprPreviewBarProvider>
+  )
+}
+
+// app/layout.tsx
+import PreviewWrapper from '@/components/PreviewWrapper'
+import '@preprio/prepr-nextjs/index.css'
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <PreviewWrapper>
+          {children}
+        </PreviewWrapper>
+      </body>
+    </html>
+  )
+}
+```
+
+#### Why Conditional Rendering Matters
+
+1. **Performance**: Prevents unnecessary API calls in production
+2. **Security**: Avoids exposing preview functionality to end users
+3. **Bundle Size**: Excludes preview bar code from production builds
+4. **User Experience**: Ensures clean production UI without development tools
+
+#### Best Practices for Conditional Rendering
+
+- **Environment Variables**: Always use environment variables to control preview mode
+- **Error Boundaries**: Wrap preview components in error boundaries to prevent crashes
+- **Fallback UI**: Always provide a fallback when preview bar fails to load
+- **TypeScript Safety**: Use proper type guards when checking conditions
+- **Bundle Optimization**: Consider dynamic imports for preview-only code
+
+```typescript
+// Dynamic import example for advanced optimization
+const PreviewBarDynamic = dynamic(
+  () => import('@preprio/prepr-nextjs/react').then(mod => mod.PreprPreviewBar),
+  { 
+    ssr: false,
+    loading: () => <div>Loading preview tools...</div>
+  }
+)
 ```
 
 ### 5. API Integration
