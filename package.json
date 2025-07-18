@@ -9,18 +9,13 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "dev:css": "postcss ./src/globals.css -o ./src/output.css --watch",
-    "build:css": "NODE_ENV=production postcss ./src/globals.css -o ./dist/index.css",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist",
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
-    "release": "node scripts/release.js",
-    "check": "npm run type-check && npm run lint:check && npm run format:check",
-    "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.tsx --fix",
-    "lint:check": "eslint src --ext .ts,.tsx",
-    "prepublishOnly": "npm run check && npm run build"
+    "check": "tsc --noEmit && eslint src --ext .ts,.tsx && prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "fix": "eslint src --ext .ts,.tsx --fix && prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm run build && changeset publish",
+    "prepublishOnly": "pnpm run check && pnpm run build"
   },
   "exports": {
     "./middleware": {
@@ -37,11 +32,6 @@
       "import": "./dist/react/index.js",
       "types": "./dist/react/index.d.ts",
       "require": "./dist/react/index.cjs"
-    },
-    "./contexts": {
-      "import": "./dist/contexts/index.js",
-      "types": "./dist/contexts/index.d.ts",
-      "require": "./dist/contexts/index.cjs"
     },
     "./utils": {
       "import": "./dist/utils/index.js",
@@ -78,6 +68,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.5.2",
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
     "@eslint/js": "^9.25.1",
     "@types/node": "^20.11.5",
     "@types/react": "19.1.0",

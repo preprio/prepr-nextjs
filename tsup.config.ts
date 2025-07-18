@@ -15,13 +15,10 @@ export default defineConfig((options) => {
                     js: '"use client";',
                 };
             },
-            onSuccess: "pnpm run build:css",
+            onSuccess: "NODE_ENV=production postcss ./src/globals.css -o ./dist/index.css",
             clean: true,
             external: ['react', 'react-dom', 'next/navigation'],
-            // Bundle analysis
             metafile: !options.watch,
-  
-            // Splitting for better caching
             splitting: false,
         },
         {
@@ -36,9 +33,7 @@ export default defineConfig((options) => {
             minify: !options.watch,
             sourcemap: true,
             external: ['react', 'react-dom'],
-            // Bundle analysis
             metafile: !options.watch,
-            // Tree shaking
             treeshake: true,
         },
     ] as Options[];
