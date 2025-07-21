@@ -52,17 +52,13 @@ export default function PreprTrackingPixel({
   return (
     <Script
       id="prepr-tracking-pixel"
-      strategy="afterInteractive"
       dangerouslySetInnerHTML={{
         __html: `
-          !function(e,t,p,r,n,a,s){
-            e[r]||((n=e[r]=function(){
-              n.process?n.process.apply(n,arguments):n.queue.push(arguments)
-            }).queue=[],n.t=+new Date,(a=t.createElement(p)).async=1,a.src="https://cdn.tracking.prepr.io/js/prepr_v2.min.js?t="+864e5*Math.ceil(new Date/864e5),(s=t.getElementsByTagName(p)[0]).parentNode.insertBefore(a,s))
-          }(window,document,"script","prepr");
-          prepr("init","${accessToken}");
-          prepr("event","pageload");
-        `,
+   ! function (e, t, p, r, n, a, s) {
+    e[r] || ((n = e[r] = function () {
+    n.process ? n.process.apply(n, arguments) : n.queue.push(arguments)
+    }).queue = [], n.t = +new Date, (a = t.createElement(p)).async = 1, a.src = "https://cdn.tracking.prepr.io/js/prepr_v2.min.js?t=" + 864e5 * Math.ceil(new Date / 864e5), (s = t.getElementsByTagName(p)[0]).parentNode.insertBefore(a, s))
+    }(window, document, "script", "prepr"), prepr("init", "${accessToken}", { destinations: { googleTagManager: true } }), prepr("event", "pageload");`,
       }}
     />
   );
