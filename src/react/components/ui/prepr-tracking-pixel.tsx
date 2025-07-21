@@ -22,10 +22,11 @@ interface PreprTrackingPixelProps {
  * @example
  * ```tsx
  * // In your layout or page
+ *
  * import { PreprTrackingPixel } from '@preprio/prepr-nextjs/react'
  *
  * // Extract token from PREPR_GRAPHQL_URL
- * const accessToken = process.env.PREPR_GRAPHQL_URL?.split('/').pop() || ''
+ * const accessToken = extractAccessToken(process.env.PREPR_GRAPHQL_URL!)
  *
  * export default function Layout({ children }) {
  *   return (

@@ -499,17 +499,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-#### Manual Token Extraction
-
-If you prefer to extract the token manually:
-
-```typescript
-// Extract token from PREPR_GRAPHQL_URL
-const accessToken = process.env.PREPR_GRAPHQL_URL?.split('/').pop() || ''
-
-<PreprTrackingPixel accessToken={accessToken} />
-```
-
 ### 6. API Integration
 
 Use the `getPreprHeaders()` helper function in your data fetching to enable personalization and A/B testing:
