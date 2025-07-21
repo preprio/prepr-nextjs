@@ -12,6 +12,7 @@ import {
 } from './contexts';
 import { StegaErrorBoundary } from './components/error-boundary';
 import { initDebugLogger } from '../utils/debug';
+import useScrollPosition from './hooks/use-scroll-position';
 
 interface PreprToolbarProviderProps {
   children: ReactNode;
@@ -32,6 +33,15 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
     initDebugLogger(debugEnabled);
   }, [options?.debug]);
 
+  // Initialize scroll position handling for iframe communication
+  useScrollPosition();
+
+  useEffect(() => {
+    window.addEventListener('message', event => {
+      console.log('HeroSection message', event);
+    });
+  }, []);
+
   return (
     <StegaErrorBoundary>
       <SegmentProvider initialSegments={data} activeSegment={activeSegment}>
@@ -50,6 +60,9 @@ export const usePreprToolbar = () => {
   const segmentContext = useSegmentContext();
   const variantContext = useVariantContext();
   const editModeContext = useEditModeContext();
+
+  console.log('usePreprToolbar');
+  useScrollPosition(); // Side effect hook - must be called for iframe scroll handling
 
   const resetPersonalization = useCallback(() => {
     segmentContext.setSelectedSegment(segmentContext.emptySegment);

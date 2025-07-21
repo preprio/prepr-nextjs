@@ -7,7 +7,7 @@
 export type DebugArg = string | number | boolean | null | undefined | object;
 
 interface DebugOptions {
-  enabled: boolean;
+  enabled?: boolean;
   prefix?: string;
 }
 
@@ -22,10 +22,23 @@ class DebugLogger {
   }
 
   /**
+   * Check if debug is enabled - checks both local and global state
+   */
+  private isEnabled(): boolean {
+    // If this logger has a local enabled state, use it
+    if (this.options.enabled !== undefined) {
+      return this.options.enabled;
+    }
+    
+    // Otherwise, check the global logger state
+    return globalDebugLogger?.options?.enabled ?? false;
+  }
+
+  /**
    * Log a debug message if debug is enabled
    */
   log(message: string, ...args: DebugArg[]): void {
-    if (!this.options.enabled) return;
+    if (!this.isEnabled()) return;
 
     const prefix = this.options.prefix;
     console.log(`${prefix} ${message}`, ...args);
@@ -35,7 +48,7 @@ class DebugLogger {
    * Log a debug warning if debug is enabled
    */
   warn(message: string, ...args: DebugArg[]): void {
-    if (!this.options.enabled) return;
+    if (!this.isEnabled()) return;
 
     const prefix = this.options.prefix;
     console.warn(`${prefix} ${message}`, ...args);
@@ -45,7 +58,7 @@ class DebugLogger {
    * Log a debug error if debug is enabled
    */
   error(message: string, ...args: DebugArg[]): void {
-    if (!this.options.enabled) return;
+    if (!this.isEnabled()) return;
 
     const prefix = this.options.prefix;
     console.error(`${prefix} ${message}`, ...args);
@@ -105,8 +118,12 @@ export function debugError(message: string, ...args: DebugArg[]): void {
 }
 
 /**
- * Create a scoped debug logger
+ * Create a scoped debug logger that dynamically checks global debug state
  */
 export function createScopedLogger(scopeName: string): DebugLogger {
-  return getDebugLogger().scope(scopeName);
+  // Create a scoped logger without its own enabled state
+  // This allows it to dynamically check the global logger state
+  return new DebugLogger({
+    prefix: `[Prepr][${scopeName}]`,
+  });
 }

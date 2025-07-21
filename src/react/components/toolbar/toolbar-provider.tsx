@@ -12,6 +12,7 @@ import {
 } from '../../contexts';
 import { StegaErrorBoundary } from '../error-boundary';
 import { initDebugLogger } from '../../../utils/debug';
+import useScrollPosition from '../../hooks/use-scroll-position';
 
 interface PreprToolbarProviderProps {
   children: ReactNode;
@@ -31,6 +32,9 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
     const debugEnabled = options?.debug ?? false;
     initDebugLogger(debugEnabled);
   }, [options?.debug]);
+
+  // Initialize scroll position handling for iframe communication
+  useScrollPosition();
 
   return (
     <StegaErrorBoundary>

@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { sendPreprEvent } from '../../utils';
 import { createScopedLogger } from '../../utils/debug';
 
+// Mark this hook as having side effects to prevent tree shaking
+
 export default function useScrollPosition() {
   const debug = createScopedLogger('useScrollPosition');
 
@@ -53,4 +55,7 @@ export default function useScrollPosition() {
       return undefined;
     }
   }, [debug]);
+
+  // Return something to prevent tree shaking
+  return true;
 }

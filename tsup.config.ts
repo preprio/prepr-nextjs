@@ -16,10 +16,11 @@ export default defineConfig((options) => {
                 };
             },
             onSuccess: "NODE_ENV=production postcss ./src/globals.css -o ./dist/index.css",
-            clean: true,
+            clean: false,
             external: ['react', 'react-dom', 'next/navigation'],
             metafile: !options.watch,
             splitting: false,
+            treeshake: false, // Disable tree shaking to preserve useScrollPosition
         },
         {
             entry: {
