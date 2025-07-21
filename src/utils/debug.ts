@@ -29,7 +29,7 @@ class DebugLogger {
     if (this.options.enabled !== undefined) {
       return this.options.enabled;
     }
-    
+
     // Otherwise, check the global logger state
     return globalDebugLogger?.options?.enabled ?? false;
   }
