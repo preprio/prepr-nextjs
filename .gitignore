@@ -1,2 +1,7 @@
-node_modules/
-.idea/
+node_modules
+.turbo
+tsconfig.tsbuildinfo
+dist
+src/output.css
+/CLAUDE.md
+/.idea
