@@ -8,6 +8,7 @@ import React, {
   ReactNode,
 } from 'react';
 import { handleContextError } from '../../utils/errors';
+import { sendPreprEvent } from '../../utils';
 
 interface EditModeContextValue {
   editMode: boolean;
@@ -27,6 +28,11 @@ export function EditModeProvider({ children }: EditModeProviderProps) {
   const [editMode, setEditMode] = useState(false);
   const [isIframe, setIsIframe] = useState(false);
 
+  const handleSetEditMode = (mode: boolean) => {
+    setEditMode(mode);
+    sendPreprEvent('edit_mode_toggled', { editMode: mode });
+  };
+
   useEffect(() => {
     if (window.parent !== self) {
       setIsIframe(true);
@@ -37,7 +43,7 @@ export function EditModeProvider({ children }: EditModeProviderProps) {
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && editMode) {
-        setEditMode(false);
+        handleSetEditMode(false);
       }
     };
 
@@ -52,7 +58,7 @@ export function EditModeProvider({ children }: EditModeProviderProps) {
 
   const value: EditModeContextValue = {
     editMode,
-    setEditMode,
+    setEditMode: handleSetEditMode,
     isIframe,
   };
 

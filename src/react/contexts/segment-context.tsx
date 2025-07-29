@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { PreprSegment } from '../../types';
 import { handleContextError } from '../../utils/errors';
+import { sendPreprEvent } from '../../utils';
 
 interface SegmentContextValue {
   segments: PreprSegment[];
@@ -47,10 +48,15 @@ export function SegmentProvider({
       emptySegment
   );
 
+  const handleSetSelectedSegment = (segment: PreprSegment) => {
+    setSelectedSegment(segment);
+    sendPreprEvent('segment_changed', { segment: segment._id });
+  };
+
   const value: SegmentContextValue = {
     segments: segmentList,
     selectedSegment,
-    setSelectedSegment,
+    setSelectedSegment: handleSetSelectedSegment,
     emptySegment,
   };
 
