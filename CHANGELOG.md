@@ -1,5 +1,18 @@
 # @preprio/prepr-nextjs
 
+## 2.0.1
+
+### Patch Changes
+
+- Add sendPreprEvent calls for state changes in context providers
+
+  Implemented automatic event tracking when segments, variants, or edit mode states are updated:
+  - Added `segment_changed` event when segments are switched
+  - Added `variant_changed` event when variants are switched
+  - Added `edit_mode_toggled` event when edit mode is toggled
+
+  This enables better tracking and debugging of personalization state changes.
+
 ## 2.0.0
 
 ### Major Changes

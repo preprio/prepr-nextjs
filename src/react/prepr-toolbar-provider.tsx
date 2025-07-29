@@ -11,7 +11,7 @@ import {
   useEditModeContext,
 } from './contexts';
 import { StegaErrorBoundary } from './components/error-boundary';
-import { initDebugLogger } from '../utils/debug';
+import { initDebugLogger } from '../utils';
 import useScrollPosition from './hooks/use-scroll-position';
 
 interface PreprToolbarProviderProps {

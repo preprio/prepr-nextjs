@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { handleContextError } from '../../utils/errors';
+import { sendPreprEvent } from '../../utils';
 
 interface VariantContextValue {
   selectedVariant: string | null;
@@ -28,9 +29,14 @@ export function VariantProvider({
     activeVariant || 'null'
   );
 
+  const handleSetSelectedVariant = (variant: string | null) => {
+    setSelectedVariant(variant);
+    sendPreprEvent('variant_changed', { variant: variant ?? undefined });
+  };
+
   const value: VariantContextValue = {
     selectedVariant,
-    setSelectedVariant,
+    setSelectedVariant: handleSetSelectedVariant,
     emptyVariant,
   };
 

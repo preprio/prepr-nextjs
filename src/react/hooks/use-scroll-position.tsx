@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { sendPreprEvent } from '../../utils';
-import { createScopedLogger } from '../../utils/debug';
+import { createScopedLogger } from '../../utils';
 
 // Mark this hook as having side effects to prevent tree shaking
 
