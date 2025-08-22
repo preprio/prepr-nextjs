@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.0.2
+
+### Patch Changes
+
+- Added auto close on segment & variant switch
+
 ## 2.0.1
 
 ### Patch Changes
