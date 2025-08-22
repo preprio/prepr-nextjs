@@ -112,17 +112,17 @@
 
 /* Component-specific styles */
 .preview-bar-container {
-  @apply p-fixed p-ml-auto p-right-0 p-z-[999] p-top-[calc(50%-64px)] p-flex p-justify-end p-items-center;
+  @apply p-fixed p-right-0 p-top-[calc(50%-64px)] p-z-[999] p-ml-auto p-flex p-items-center p-justify-end;
 }
 
 .preview-bar-content {
-  @apply p-p-6 sm:p-p-10 p-right-0 p-gap-y-10 p-z-[101] p-w-full sm:p-w-[502px] p-bg-primary-50 p-box-shadow p-rounded-lg p-flex p-flex-col;
+  @apply p-box-shadow p-right-0 p-z-[101] p-flex p-w-full p-flex-col p-gap-y-10 p-rounded-lg p-bg-primary-50 p-p-6 sm:p-w-[502px] sm:p-p-10;
 }
 
 .preview-bar-backdrop {
-  @apply p-fixed p-inset-0 p-w-screen p-h-screen p-bg-black/10 p-z-50;
+  @apply p-fixed p-inset-0 p-z-50 p-h-screen p-w-screen p-bg-black/10;
 }
 
 .preview-bar-popup {
-  @apply p-absolute p-w-full p-p-3 sm:p-p-0 sm:p-mr-16 p-flex p-justify-end p-z-[60] p-transition-all p-duration-200 p-ease-in-out;
+  @apply p-absolute p-z-[60] p-flex p-w-full p-justify-end p-p-3 p-transition-all p-duration-200 p-ease-in-out sm:p-mr-16 sm:p-p-0;
 }

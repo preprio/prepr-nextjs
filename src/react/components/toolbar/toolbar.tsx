@@ -70,16 +70,16 @@ export default function Toolbar({ children }: ToolbarProps) {
 
   // Auto-close modal when segment changes
   useEffect(() => {
-      setTimeout(() => {
-        setIsBarVisible(false);
-      }, 150);
+    setTimeout(() => {
+      setIsBarVisible(false);
+    }, 150);
   }, [selectedSegment]);
 
   // Auto-close modal when variant changes
   useEffect(() => {
-      setTimeout(() => {
-        setIsBarVisible(false);
-      }, 150);
+    setTimeout(() => {
+      setIsBarVisible(false);
+    }, 150);
   }, [selectedVariant]);
 
   const previewBarContent = (
@@ -107,7 +107,7 @@ export default function Toolbar({ children }: ToolbarProps) {
           )}
         >
           {children || (
-            <ToolbarContent onClose={handleClick} contentRef={contentRef}  />
+            <ToolbarContent onClose={handleClick} contentRef={contentRef} />
           )}
         </div>
       </div>
