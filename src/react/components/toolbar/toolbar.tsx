@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../../../utils';
-import { useEditModeContext } from '../../contexts';
+import {
+  useEditModeContext,
+  useSegmentContext,
+  useVariantContext,
+} from '../../contexts';
 import { useModal } from '../../hooks/use-modal';
 import { ToolbarContent } from './toolbar-content';
 import { ToolbarButton } from './toolbar-button';
@@ -14,6 +18,8 @@ export default function Toolbar({ children }: ToolbarProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isBarVisible, setIsBarVisible] = React.useState(false);
   const { editMode } = useEditModeContext();
+  const { selectedSegment } = useSegmentContext();
+  const { selectedVariant } = useVariantContext();
   const { contentRef, triggerRef } = useModal({
     isVisible: isBarVisible,
     onClose: () => setIsBarVisible(false),
@@ -62,6 +68,20 @@ export default function Toolbar({ children }: ToolbarProps) {
     }
   }, [editMode]);
 
+  // Auto-close modal when segment changes
+  useEffect(() => {
+      setTimeout(() => {
+        setIsBarVisible(false);
+      }, 150);
+  }, [selectedSegment]);
+
+  // Auto-close modal when variant changes
+  useEffect(() => {
+      setTimeout(() => {
+        setIsBarVisible(false);
+      }, 150);
+  }, [selectedVariant]);
+
   const previewBarContent = (
     <>
       {isBarVisible && <div className="preview-bar-backdrop" />}
@@ -87,7 +107,7 @@ export default function Toolbar({ children }: ToolbarProps) {
           )}
         >
           {children || (
-            <ToolbarContent onClose={handleClick} contentRef={contentRef} />
+            <ToolbarContent onClose={handleClick} contentRef={contentRef}  />
           )}
         </div>
       </div>
