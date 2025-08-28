@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.0.3
+
+### Patch Changes
+
+- Added CF exception for IP recognition
+
 ## 2.0.2
 
 ### Patch Changes
