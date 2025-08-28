@@ -90,8 +90,12 @@ export default function createPreprMiddleware(
   // Set Prepr version header
   response.headers.set('Prepr-Package', version);
 
-  // Set IP address header
-  const ip = ipAddress(request);
+  let ip: string | null = ipAddress(request) || null;
+
+  if (request.headers.get('Cf-Connecting-Ip')) {
+    ip = request.headers.get('Cf-Connecting-Ip');
+  }
+
   if (ip) {
     response.headers.set('Prepr-Visitor-IP', ip);
   }
