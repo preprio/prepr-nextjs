@@ -55,7 +55,7 @@ export default function StatusIndicatorPill() {
       <button
         type="button"
         onClick={previewMode ? handleReset : () => setPreviewMode(true)}
-        className="p-flex p-cursor-pointer p-items-center p-gap-2 p-rounded-full p-bg-primary-700 p-px-4 p-py-2 p-text-xs p-font-medium p-text-white p-shadow-lg p-transition-colors p-duration-150 hover:p-bg-primary-800"
+        className="p-flex p-items-center p-gap-2 p-rounded-full p-bg-primary-700 p-px-4 p-py-2 p-text-xs p-font-medium p-text-white p-shadow-lg"
       >
         <span className="p-text-[10px] p-text-white/60">Viewing as:</span>
         <span className="max-w-[120px] p-inline-block p-truncate">{segmentLabel}</span>
@@ -64,7 +64,6 @@ export default function StatusIndicatorPill() {
             {selectedVariant}
           </span>
         )}
-        <XMark className="p-h-3 p-w-3 p-text-white" />
       </button>
     </div>
   );

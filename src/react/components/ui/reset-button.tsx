@@ -6,7 +6,14 @@ import Rotate from '../icons/rotate';
 
 export default function ResetButton() {
   const router = useRouter();
-  const { resetAll, selectedVariant, selectedSegment, setEditMode, editMode } =
+  const {
+    resetAll,
+    selectedVariant,
+    selectedSegment,
+    setEditMode,
+    editMode,
+    isPreviewMode,
+  } =
     usePreprToolbar();
   const pathname = usePathname();
   const enabled =
@@ -34,7 +41,8 @@ export default function ResetButton() {
     'p-py-2 p-px-3 p-flex p-justify-center p-gap-2 p-items-center p-rounded-md p-regular-text p-h-10 p-w-full md:p-w-[108px]',
     enabled &&
       'p-bg-secondary-400 hover:p-secondary-500 p-cursor-pointer p-text-white',
-    !enabled && 'p-bg-grey-400 p-text-gray-500'
+    !enabled && 'p-bg-grey-400 p-text-gray-500',
+    !isPreviewMode && 'p-cursor-not-allowed'
   );
 
   return (
