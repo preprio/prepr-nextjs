@@ -1,6 +1,10 @@
 import React from 'react';
 import { PreprSegment } from '../../../types';
-import { useSegmentContext } from '../../contexts';
+import {
+  useSegments,
+  useSelectedSegment,
+  usePreprStore,
+} from '../../../stores/prepr-store';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Listbox,
@@ -12,7 +16,9 @@ import SortDown from '../icons/sort-down';
 import { cn } from '../../../utils';
 
 export default function SegmentSelector() {
-  const { segments, setSelectedSegment, selectedSegment } = useSegmentContext();
+  const segments = useSegments();
+  const selectedSegment = useSelectedSegment();
+  const setSelectedSegment = usePreprStore(state => state.setSelectedSegment);
 
   const pathname = usePathname();
   const router = useRouter();

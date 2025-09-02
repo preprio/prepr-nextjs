@@ -2,17 +2,11 @@
 
 import React, { ReactNode, useEffect, useCallback, useMemo } from 'react';
 import { PreprToolbarOptions, PreprToolbarProps } from '../../../types';
-import {
-  SegmentProvider,
-  VariantProvider,
-  EditModeProvider,
-  useSegmentContext,
-  useVariantContext,
-  useEditModeContext,
-} from '../../contexts';
 import { StegaErrorBoundary } from '../error-boundary';
+import { PreprStoreInitializer } from '../store/prepr-store-initializer';
 import { initDebugLogger } from '../../../utils/debug';
 import useScrollPosition from '../../hooks/use-scroll-position';
+import { usePreprStore, usePreviewMode } from '../../../stores/prepr-store';
 
 interface PreprToolbarProviderProps {
   children: ReactNode;
@@ -25,8 +19,6 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
   props,
   options,
 }) => {
-  const { activeSegment, activeVariant, data } = props;
-
   // Initialize debug logger with options
   useEffect(() => {
     const debugEnabled = options?.debug ?? false;
@@ -38,64 +30,70 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
 
   return (
     <StegaErrorBoundary>
-      <SegmentProvider initialSegments={data} activeSegment={activeSegment}>
-        <VariantProvider activeVariant={activeVariant}>
-          <EditModeProvider>{children}</EditModeProvider>
-        </VariantProvider>
-      </SegmentProvider>
+      <PreprStoreInitializer props={props}>{children}</PreprStoreInitializer>
     </StegaErrorBoundary>
   );
 };
 
 // Legacy hook for backward compatibility
 export const usePreprToolbar = () => {
-  // This will be deprecated in favor of specific context hooks
-  // but kept for backward compatibility
-  const segmentContext = useSegmentContext();
-  const variantContext = useVariantContext();
-  const editModeContext = useEditModeContext();
+  // Convenience hook backed by Zustand store
+  const selectedSegment = usePreprStore(s => s.selectedSegment);
+  const segments = usePreprStore(s => s.segments);
+  const emptySegment = usePreprStore(s => s.emptySegment);
+  const setSelectedSegment = usePreprStore(s => s.setSelectedSegment);
+
+  const selectedVariant = usePreprStore(s => s.selectedVariant);
+  const emptyVariant = usePreprStore(s => s.emptyVariant);
+  const setSelectedVariant = usePreprStore(s => s.setSelectedVariant);
+
+  const editMode = usePreprStore(s => s.editMode);
+  const setEditMode = usePreprStore(s => s.setEditMode);
+  const isIframe = usePreprStore(s => s.isIframe);
+
+  const resetPersonalizationStore = usePreprStore(s => s.resetPersonalization);
+  const resetAllStore = usePreprStore(s => s.resetAll);
+  const previewMode = usePreviewMode();
 
   const resetPersonalization = useCallback(() => {
-    segmentContext.setSelectedSegment(segmentContext.emptySegment);
-    variantContext.setSelectedVariant(variantContext.emptyVariant);
-  }, [segmentContext, variantContext]);
+    resetPersonalizationStore();
+  }, [resetPersonalizationStore]);
 
   const resetAll = useCallback(() => {
-    segmentContext.setSelectedSegment(segmentContext.emptySegment);
-    variantContext.setSelectedVariant(variantContext.emptyVariant);
-    editModeContext.setEditMode(false);
-  }, [segmentContext, variantContext, editModeContext]);
+    resetAllStore();
+  }, [resetAllStore]);
 
   return useMemo(
     () => ({
-      isPreviewMode: false,
-      activeSegment: segmentContext.selectedSegment._id,
-      activeVariant: variantContext.selectedVariant,
-      data: segmentContext.segments,
-      emptySegment: segmentContext.emptySegment,
-      segmentList: segmentContext.segments,
-      selectedSegment: segmentContext.selectedSegment,
-      setSelectedSegment: segmentContext.setSelectedSegment,
-      emptyVariant: variantContext.emptyVariant,
-      selectedVariant: variantContext.selectedVariant,
-      setSelectedVariant: variantContext.setSelectedVariant,
-      editMode: editModeContext.editMode,
-      setEditMode: editModeContext.setEditMode,
-      isIframe: editModeContext.isIframe,
+      isPreviewMode: previewMode,
+      activeSegment: selectedSegment._id,
+      activeVariant: selectedVariant,
+      data: segments,
+      emptySegment,
+      segmentList: segments,
+      selectedSegment,
+      setSelectedSegment,
+      emptyVariant,
+      selectedVariant,
+      setSelectedVariant,
+      editMode,
+      setEditMode,
+      isIframe,
       resetPersonalization,
       resetAll,
     }),
     [
-      segmentContext.selectedSegment,
-      segmentContext.segments,
-      segmentContext.emptySegment,
-      segmentContext.setSelectedSegment,
-      variantContext.selectedVariant,
-      variantContext.emptyVariant,
-      variantContext.setSelectedVariant,
-      editModeContext.editMode,
-      editModeContext.setEditMode,
-      editModeContext.isIframe,
+      previewMode,
+      selectedSegment,
+      segments,
+      emptySegment,
+      setSelectedSegment,
+      selectedVariant,
+      emptyVariant,
+      setSelectedVariant,
+      editMode,
+      setEditMode,
+      isIframe,
       resetPersonalization,
       resetAll,
     ]

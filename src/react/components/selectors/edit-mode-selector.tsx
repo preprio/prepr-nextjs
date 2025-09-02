@@ -1,9 +1,10 @@
 import React from 'react';
-import { useEditModeContext } from '../../contexts';
+import { useEditMode, usePreprStore } from '../../../stores/prepr-store';
 import RadioSelector from './radio-selector';
 
 export default function EditModeSelector() {
-  const { editMode, setEditMode } = useEditModeContext();
+  const editMode = useEditMode();
+  const setEditMode = usePreprStore(state => state.setEditMode);
 
   const updateEditMode = (value: string | boolean) => {
     setEditMode(value === 'true' || value === true);

@@ -1,11 +1,12 @@
 import React from 'react';
-import { useVariantContext } from '../../contexts';
+import { useSelectedVariant, usePreprStore } from '../../../stores/prepr-store';
 import { usePathname, useRouter } from 'next/navigation';
 import RadioSelector from './radio-selector';
 
 export default function VariantSelector() {
-  const { selectedVariant, setSelectedVariant, emptyVariant } =
-    useVariantContext();
+  const selectedVariant = useSelectedVariant();
+  const setSelectedVariant = usePreprStore(state => state.setSelectedVariant);
+  const emptyVariant = usePreprStore(state => state.emptyVariant);
 
   const pathname = usePathname();
   const router = useRouter();

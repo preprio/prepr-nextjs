@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../../../utils';
 import {
-  useEditModeContext,
-  useSegmentContext,
-  useVariantContext,
-} from '../../contexts';
+  useEditMode,
+  useSelectedSegment,
+  useSelectedVariant,
+} from '../../../stores/prepr-store';
 import { useModal } from '../../hooks/use-modal';
 import { ToolbarContent } from './toolbar-content';
 import { ToolbarButton } from './toolbar-button';
@@ -17,9 +17,9 @@ interface ToolbarProps {
 export default function Toolbar({ children }: ToolbarProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isBarVisible, setIsBarVisible] = React.useState(false);
-  const { editMode } = useEditModeContext();
-  const { selectedSegment } = useSegmentContext();
-  const { selectedVariant } = useVariantContext();
+  const editMode = useEditMode();
+  const selectedSegment = useSelectedSegment();
+  const selectedVariant = useSelectedVariant();
   const { contentRef, triggerRef } = useModal({
     isVisible: isBarVisible,
     onClose: () => setIsBarVisible(false),
