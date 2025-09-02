@@ -20,7 +20,12 @@ export default function useStegaScan(editMode: boolean): void {
     decode,
   } = useStegaOverlay();
 
-  const { updateElementGradients, clearAllHighlights } = useStegaProximity();
+  const {
+    updateElementGradients,
+    clearAllHighlights,
+    refreshObserving,
+    stopObserving,
+  } = useStegaProximity();
 
   const {
     getElements,
@@ -95,7 +100,12 @@ export default function useStegaScan(editMode: boolean): void {
     scanDocument(decode);
     const elements = getElements();
     debug.log('found', elements.length, 'encoded elements after scan');
-    setupMutationObserver(decode);
+    // Start observing visible candidates
+    refreshObserving();
+    setupMutationObserver(decode, () => {
+      // Refresh visible candidates on DOM changes
+      refreshObserving();
+    });
     debug.log('set up mutation observer');
     DOMService.addEventListener(document, 'mousemove', throttledMouseMove);
     debug.log('added throttled mousemove handler');
@@ -118,6 +128,7 @@ export default function useStegaScan(editMode: boolean): void {
       }
       cleanupOverlay();
       clearAllHighlights();
+      stopObserving();
       cleanupElements();
       isInitializedRef.current = false;
     };

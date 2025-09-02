@@ -9,24 +9,24 @@ interface DecodedData {
   href: string;
 }
 
+const decodeLogger = createScopedLogger('decode');
+
 function decode(str: string | null): DecodedData | null {
   if (!str) return null;
 
-  const debug = createScopedLogger('decode');
-
   try {
     // First, try to decode the string directly
-    debug.log('attempting to decode stega data');
+    decodeLogger.log('attempting to decode stega data');
 
     const decoded = vercelStegaDecode(str) as DecodedData;
-    debug.log('vercelStegaDecode result:', decoded);
+    decodeLogger.log('vercelStegaDecode result:', decoded);
 
     if (decoded?.href) {
-      debug.log('successfully decoded', decoded);
+      decodeLogger.log('successfully decoded', decoded);
       return decoded;
     }
   } catch (e) {
-    debug.log('error decoding stega data:', e as Error);
+    decodeLogger.log('error decoding stega data:', e as Error);
     // If it fails, it might be because of trailing characters.
     // Regex to find the JSON string
     const regex = /{"origin.*?}/;
@@ -37,7 +37,7 @@ function decode(str: string | null): DecodedData | null {
         // Now, try to decode the matched JSON string
         const decodedMatch = vercelStegaDecode(match[0]) as DecodedData;
         if (decodedMatch?.href) {
-          debug.log('successfully decoded with regex match', decodedMatch);
+          decodeLogger.log('successfully decoded with regex match', decodedMatch);
           return decodedMatch;
         }
       } catch (e) {
@@ -89,6 +89,11 @@ export function useStegaOverlay() {
         hideTimeoutRef.current = null;
       }
 
+      // Update active class on elements
+      if (currentElementRef.current && currentElementRef.current !== element) {
+        currentElementRef.current.classList.remove('prepr-overlay-active');
+      }
+
       const rect = DOMService.getElementRect(element);
       const href = element.getAttribute('data-prepr-href');
       const origin = element.getAttribute('data-prepr-origin');
@@ -121,8 +126,25 @@ export function useStegaOverlay() {
         // Use requestAnimationFrame to ensure the DOM has updated before calculating position
         requestAnimationFrame(() => {
           if (tooltip) {
-            tooltip.style.top = `${rect.top + window.scrollY - tooltip.clientHeight - 2}px`;
-            tooltip.style.left = `${rect.right + 4 - tooltip.clientWidth}px`;
+            // Compute desired positions
+            let top = rect.top + window.scrollY - tooltip.clientHeight - 2;
+            let left = rect.right + 4 - tooltip.clientWidth;
+
+            // Clamp within viewport bounds
+            const minTop = window.scrollY + 4;
+            const maxTop = window.scrollY + window.innerHeight - tooltip.clientHeight - 4;
+            const minLeft = window.scrollX + 4;
+            const maxLeft = window.scrollX + window.innerWidth - tooltip.clientWidth - 4;
+
+            if (top < minTop) {
+              // If above viewport, place below the element
+              top = rect.bottom + window.scrollY + 2;
+            }
+            top = Math.max(minTop, Math.min(top, maxTop));
+            left = Math.max(minLeft, Math.min(left, maxLeft));
+
+            tooltip.style.top = `${top}px`;
+            tooltip.style.left = `${left}px`;
           }
         });
 
@@ -131,6 +153,7 @@ export function useStegaOverlay() {
       }
 
       currentElementRef.current = element;
+      element.classList.add('prepr-overlay-active');
     },
     [debug]
   );
@@ -145,6 +168,9 @@ export function useStegaOverlay() {
     hideTimeoutRef.current = setTimeout(() => {
       if (overlayRef.current) overlayRef.current.style.display = 'none';
       if (tooltipRef.current) tooltipRef.current.style.display = 'none';
+      if (currentElementRef.current) {
+        currentElementRef.current.classList.remove('prepr-overlay-active');
+      }
       currentElementRef.current = null;
       debug.log('hidden overlay and tooltip');
     }, 100);
