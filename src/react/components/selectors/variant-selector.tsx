@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelectedVariant, usePreprStore } from '../../../stores/prepr-store';
 import { usePathname, useRouter } from 'next/navigation';
 import RadioSelector from './radio-selector';
+import { usePreviewMode } from '../../../stores/prepr-store';
 
 export default function VariantSelector() {
   const selectedVariant = useSelectedVariant();
@@ -10,6 +11,7 @@ export default function VariantSelector() {
 
   const pathname = usePathname();
   const router = useRouter();
+  const previewMode = usePreviewMode();
 
   const updateSelectedVariant = (value: string | boolean) => {
     const params = new URLSearchParams(window.location.search);
@@ -33,6 +35,7 @@ export default function VariantSelector() {
       value={selectedVariant || emptyVariant}
       onChange={updateSelectedVariant}
       options={options}
+      disabled={!previewMode}
     />
   );
 }

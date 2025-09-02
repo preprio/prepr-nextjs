@@ -32,6 +32,10 @@ interface PreprStore {
   previewMode: boolean;
   setPreviewMode: (mode: boolean) => void;
 
+  // Toolbar visibility slice
+  toolbarOpen: boolean;
+  setToolbarOpen: (open: boolean) => void;
+
   // Reset actions
   resetPersonalization: () => void;
   resetAll: () => void;
@@ -117,16 +121,37 @@ export const usePreprStore = create<PreprStore>()(
     previewMode: true,
     setPreviewMode: (mode: boolean) => {
       set({ previewMode: mode });
+      // Ensure edit mode is off when toolbar is disabled
+      if (!mode) {
+        const { setEditMode } = get();
+        setEditMode(false);
+      }
+      // Manage toolbar open state and cookie to restore after reload
+      const { setToolbarOpen } = get();
+      // Auto-close toolbar when toggling preview mode
+      setToolbarOpen(false);
       // Cookie handling
       if (typeof document !== 'undefined') {
         const expires = new Date();
         expires.setTime(expires.getTime() + 365 * 24 * 60 * 60 * 1000);
         document.cookie = `Prepr-Preview-Mode=${mode.toString()};expires=${expires.toUTCString()};path=/`;
+        document.cookie = `Prepr-Toolbar-Open=false;expires=${expires.toUTCString()};path=/`;
       }
       sendPreprEvent('preview_mode_toggled', { previewMode: mode });
       // Refresh the page to apply the new preview mode state
       if (typeof window !== 'undefined') {
         window.location.reload();
+      }
+    },
+
+    // Toolbar visibility
+    toolbarOpen: false,
+    setToolbarOpen: (open: boolean) => {
+      set({ toolbarOpen: open });
+      if (typeof document !== 'undefined') {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + 365 * 24 * 60 * 60 * 1000);
+        document.cookie = `Prepr-Toolbar-Open=${open.toString()};expires=${expires.toUTCString()};path=/`;
       }
     },
 

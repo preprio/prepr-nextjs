@@ -124,6 +124,15 @@ export default function createPreprMiddleware(
     return response;
   }
 
+  // Respect preview mode toggle cookie from client
+  const previewModeCookie = request.cookies.get('Prepr-Preview-Mode')?.value;
+  const previewModeEnabled = previewModeCookie !== 'false';
+
+  if (!previewModeEnabled) {
+    // When preview mode is disabled, do not set preview headers
+    return response;
+  }
+
   // If preview mode is enabled, set additional headers
   response.headers.set('Prepr-Preview-Bar', 'true');
 

@@ -1,10 +1,6 @@
 import React from 'react';
 import { Logo } from '../ui';
-import {
-  SegmentSelector,
-  VariantSelector,
-  EditModeSelector,
-} from '../selectors';
+import { SegmentSelector, VariantSelector, EditModeSelector, PreviewModeSelector } from '../selectors';
 import { ResetButton } from '../ui';
 
 interface ToolbarContentProps {
@@ -48,6 +44,10 @@ export function ToolbarContent({ onClose, contentRef }: ToolbarContentProps) {
       {/* Personalized Content */}
       <div className="p-space-y-2">
         <span className="p-text-sm p-text-grey-400">Personalized content</span>
+        <div className="p-gap p-flex p-flex-wrap p-items-center p-justify-between p-gap-x-6 p-gap-y-2">
+          <h2 className="p-text-grey-800 p-font-semibold">View Mode</h2>
+          <PreviewModeSelector />
+        </div>
         <div className="p-gap p-flex p-flex-wrap p-items-center p-justify-between p-gap-x-6 p-gap-y-2">
           <h2 className="p-text-grey-800 p-font-semibold">Apply segment</h2>
           <SegmentSelector />

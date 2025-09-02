@@ -17,6 +17,7 @@ export function PreprStoreInitializer({
   const setIsIframe = usePreprStore(state => state.setIsIframe);
   const editMode = usePreprStore(state => state.editMode);
   const setEditMode = usePreprStore(state => state.setEditMode);
+  const setToolbarOpen = usePreprStore(state => state.setToolbarOpen);
 
   // Initialize store with server data
   useEffect(() => {
@@ -66,6 +67,11 @@ export function PreprStoreInitializer({
       if (cookieValue !== null) {
         // Don't trigger events on initial load
         usePreprStore.setState({ previewMode: cookieValue === 'true' });
+      }
+
+      const toolbarOpenCookie = getCookie('Prepr-Toolbar-Open');
+      if (toolbarOpenCookie !== null) {
+        setToolbarOpen(toolbarOpenCookie === 'true');
       }
     }
   }, []);

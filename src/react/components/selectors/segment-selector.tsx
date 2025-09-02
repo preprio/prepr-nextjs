@@ -1,10 +1,6 @@
 import React from 'react';
 import { PreprSegment } from '../../../types';
-import {
-  useSegments,
-  useSelectedSegment,
-  usePreprStore,
-} from '../../../stores/prepr-store';
+import { useSegments, useSelectedSegment, usePreprStore, usePreviewMode } from '../../../stores/prepr-store';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Listbox,
@@ -19,6 +15,7 @@ export default function SegmentSelector() {
   const segments = useSegments();
   const selectedSegment = useSelectedSegment();
   const setSelectedSegment = usePreprStore(state => state.setSelectedSegment);
+  const previewMode = usePreviewMode();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -39,13 +36,10 @@ export default function SegmentSelector() {
   };
 
   return (
-    <Listbox
-      value={selectedSegment._id}
-      onChange={(value: string) => updateSelectedSegment(value)}
-    >
+    <Listbox value={selectedSegment._id} onChange={(value: string) => updateSelectedSegment(value)}>
       <ListboxButton
         as="button"
-        disabled={!(segments && segments.length > 0)}
+        disabled={!(segments && segments.length > 0) || !previewMode}
         className="p-regular-text p-flex p-h-10 p-w-[240px] p-shrink-0 p-flex-nowrap p-items-center p-gap-2 p-overflow-hidden p-text-ellipsis p-text-nowrap p-rounded-lg p-border p-border-gray-300 p-bg-white p-px-2 p-text-gray-500 disabled:p-cursor-not-allowed disabled:p-bg-gray-200 disabled:p-text-gray-400 data-[open]:p-rounded-b-none data-[open]:p-border-b-white md:p-px-4"
       >
         <div
