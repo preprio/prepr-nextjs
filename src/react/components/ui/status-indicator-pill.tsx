@@ -50,7 +50,7 @@ export default function StatusIndicatorPill() {
 
   // Always show in preview mode; default segment label falls back to "All other users"
   const defaultSegmentName =
-    segments.find(s => s._id === 'all_other_users')?.name || t('segments.allOtherUsers');
+    segments.find(s => s._id === 'all_other_users')?.name || t('adaptiveContent.allOtherUsers');
   const segmentLabel = !previewMode
     ? t('common.user')
     : selectedSegment && selectedSegment._id !== (emptySegment?._id ?? 'null')
