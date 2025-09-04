@@ -54,9 +54,9 @@ export default function SegmentSelector() {
         >
           {segments.length > 0
             ? selectedSegment._id === 'null'
-              ? t('segments.choose')
+              ? t('adaptiveContent.chooseSegment')
               : selectedSegment.name
-            : t('segments.none')}
+            : t('adaptiveContent.none')}
         </div>
         <div className="p-text-gray-800">
           <SortDown />

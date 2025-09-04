@@ -25,7 +25,6 @@ export default function VariantSelector() {
   };
 
   const options = [
-    { value: 'null', label: 'Off', width: 'p-w-[58px]' },
     { value: 'A', label: 'A', width: 'p-w-[82px]' },
     { value: 'B', label: 'B', width: 'p-w-[82px]' },
   ];
