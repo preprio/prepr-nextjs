@@ -5,6 +5,7 @@ export interface PreprSegment {
 
 export interface PreprToolbarOptions {
   readonly debug?: boolean;
+  readonly locale?: string; // e.g., 'en', 'nl'
   // Future options can be added here:
   // readonly enableProximityHighlight?: boolean;
   // readonly enableOverlay?: boolean;

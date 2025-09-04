@@ -1,10 +1,11 @@
 import React from 'react';
 import { usePreprToolbar } from '../toolbar/toolbar-provider';
 import XMark from '../icons/xmark';
+import { useTranslations } from '../../hooks/use-i18n';
 
 export default function CloseEditModePill() {
   const { editMode, setEditMode, isIframe } = usePreprToolbar();
-
+  const { t } = useTranslations();
   if (!editMode || isIframe) {
     return null;
   }
@@ -15,9 +16,9 @@ export default function CloseEditModePill() {
         type="button"
         onClick={() => setEditMode && setEditMode(false)}
         className="p-flex p-items-center p-gap-2 p-rounded-full p-bg-primary-50 p-px-4 p-py-2 p-text-xs p-font-medium p-text-gray-800 p-shadow-lg p-transition-colors p-duration-150 hover:p-bg-primary-100"
-        aria-label="Close edit mode"
+        aria-label={t('editingTools.ariaCloseEditMode')}
       >
-        <span>Edit mode</span>
+        <span>{t('editingTools.editMode')}</span>
         <XMark className="transition-colors duration-150 p-h-4 p-w-4 p-text-gray-500 hover:p-text-gray-700" />
       </button>
     </div>

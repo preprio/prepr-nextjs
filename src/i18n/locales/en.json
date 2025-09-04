@@ -1,0 +1,25 @@
+{
+  "common": {
+    "viewingAs": "Viewing as:",
+    "user": "User",
+    "off": "Off",
+    "on": "On",
+    "reset": "Reset",
+    "toolbar": "Toolbar"
+  },
+  "adaptiveContent": {
+    "adaptiveContent": "Adaptive content",
+    "enablePreview": "Enable preview",
+    "segment": "Segment",
+    "ABVariant": "A/B variant",
+    "chooseSegment": "Choose segment",
+    "allOtherUsers": "All other users",
+    "offDescription": "View the site as a real user (use cookies)",
+    "onDescription": "Use the toolbar to simulate segments and A/B variants"
+  },
+  "editingTools": {
+    "editingTools": "Editing tools",
+    "editMode": "Edit mode",
+    "ariaCloseEditMode": "Close edit mode"
+  }
+}

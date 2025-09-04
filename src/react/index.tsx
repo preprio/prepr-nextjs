@@ -7,3 +7,4 @@ export {
 
 export { default as PreprToolbar } from './components/toolbar/prepr-toolbar';
 export { default as PreprTrackingPixel } from './components/ui/prepr-tracking-pixel';
+export { useTranslations } from './hooks/use-i18n';

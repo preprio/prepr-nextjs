@@ -3,7 +3,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '../../../utils';
 import { usePreprToolbar } from '../toolbar/toolbar-provider';
 import Rotate from '../icons/rotate';
-
+import { useTranslations } from '../../hooks/use-i18n';
 export default function ResetButton() {
   const router = useRouter();
   const {
@@ -18,7 +18,7 @@ export default function ResetButton() {
   const pathname = usePathname();
   const enabled =
     selectedSegment._id !== 'null' || selectedVariant !== 'null' || editMode;
-
+  const { t } = useTranslations();
   const handleClick = () => {
     resetAll();
     setEditMode(false);
@@ -48,7 +48,7 @@ export default function ResetButton() {
   return (
     <button onClick={handleClick} className={classes} disabled={!enabled}>
       <Rotate />
-      <span className="p-block sm:p-hidden lg:p-block">Reset</span>
+        <span className="p-block sm:p-hidden lg:p-block">{t('common.reset')}</span>
     </button>
   );
 }

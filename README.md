@@ -698,10 +698,49 @@ createPreprMiddleware(request, response, {
 <PreprToolbarProvider 
   props={toolbarProps}
   options={{
-    debug: true // Enable debug logging
+    debug: true, // Enable debug logging
+    locale: 'en', // Set UI locale (e.g., 'en', 'nl')
   }}
 >
 ```
+
+### Internationalization (i18n)
+
+This package includes simple, built-in i18n support with JSON dictionaries. You can:
+
+- Pass a `locale` through `PreprToolbarProvider` options
+- Read the current locale from the store
+- Translate UI strings via a `useTranslations` hook
+
+Usage:
+
+```tsx
+import { PreprToolbarProvider, PreprToolbar, useTranslations } from '@preprio/prepr-nextjs/react'
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const toolbarProps = /* ... */
+
+  return (
+    <PreprToolbarProvider props={toolbarProps} options={{ locale: 'nl' }}>
+      <PreprToolbar />
+      <ExampleComponent />
+      {children}
+    </PreprToolbarProvider>
+  )
+}
+
+function ExampleComponent() {
+  const { t, locale } = useTranslations()
+  return (
+    <div>
+      <p>{t('common.viewingAs')}</p>
+      <small>Locale: {locale}</small>
+    </div>
+  )
+}
+```
+
+To add or customize translations, edit the JSON files under `src/i18n/locales/` (e.g., `en.json`, `nl.json`).
 
 ## 🚨 Troubleshooting
 

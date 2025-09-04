@@ -6,6 +6,10 @@ import { PreprSegment } from '../types';
 import { sendPreprEvent } from '../utils';
 
 interface PreprStore {
+  // Locale slice
+  locale: string;
+  setLocale: (locale: string) => void;
+
   // Segment slice
   segments: PreprSegment[];
   selectedSegment: PreprSegment;
@@ -50,6 +54,10 @@ interface PreprStore {
 
 export const usePreprStore = create<PreprStore>()(
   subscribeWithSelector((set, get) => ({
+    // Initial i18n state
+    locale: 'en',
+    setLocale: (locale: string) => set({ locale }),
+
     // Initial segment state
     segments: [],
     selectedSegment: {
@@ -197,3 +205,4 @@ export const useSelectedVariant = () =>
 export const useEditMode = () => usePreprStore(state => state.editMode);
 export const useIsIframe = () => usePreprStore(state => state.isIframe);
 export const usePreviewMode = () => usePreprStore(state => state.previewMode);
+export const useLocale = () => usePreprStore(state => state.locale);

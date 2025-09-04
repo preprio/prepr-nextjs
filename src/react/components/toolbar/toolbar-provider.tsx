@@ -28,6 +28,14 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
   // Initialize scroll position handling for iframe communication
   useScrollPosition();
 
+  // Initialize locale from options
+  const setLocale = usePreprStore(s => s.setLocale);
+  useEffect(() => {
+    if (options?.locale) {
+      setLocale(options.locale);
+    }
+  }, [options?.locale, setLocale]);
+
   return (
     <StegaErrorBoundary>
       <PreprStoreInitializer props={props}>{children}</PreprStoreInitializer>

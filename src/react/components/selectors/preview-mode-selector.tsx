@@ -1,11 +1,12 @@
 import React from 'react';
 import { usePreviewMode, usePreprStore } from '../../../stores/prepr-store';
 import RadioSelector from './radio-selector';
+import { useTranslations } from '../../hooks/use-i18n';
 
 export default function PreviewModeSelector() {
   const previewMode = usePreviewMode();
   const setPreviewMode = usePreprStore(state => state.setPreviewMode);
-
+  const { t } = useTranslations();
   const updatePreviewMode = (value: string | boolean) => {
     setPreviewMode(value === 'true' || value === true);
   };
@@ -13,13 +14,13 @@ export default function PreviewModeSelector() {
   const options = [
     {
       value: 'false',
-      label: 'User',
-      title: 'View the site as a real user (use cookies)'
+      label: t('common.off'),
+      title: t('adaptiveContent.offDescription')
     },
     {
       value: 'true',
-      label: 'Preview',
-      title: 'Use the toolbar to simulate segments and A/B variants'
+      label: t('common.on'),
+      title: t('adaptiveContent.onDescription')
     },
   ];
 

@@ -10,12 +10,14 @@ import {
 } from '@headlessui/react';
 import SortDown from '../icons/sort-down';
 import { cn } from '../../../utils';
+import { useTranslations } from '../../hooks/use-i18n';
 
 export default function SegmentSelector() {
   const segments = useSegments();
   const selectedSegment = useSelectedSegment();
   const setSelectedSegment = usePreprStore(state => state.setSelectedSegment);
   const previewMode = usePreviewMode();
+  const { t } = useTranslations();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -50,7 +52,11 @@ export default function SegmentSelector() {
           }}
           className="p-mr-auto p-w-full p-overflow-hidden"
         >
-          {segments.length > 0 ? selectedSegment.name : 'No segments'}
+          {segments.length > 0
+            ? selectedSegment._id === 'null'
+              ? t('segments.choose')
+              : selectedSegment.name
+            : t('segments.none')}
         </div>
         <div className="p-text-gray-800">
           <SortDown />
