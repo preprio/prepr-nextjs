@@ -6,7 +6,6 @@ import { useTranslations } from '../../hooks/use-i18n';
 export default function EditModeSelector() {
   const editMode = useEditMode();
   const setEditMode = usePreprStore(state => state.setEditMode);
-  const previewMode = usePreviewMode();
   const { t } = useTranslations();
   const updateEditMode = (value: string | boolean) => {
     setEditMode(value === 'true' || value === true);
@@ -22,7 +21,6 @@ export default function EditModeSelector() {
       options={options}
       value={editMode.toString()}
       onChange={updateEditMode}
-      disabled={!previewMode}
     />
   );
 }

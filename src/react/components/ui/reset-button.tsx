@@ -11,13 +11,12 @@ export default function ResetButton() {
     selectedVariant,
     selectedSegment,
     setEditMode,
-    editMode,
     isPreviewMode,
   } =
     usePreprToolbar();
   const pathname = usePathname();
   const enabled =
-    selectedSegment._id !== 'null' || selectedVariant !== 'null' || editMode;
+    selectedSegment._id !== 'null' || selectedVariant !== 'null';
   const { t } = useTranslations();
   const handleClick = () => {
     resetAll();
