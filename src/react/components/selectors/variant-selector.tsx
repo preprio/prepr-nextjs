@@ -7,7 +7,6 @@ import { usePreviewMode } from '../../../stores/prepr-store';
 export default function VariantSelector() {
   const selectedVariant = useSelectedVariant();
   const setSelectedVariant = usePreprStore(state => state.setSelectedVariant);
-  const emptyVariant = usePreprStore(state => state.emptyVariant);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -29,9 +28,12 @@ export default function VariantSelector() {
     { value: 'B', label: 'B', width: 'p-w-[82px]' },
   ];
 
+  // Always show 'A' as active when state is not 'B'
+  const displayValue = selectedVariant === 'B' ? 'B' : 'A';
+
   return (
     <RadioSelector
-      value={selectedVariant || emptyVariant}
+      value={displayValue}
       onChange={updateSelectedVariant}
       options={options}
       disabled={!previewMode}

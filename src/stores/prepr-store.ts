@@ -104,14 +104,14 @@ export const usePreprStore = create<PreprStore>()(
     },
 
     // Initial variant state
-    selectedVariant: 'null',
-    emptyVariant: 'null',
+    selectedVariant: 'A',
+    emptyVariant: 'A',
     setSelectedVariant: (variant: string | null) => {
       set({ selectedVariant: variant });
       sendPreprEvent('variant_changed', { variant: variant ?? undefined });
     },
     initializeVariant: (activeVariant?: string | null) => {
-      set({ selectedVariant: activeVariant || 'null' });
+      set({ selectedVariant: activeVariant || 'A' });
     },
 
     // Initial edit mode state

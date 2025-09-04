@@ -11,7 +11,6 @@ export default function StatusIndicatorPill() {
     selectedSegment,
     selectedVariant,
     emptySegment,
-    emptyVariant,
     isIframe,
     resetPersonalization,
   } = usePreprToolbar();
@@ -69,9 +68,9 @@ export default function StatusIndicatorPill() {
       >
         <span className="p-text-[10px] p-text-white/60">{t('common.viewingAs')}</span>
         <span className="max-w-[120px] p-inline-block p-truncate">{segmentLabel}</span>
-        {previewMode && selectedVariant && selectedVariant !== (emptyVariant ?? 'null') && (
+        {previewMode && (
           <span className="max-w-[80px] p-inline-block p-truncate p-rounded p-bg-white/20 p-px-2">
-            {selectedVariant}
+            {selectedVariant === 'B' ? 'B' : 'A'}
           </span>
         )}
         {selectedSegment !== emptySegment && <XMark className="p-h-3 p-w-3 p-text-white" />}
