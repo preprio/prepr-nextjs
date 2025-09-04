@@ -13,6 +13,7 @@
     "segment": "Segment",
     "ABVariant": "A/B variant",
     "chooseSegment": "Choose segment",
+    "none": "No segments",
     "allOtherUsers": "All other users",
     "offDescription": "View the site as a real user (use cookies)",
     "onDescription": "Use the toolbar to simulate segments and A/B variants"
