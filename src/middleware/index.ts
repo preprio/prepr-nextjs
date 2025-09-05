@@ -56,10 +56,6 @@ export default function createPreprMiddleware(
     finalOptions = responseOrOptions as PreprMiddlewareOptions | undefined;
   }
 
-  if (!process.env.PREPR_GRAPHQL_URL) {
-    console.error('PREPR_GRAPHQL_URL is not set');
-  }
-
   // Map over search params and set headers
   request.nextUrl.searchParams.forEach((value, key) => {
     switch (key) {
