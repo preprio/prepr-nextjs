@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.0.4
+
+### Patch Changes
+
+- Removed unnecessary error throw on missing PREPR_GRAPHQL_URL env variable.
+
 ## 2.0.3
 
 ### Patch Changes
