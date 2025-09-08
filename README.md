@@ -711,6 +711,7 @@ This package includes simple, built-in i18n support with JSON dictionaries. You 
 - Pass a `locale` through `PreprToolbarProvider` options
 - Read the current locale from the store
 - Translate UI strings via a `useTranslations` hook
+- Omit `locale` to auto-detect from the browser (supports `en` and `nl`, defaults to `en`)
 
 Usage:
 

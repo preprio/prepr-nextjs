@@ -36,6 +36,31 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
     }
   }, [options?.locale, setLocale]);
 
+  // Fallback: auto-detect browser language when no locale is provided
+  useEffect(() => {
+    if (options?.locale) return; // Respect explicitly provided locale
+
+    if (typeof navigator !== 'undefined') {
+      const candidates = Array.isArray(navigator.languages) && navigator.languages.length
+        ? navigator.languages
+        : [navigator.language];
+
+      const normalized = candidates
+        .filter(Boolean)
+        .map(l => l.toLowerCase())
+        .map(l => l.split('-')[0]);
+
+      // Restrict to supported locales; default to 'en'
+      const supported: Array<'en' | 'nl'> = ['en', 'nl'];
+      const match = normalized.find(l => supported.includes(l as 'en' | 'nl')) as
+        | 'en'
+        | 'nl'
+        | undefined;
+
+      setLocale(match ?? 'en');
+    }
+  }, [options?.locale, setLocale]);
+
   return (
     <StegaErrorBoundary>
       <PreprStoreInitializer props={props}>{children}</PreprStoreInitializer>
