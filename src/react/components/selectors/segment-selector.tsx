@@ -1,6 +1,11 @@
 import React from 'react';
 import { PreprSegment } from '../../../types';
-import { useSegments, useSelectedSegment, usePreprStore, usePreviewMode } from '../../../stores/prepr-store';
+import {
+  useSegments,
+  useSelectedSegment,
+  usePreprStore,
+  usePreviewMode,
+} from '../../../stores/prepr-store';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Listbox,
@@ -38,7 +43,10 @@ export default function SegmentSelector() {
   };
 
   return (
-    <Listbox value={selectedSegment._id} onChange={(value: string) => updateSelectedSegment(value)}>
+    <Listbox
+      value={selectedSegment._id}
+      onChange={(value: string) => updateSelectedSegment(value)}
+    >
       <ListboxButton
         as="button"
         disabled={!(segments && segments.length > 0) || !previewMode}

@@ -15,7 +15,9 @@ function getDict(locale: string) {
 }
 
 function getFromPath(obj: any, path: string) {
-  return path.split('.').reduce((acc: any, key: string) => (acc ? acc[key] : undefined), obj);
+  return path
+    .split('.')
+    .reduce((acc: any, key: string) => (acc ? acc[key] : undefined), obj);
 }
 
 function format(message: string, vars?: Record<string, string | number>) {
@@ -34,4 +36,3 @@ export function t(key: string, vars?: Record<string, string | number>): string {
   // Fallback to key if not found
   return key;
 }
-

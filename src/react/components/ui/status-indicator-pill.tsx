@@ -1,6 +1,10 @@
 import React from 'react';
 import { usePreprToolbar } from '../toolbar/toolbar-provider';
-import { usePreviewMode, useSegments, usePreprStore } from '../../../stores/prepr-store';
+import {
+  usePreviewMode,
+  useSegments,
+  usePreprStore,
+} from '../../../stores/prepr-store';
 import XMark from '../icons/xmark';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '../../../utils';
@@ -49,7 +53,8 @@ export default function StatusIndicatorPill() {
 
   // Always show in preview mode; default segment label falls back to "All other users"
   const defaultSegmentName =
-    segments.find(s => s._id === 'all_other_users')?.name || t('adaptiveContent.allOtherUsers');
+    segments.find(s => s._id === 'all_other_users')?.name ||
+    t('adaptiveContent.allOtherUsers');
   const segmentLabel = !previewMode
     ? t('common.user')
     : selectedSegment && selectedSegment._id !== (emptySegment?._id ?? 'null')
@@ -62,18 +67,25 @@ export default function StatusIndicatorPill() {
         type="button"
         onClick={previewMode ? handleReset : () => setPreviewMode(true)}
         className={cn(
-          "p-flex p-items-center p-gap-2 p-rounded-full p-bg-primary-700 p-px-4 p-py-2 p-text-xs p-font-medium p-text-white p-shadow-lg",
-          selectedSegment !== emptySegment && "p-cursor-pointer p-transition-colors p-duration-150 hover:p-bg-primary-800"
+          'p-flex p-items-center p-gap-2 p-rounded-full p-bg-primary-700 p-px-4 p-py-2 p-text-xs p-font-medium p-text-white p-shadow-lg',
+          selectedSegment !== emptySegment &&
+            'p-cursor-pointer p-transition-colors p-duration-150 hover:p-bg-primary-800'
         )}
       >
-        <span className="p-text-[10px] p-text-white/60">{t('common.viewingAs')}</span>
-        <span className="max-w-[120px] p-inline-block p-truncate">{segmentLabel}</span>
+        <span className="p-text-[10px] p-text-white/60">
+          {t('common.viewingAs')}
+        </span>
+        <span className="max-w-[120px] p-inline-block p-truncate">
+          {segmentLabel}
+        </span>
         {previewMode && (
           <span className="max-w-[80px] p-inline-block p-truncate p-rounded p-bg-white/20 p-px-2">
             {selectedVariant === 'B' ? 'B' : 'A'}
           </span>
         )}
-        {selectedSegment !== emptySegment && <XMark className="p-h-3 p-w-3 p-text-white" />}
+        {selectedSegment !== emptySegment && (
+          <XMark className="p-h-3 p-w-3 p-text-white" />
+        )}
       </button>
     </div>
   );

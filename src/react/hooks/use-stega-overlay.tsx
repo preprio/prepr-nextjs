@@ -37,7 +37,10 @@ function decode(str: string | null): DecodedData | null {
         // Now, try to decode the matched JSON string
         const decodedMatch = vercelStegaDecode(match[0]) as DecodedData;
         if (decodedMatch?.href) {
-          decodeLogger.log('successfully decoded with regex match', decodedMatch);
+          decodeLogger.log(
+            'successfully decoded with regex match',
+            decodedMatch
+          );
           return decodedMatch;
         }
       } catch (e) {
@@ -132,9 +135,11 @@ export function useStegaOverlay() {
 
             // Clamp within viewport bounds
             const minTop = window.scrollY + 4;
-            const maxTop = window.scrollY + window.innerHeight - tooltip.clientHeight - 4;
+            const maxTop =
+              window.scrollY + window.innerHeight - tooltip.clientHeight - 4;
             const minLeft = window.scrollX + 4;
-            const maxLeft = window.scrollX + window.innerWidth - tooltip.clientWidth - 4;
+            const maxLeft =
+              window.scrollX + window.innerWidth - tooltip.clientWidth - 4;
 
             if (top < minTop) {
               // If above viewport, place below the element

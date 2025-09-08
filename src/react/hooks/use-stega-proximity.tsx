@@ -5,7 +5,10 @@ import { createElementCache } from '../../utils/performance';
 export function useStegaProximity() {
   const debug = createScopedLogger('useStegaProximity');
   const highlightedElementsRef = useRef<Set<HTMLElement>>(new Set());
-  const getEncodedElements = createElementCache<HTMLElement>('[data-prepr-encoded]', 200);
+  const getEncodedElements = createElementCache<HTMLElement>(
+    '[data-prepr-encoded]',
+    200
+  );
 
   // Track on-screen candidates via IntersectionObserver
   const visibleElementsRef = useRef<Set<HTMLElement>>(new Set());
@@ -24,16 +27,19 @@ export function useStegaProximity() {
       const visible = new Set<HTMLElement>();
       visibleElementsRef.current = visible;
 
-      observerRef.current = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          const el = entry.target as HTMLElement;
-          if (entry.isIntersecting) {
-            visible.add(el);
-          } else {
-            visible.delete(el);
-          }
-        });
-      }, { root: null, rootMargin: '0px', threshold: 0 });
+      observerRef.current = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            const el = entry.target as HTMLElement;
+            if (entry.isIntersecting) {
+              visible.add(el);
+            } else {
+              visible.delete(el);
+            }
+          });
+        },
+        { root: null, rootMargin: '0px', threshold: 0 }
+      );
 
       const nodes = getEncodedElements();
       nodes.forEach(el => observerRef.current!.observe(el));

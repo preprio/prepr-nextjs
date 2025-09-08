@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEditMode, usePreprStore, usePreviewMode } from '../../../stores/prepr-store';
+import { useEditMode, usePreprStore } from '../../../stores/prepr-store';
 import RadioSelector from './radio-selector';
 import { useTranslations } from '../../hooks/use-i18n';
 

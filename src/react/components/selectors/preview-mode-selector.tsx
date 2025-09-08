@@ -15,12 +15,12 @@ export default function PreviewModeSelector() {
     {
       value: 'false',
       label: t('common.off'),
-      title: t('adaptiveContent.offDescription')
+      title: t('adaptiveContent.offDescription'),
     },
     {
       value: 'true',
       label: t('common.on'),
-      title: t('adaptiveContent.onDescription')
+      title: t('adaptiveContent.onDescription'),
     },
   ];
 

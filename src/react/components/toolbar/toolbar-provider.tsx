@@ -41,9 +41,10 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
     if (options?.locale) return; // Respect explicitly provided locale
 
     if (typeof navigator !== 'undefined') {
-      const candidates = Array.isArray(navigator.languages) && navigator.languages.length
-        ? navigator.languages
-        : [navigator.language];
+      const candidates =
+        Array.isArray(navigator.languages) && navigator.languages.length
+          ? navigator.languages
+          : [navigator.language];
 
       const normalized = candidates
         .filter(Boolean)
@@ -52,10 +53,9 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
 
       // Restrict to supported locales; default to 'en'
       const supported: Array<'en' | 'nl'> = ['en', 'nl'];
-      const match = normalized.find(l => supported.includes(l as 'en' | 'nl')) as
-        | 'en'
-        | 'nl'
-        | undefined;
+      const match = normalized.find(l =>
+        supported.includes(l as 'en' | 'nl')
+      ) as 'en' | 'nl' | undefined;
 
       setLocale(match ?? 'en');
     }

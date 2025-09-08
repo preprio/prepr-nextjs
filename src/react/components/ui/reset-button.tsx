@@ -12,11 +12,9 @@ export default function ResetButton() {
     selectedSegment,
     setEditMode,
     isPreviewMode,
-  } =
-    usePreprToolbar();
+  } = usePreprToolbar();
   const pathname = usePathname();
-  const enabled =
-    selectedSegment._id !== 'null' || selectedVariant !== 'null';
+  const enabled = selectedSegment._id !== 'null' || selectedVariant !== 'null';
   const { t } = useTranslations();
   const handleClick = () => {
     resetAll();
@@ -47,7 +45,9 @@ export default function ResetButton() {
   return (
     <button onClick={handleClick} className={classes} disabled={!enabled}>
       <Rotate />
-        <span className="p-block sm:p-hidden lg:p-block">{t('common.reset')}</span>
+      <span className="p-block sm:p-hidden lg:p-block">
+        {t('common.reset')}
+      </span>
     </button>
   );
 }
