@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@preprio/prepr-nextjs": "2.0.3"
+  },
+  "changesets": [
+    "prepare-210-minor"
+  ]
+}
