@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.1.0
+
+### Minor Changes
+
+- 3fa8315: Preview mode toggle and multi-locale support with browser detection.
+
 ## 2.1.0-beta.0
 
 ### Minor Changes
