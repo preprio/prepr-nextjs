@@ -1,6 +1,6 @@
 {
   "name": "@preprio/prepr-nextjs",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "Next.js package for Prepr CMS preview functionality with advanced debugging and visual editing capabilities",
   "main": "dist/react/index.cjs",
   "types": "./dist/react/index.d.ts",
@@ -103,6 +103,7 @@
     "@vercel/stega": "^0.1.2",
     "clsx": "^2.1.1",
     "postcss-cli": "^11.0.1",
-    "tailwind-merge": "^3.0.1"
+    "tailwind-merge": "^3.0.1",
+    "zustand": "^5.0.8"
   }
 }

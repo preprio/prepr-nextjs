@@ -3,15 +3,19 @@ import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '../../../utils';
 import { usePreprToolbar } from '../toolbar/toolbar-provider';
 import Rotate from '../icons/rotate';
-
+import { useTranslations } from '../../hooks/use-i18n';
 export default function ResetButton() {
   const router = useRouter();
-  const { resetAll, selectedVariant, selectedSegment, setEditMode, editMode } =
-    usePreprToolbar();
+  const {
+    resetAll,
+    selectedVariant,
+    selectedSegment,
+    setEditMode,
+    isPreviewMode,
+  } = usePreprToolbar();
   const pathname = usePathname();
-  const enabled =
-    selectedSegment._id !== 'null' || selectedVariant !== 'null' || editMode;
-
+  const enabled = selectedSegment._id !== 'null' || selectedVariant !== 'null';
+  const { t } = useTranslations();
   const handleClick = () => {
     resetAll();
     setEditMode(false);
@@ -34,13 +38,16 @@ export default function ResetButton() {
     'p-py-2 p-px-3 p-flex p-justify-center p-gap-2 p-items-center p-rounded-md p-regular-text p-h-10 p-w-full md:p-w-[108px]',
     enabled &&
       'p-bg-secondary-400 hover:p-secondary-500 p-cursor-pointer p-text-white',
-    !enabled && 'p-bg-grey-400 p-text-gray-500'
+    !enabled && 'p-bg-grey-400 p-text-gray-500',
+    !isPreviewMode && 'p-cursor-not-allowed'
   );
 
   return (
     <button onClick={handleClick} className={classes} disabled={!enabled}>
       <Rotate />
-      <span className="p-block sm:p-hidden lg:p-block">Reset</span>
+      <span className="p-block sm:p-hidden lg:p-block">
+        {t('common.reset')}
+      </span>
     </button>
   );
 }

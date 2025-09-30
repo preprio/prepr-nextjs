@@ -85,7 +85,10 @@ export function useStegaElements() {
   );
 
   const setupMutationObserver = useCallback(
-    (decode: (str: string | null) => DecodedData | null) => {
+    (
+      decode: (str: string | null) => DecodedData | null,
+      onUpdate?: () => void
+    ) => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
@@ -95,10 +98,15 @@ export function useStegaElements() {
         const allAddedNodes = new Set<Node>();
         pendingMutations.forEach(mutation => {
           mutation.addedNodes.forEach(node => allAddedNodes.add(node));
+          // Include text changes in existing nodes
+          if (mutation.type === 'characterData') {
+            allAddedNodes.add(mutation.target);
+          }
         });
         allAddedNodes.forEach(node => scanNode(node, decode));
         pendingMutations = [];
         elementsRef.current = document.querySelectorAll('[data-prepr-encoded]');
+        if (onUpdate) onUpdate();
       };
       observerRef.current = new MutationObserver(mutations => {
         pendingMutations.push(...mutations);
@@ -108,6 +116,7 @@ export function useStegaElements() {
       observerRef.current.observe(document.body, {
         childList: true,
         subtree: true,
+        characterData: true,
       });
       debug.log('mutation observer set up');
     },

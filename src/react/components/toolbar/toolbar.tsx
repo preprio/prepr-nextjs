@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../../../utils';
 import {
-  useEditModeContext,
-  useSegmentContext,
-  useVariantContext,
-} from '../../contexts';
+  useEditMode,
+  useSelectedSegment,
+  useSelectedVariant,
+  usePreprStore,
+} from '../../../stores/prepr-store';
 import { useModal } from '../../hooks/use-modal';
 import { ToolbarContent } from './toolbar-content';
 import { ToolbarButton } from './toolbar-button';
@@ -16,13 +17,14 @@ interface ToolbarProps {
 
 export default function Toolbar({ children }: ToolbarProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const [isBarVisible, setIsBarVisible] = React.useState(false);
-  const { editMode } = useEditModeContext();
-  const { selectedSegment } = useSegmentContext();
-  const { selectedVariant } = useVariantContext();
+  const isBarVisible = usePreprStore(s => s.toolbarOpen);
+  const setToolbarOpen = usePreprStore(s => s.setToolbarOpen);
+  const editMode = useEditMode();
+  const selectedSegment = useSelectedSegment();
+  const selectedVariant = useSelectedVariant();
   const { contentRef, triggerRef } = useModal({
     isVisible: isBarVisible,
-    onClose: () => setIsBarVisible(false),
+    onClose: () => setToolbarOpen(false),
   });
 
   useEffect(() => {
@@ -57,13 +59,13 @@ export default function Toolbar({ children }: ToolbarProps) {
   }, [isBarVisible, updatePopupPosition]);
 
   const handleClick = () => {
-    setIsBarVisible(!isBarVisible);
+    setToolbarOpen(!isBarVisible);
   };
 
   useEffect(() => {
     if (editMode) {
       setTimeout(() => {
-        setIsBarVisible(false);
+        setToolbarOpen(false);
       }, 150);
     }
   }, [editMode]);
@@ -71,14 +73,14 @@ export default function Toolbar({ children }: ToolbarProps) {
   // Auto-close modal when segment changes
   useEffect(() => {
     setTimeout(() => {
-      setIsBarVisible(false);
+      setToolbarOpen(false);
     }, 150);
   }, [selectedSegment]);
 
   // Auto-close modal when variant changes
   useEffect(() => {
     setTimeout(() => {
-      setIsBarVisible(false);
+      setToolbarOpen(false);
     }, 150);
   }, [selectedVariant]);
 

@@ -4,11 +4,8 @@ export interface PreprSegment {
 }
 
 export interface PreprToolbarOptions {
-  readonly debug?: boolean;
-  // Future options can be added here:
-  // readonly enableProximityHighlight?: boolean;
-  // readonly enableOverlay?: boolean;
-  // readonly enableTooltip?: boolean;
+  debug?: boolean;
+  locale?: string; // e.g., 'en', 'nl'
 }
 
 export interface PreprToolbarProps {
@@ -34,6 +31,7 @@ export type PreprEventType =
   | 'segment_changed'
   | 'variant_changed'
   | 'edit_mode_toggled'
+  | 'preview_mode_toggled'
   | 'personalization_reset'
   | 'getScrollPosition'
   | 'loaded';

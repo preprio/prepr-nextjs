@@ -1,0 +1,26 @@
+{
+  "common": {
+    "viewingAs": "Bekijken als:",
+    "user": "Gebruiker",
+    "off": "Uit",
+    "on": "Aan",
+    "reset": "Resetten",
+    "toolbar": "Toolbar"
+  },
+  "adaptiveContent": {
+    "adaptiveContent": "Adaptieve inhoud",
+    "enablePreview": "Preview modus",
+    "segment": "Segment",
+    "ABVariant": "A/B-variant",
+    "chooseSegment": "Kies segment",
+    "none": "Geen segmenten",
+    "allOtherUsers": "Alle andere gebruikers",
+    "offDescription": "Bekijk de site als een echte gebruiker (gebruik cookies)",
+    "onDescription": "Gebruik de werkbalk om segmenten en A/B-varianten te simuleren"
+  },
+  "editingTools": {
+    "editingTools": "Editing Tools",
+    "editMode": "Edit mode",
+    "ariaCloseEditMode": "Edit mode sluiten"
+  }
+}

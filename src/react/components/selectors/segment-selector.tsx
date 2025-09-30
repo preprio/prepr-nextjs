@@ -1,6 +1,11 @@
 import React from 'react';
 import { PreprSegment } from '../../../types';
-import { useSegmentContext } from '../../contexts';
+import {
+  useSegments,
+  useSelectedSegment,
+  usePreprStore,
+  usePreviewMode,
+} from '../../../stores/prepr-store';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Listbox,
@@ -10,9 +15,14 @@ import {
 } from '@headlessui/react';
 import SortDown from '../icons/sort-down';
 import { cn } from '../../../utils';
+import { useTranslations } from '../../hooks/use-i18n';
 
 export default function SegmentSelector() {
-  const { segments, setSelectedSegment, selectedSegment } = useSegmentContext();
+  const segments = useSegments();
+  const selectedSegment = useSelectedSegment();
+  const setSelectedSegment = usePreprStore(state => state.setSelectedSegment);
+  const previewMode = usePreviewMode();
+  const { t } = useTranslations();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -39,7 +49,7 @@ export default function SegmentSelector() {
     >
       <ListboxButton
         as="button"
-        disabled={!(segments && segments.length > 0)}
+        disabled={!(segments && segments.length > 0) || !previewMode}
         className="p-regular-text p-flex p-h-10 p-w-[240px] p-shrink-0 p-flex-nowrap p-items-center p-gap-2 p-overflow-hidden p-text-ellipsis p-text-nowrap p-rounded-lg p-border p-border-gray-300 p-bg-white p-px-2 p-text-gray-500 disabled:p-cursor-not-allowed disabled:p-bg-gray-200 disabled:p-text-gray-400 data-[open]:p-rounded-b-none data-[open]:p-border-b-white md:p-px-4"
       >
         <div
@@ -50,7 +60,11 @@ export default function SegmentSelector() {
           }}
           className="p-mr-auto p-w-full p-overflow-hidden"
         >
-          {segments.length > 0 ? selectedSegment.name : 'No segments'}
+          {segments.length > 0
+            ? selectedSegment._id === 'null'
+              ? t('adaptiveContent.chooseSegment')
+              : selectedSegment.name
+            : t('adaptiveContent.none')}
         </div>
         <div className="p-text-gray-800">
           <SortDown />

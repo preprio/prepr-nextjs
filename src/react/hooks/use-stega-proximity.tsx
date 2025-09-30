@@ -7,16 +7,67 @@ export function useStegaProximity() {
   const highlightedElementsRef = useRef<Set<HTMLElement>>(new Set());
   const getEncodedElements = createElementCache<HTMLElement>(
     '[data-prepr-encoded]',
-    500
+    200
   );
+
+  // Track on-screen candidates via IntersectionObserver
+  const visibleElementsRef = useRef<Set<HTMLElement>>(new Set());
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const refreshObserving = useCallback(() => {
+    try {
+      if (!('IntersectionObserver' in window)) return; // Fallback handled later
+
+      // Reset observer
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+
+      const visible = new Set<HTMLElement>();
+      visibleElementsRef.current = visible;
+
+      observerRef.current = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            const el = entry.target as HTMLElement;
+            if (entry.isIntersecting) {
+              visible.add(el);
+            } else {
+              visible.delete(el);
+            }
+          });
+        },
+        { root: null, rootMargin: '0px', threshold: 0 }
+      );
+
+      const nodes = getEncodedElements();
+      nodes.forEach(el => observerRef.current!.observe(el));
+      debug.log('observing', nodes.length, 'encoded elements');
+    } catch (e) {
+      debug.log('error setting up IntersectionObserver:', e as Error);
+    }
+  }, [debug, getEncodedElements]);
+
+  const stopObserving = useCallback(() => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+      observerRef.current = null;
+      visibleElementsRef.current.clear();
+    }
+  }, []);
 
   const updateElementGradients = useCallback(
     (cursorX: number, cursorY: number) => {
-      const encodedElements = getEncodedElements();
+      // Use visible candidates when available; fall back to all
+      const candidates =
+        visibleElementsRef.current.size > 0
+          ? Array.from(visibleElementsRef.current)
+          : Array.from(getEncodedElements());
       const newHighlightedElements = new Set<HTMLElement>();
       let highlightedCount = 0;
 
-      encodedElements.forEach(element => {
+      candidates.forEach(element => {
         const rect = element.getBoundingClientRect();
 
         // Calculate shortest distance from cursor to element edges
@@ -90,6 +141,8 @@ export function useStegaProximity() {
   return {
     updateElementGradients,
     clearAllHighlights,
+    refreshObserving,
+    stopObserving,
     highlightedElementsRef,
   };
 }

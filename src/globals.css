@@ -104,11 +104,6 @@
   z-index: 9999;
 }
 
-/* Hide proximity highlight when overlay is active */
-[data-prepr-encoded]:has(+ .prepr-overlay[style*='display: block'])
-  .prepr-proximity-highlight::before {
-  display: none;
-}
 
 /* Component-specific styles */
 .preview-bar-container {

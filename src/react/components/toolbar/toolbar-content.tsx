@@ -4,8 +4,10 @@ import {
   SegmentSelector,
   VariantSelector,
   EditModeSelector,
+  PreviewModeSelector,
 } from '../selectors';
 import { ResetButton } from '../ui';
+import { useTranslations } from '../../hooks/use-i18n';
 
 interface ToolbarContentProps {
   onClose: () => void;
@@ -13,6 +15,7 @@ interface ToolbarContentProps {
 }
 
 export function ToolbarContent({ onClose, contentRef }: ToolbarContentProps) {
+  const { t } = useTranslations();
   return (
     <div
       ref={contentRef}
@@ -23,7 +26,7 @@ export function ToolbarContent({ onClose, contentRef }: ToolbarContentProps) {
         <div className="p-flex p-items-start p-gap-3">
           <Logo />
           <div className="p-flex p-h-6 p-items-center p-rounded p-bg-primary-100 p-px-3 p-py-1 p-text-sm p-text-primary-700">
-            toolbar
+            {t('common.toolbar')}
           </div>
         </div>
         <button
@@ -47,22 +50,38 @@ export function ToolbarContent({ onClose, contentRef }: ToolbarContentProps) {
 
       {/* Personalized Content */}
       <div className="p-space-y-2">
-        <span className="p-text-sm p-text-grey-400">Personalized content</span>
+        <span className="p-text-sm p-text-grey-400">
+          {t('adaptiveContent.adaptiveContent')}
+        </span>
         <div className="p-gap p-flex p-flex-wrap p-items-center p-justify-between p-gap-x-6 p-gap-y-2">
-          <h2 className="p-text-grey-800 p-font-semibold">Apply segment</h2>
+          <h2 className="p-text-grey-800 p-font-semibold">
+            {t('adaptiveContent.enablePreview')}
+          </h2>
+          <PreviewModeSelector />
+        </div>
+        <div className="p-gap p-flex p-flex-wrap p-items-center p-justify-between p-gap-x-6 p-gap-y-2">
+          <h2 className="p-text-grey-800 p-font-semibold">
+            {t('adaptiveContent.segment')}
+          </h2>
           <SegmentSelector />
         </div>
         <div className="p-gap p-flex p-flex-wrap p-items-center p-justify-between p-gap-x-6 p-gap-y-2">
-          <h2 className="p-text-grey-800 p-font-semibold">Show A/B variant</h2>
+          <h2 className="p-text-grey-800 p-font-semibold">
+            {t('adaptiveContent.ABVariant')}
+          </h2>
           <VariantSelector />
         </div>
       </div>
 
       {/* Collaboration */}
       <div className="p-space-y-2">
-        <span className="p-text-sm p-text-grey-400">Collaboration</span>
+        <span className="p-text-sm p-text-grey-400">
+          {t('editingTools.editingTools')}
+        </span>
         <div className="p-gap p-flex p-flex-wrap p-items-center p-justify-between p-gap-x-6 p-gap-y-2">
-          <h2 className="p-text-grey-800 p-font-semibold">Edit mode</h2>
+          <h2 className="p-text-grey-800 p-font-semibold">
+            {t('editingTools.editMode')}
+          </h2>
           <EditModeSelector />
         </div>
       </div>

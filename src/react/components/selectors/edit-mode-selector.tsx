@@ -1,17 +1,19 @@
 import React from 'react';
-import { useEditModeContext } from '../../contexts';
+import { useEditMode, usePreprStore } from '../../../stores/prepr-store';
 import RadioSelector from './radio-selector';
+import { useTranslations } from '../../hooks/use-i18n';
 
 export default function EditModeSelector() {
-  const { editMode, setEditMode } = useEditModeContext();
-
+  const editMode = useEditMode();
+  const setEditMode = usePreprStore(state => state.setEditMode);
+  const { t } = useTranslations();
   const updateEditMode = (value: string | boolean) => {
     setEditMode(value === 'true' || value === true);
   };
 
   const options = [
-    { value: 'false', label: 'Off' },
-    { value: 'true', label: 'On' },
+    { value: 'false', label: t('common.off') },
+    { value: 'true', label: t('common.on') },
   ];
 
   return (
