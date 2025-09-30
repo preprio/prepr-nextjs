@@ -1,8 +1,15 @@
 # @preprio/prepr-nextjs
 
+## 2.1.1
+
+### Patch Changes
+
+- Updated translation for enable preview toggle
+
 ## 2.1.0
 
 ### Minor Changes
+
 - Preview mode toggle: Add a toolbar toggle to temporarily disable Prepr preview mode so you can browse the site using your own session cookie. Useful for verifying live behavior without leaving the preview context.
 - Multi-locale support with detection: Add multi-locale handling with automatic browser language detection and sensible fallbacks. The selected locale persists to provide a consistent experience across navigation.
 
