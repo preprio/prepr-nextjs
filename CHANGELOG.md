@@ -3,15 +3,14 @@
 ## 2.1.0
 
 ### Minor Changes
-
-- 3fa8315: Preview mode toggle and multi-locale support with browser detection.
-
-## 2.1.0-beta.0
-
-### Minor Changes
-
 - Preview mode toggle: Add a toolbar toggle to temporarily disable Prepr preview mode so you can browse the site using your own session cookie. Useful for verifying live behavior without leaving the preview context.
 - Multi-locale support with detection: Add multi-locale handling with automatic browser language detection and sensible fallbacks. The selected locale persists to provide a consistent experience across navigation.
+
+## 2.0.4
+
+### Patch Changes
+
+- Removed unnecessary error throw on missing PREPR_GRAPHQL_URL env variable.
 
 ## 2.0.3
 
