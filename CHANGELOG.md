@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.1.2
+
+### Patch Changes
+
+- Added the ability to tag decoded elements with data-prepr-edit-target to still get picket up by the package. See Readme.md on how to set it up.
+
 ## 2.1.1
 
 ### Patch Changes

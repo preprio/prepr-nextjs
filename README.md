@@ -820,6 +820,37 @@ When edit mode is enabled, the package:
 3. **Provides overlays**: Click-to-edit functionality
 4. **Syncs with Prepr**: Direct integration with Prepr's editing interface
 
+#### Fixing Styling Issues with Editable Fields
+
+If the styling of editable fields is incorrect (e.g., text breaking out of its container), you can use the `data-prepr-edit-target` attribute to hide the encoded data in a hidden span. This is particularly useful when elements have `letter-spacing` set in CSS or are inside a `<ReactWrapBalancer>`.
+
+**Install the required package** (if not already installed):
+
+```bash
+npm install @vercel/stega
+```
+
+**Example usage:**
+
+```typescript
+import { vercelStegaSplit } from '@vercel/stega';
+
+function MyComponent({ text }) {
+  const { cleaned, encoded } = vercelStegaSplit(text);
+
+  return (
+    <h1 data-prepr-edit-target>
+      {cleaned}
+      <span style={{ display: 'none' }}>{encoded}</span>
+    </h1>
+  );
+}
+```
+
+The stega scan will automatically detect elements with `data-prepr-edit-target` and look for encoded data in hidden spans within them. The element itself (not the hidden span) will be marked as editable and highlighted correctly.
+
+**Note:** The hidden span should have `display: none` or `visibility: hidden` set via inline styles or CSS. The scan will detect these hidden spans and extract the encoded data to mark the parent element correctly.
+
 ## 🔄 Upgrading from v1 to v2
 
 If you're upgrading from v1, please follow the [Upgrade Guide](./UPGRADE_GUIDE.md) for detailed migration instructions.

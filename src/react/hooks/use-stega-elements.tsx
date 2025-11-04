@@ -14,7 +14,9 @@ export function useStegaElements() {
 
   const getElements = useCallback(() => {
     if (!elementsRef.current) {
-      elementsRef.current = document.querySelectorAll('[data-prepr-encoded]');
+      elementsRef.current = document.querySelectorAll(
+        '[data-prepr-encoded], [data-prepr-edit-target][data-prepr-encoded]'
+      );
     }
     return elementsRef.current;
   }, []);
@@ -78,8 +80,53 @@ export function useStegaElements() {
           }
         }
       }
-      debug.log('document scan complete, encoded', encodedCount, 'elements');
-      elementsRef.current = document.querySelectorAll('[data-prepr-encoded]');
+
+      // Scan for elements with data-prepr-edit-target and check for encoded data in hidden spans
+      const editTargetElements = document.querySelectorAll(
+        '[data-prepr-edit-target]'
+      );
+      let editTargetCount = 0;
+      editTargetElements.forEach(element => {
+        if (element.hasAttribute('data-prepr-encoded')) {
+          return; // Already processed
+        }
+
+        // Check all spans within the element for hidden ones with encoded data
+        const allSpans = element.querySelectorAll('span');
+        for (const span of allSpans) {
+          const computedStyle = window.getComputedStyle(span);
+          const isHidden =
+            computedStyle.display === 'none' ||
+            computedStyle.visibility === 'hidden';
+
+          if (isHidden && span.textContent) {
+            const decoded = decode(span.textContent);
+            if (decoded?.href) {
+              // Mark the parent element with data-prepr-edit-target, not the span
+              element.setAttribute('data-prepr-encoded', '');
+              element.setAttribute('data-prepr-href', decoded.href);
+              element.setAttribute('data-prepr-origin', decoded.origin);
+              editTargetCount++;
+              debug.log('encoded element found via data-prepr-edit-target:', {
+                href: decoded.href,
+                origin: decoded.origin,
+              });
+              break; // Found encoded data, no need to check other spans
+            }
+          }
+        }
+      });
+
+      debug.log(
+        'document scan complete, encoded',
+        encodedCount,
+        'elements,',
+        editTargetCount,
+        'via data-prepr-edit-target'
+      );
+      elementsRef.current = document.querySelectorAll(
+        '[data-prepr-encoded], [data-prepr-edit-target][data-prepr-encoded]'
+      );
     },
     [debug]
   );
@@ -104,8 +151,35 @@ export function useStegaElements() {
           }
         });
         allAddedNodes.forEach(node => scanNode(node, decode));
+        
+        // Also scan for newly added elements with data-prepr-edit-target
+        const newEditTargets = document.querySelectorAll(
+          '[data-prepr-edit-target]:not([data-prepr-encoded])'
+        );
+        newEditTargets.forEach(element => {
+          const allSpans = element.querySelectorAll('span');
+          for (const span of allSpans) {
+            const computedStyle = window.getComputedStyle(span);
+            const isHidden =
+              computedStyle.display === 'none' ||
+              computedStyle.visibility === 'hidden';
+
+            if (isHidden && span.textContent) {
+              const decoded = decode(span.textContent);
+              if (decoded?.href) {
+                element.setAttribute('data-prepr-encoded', '');
+                element.setAttribute('data-prepr-href', decoded.href);
+                element.setAttribute('data-prepr-origin', decoded.origin);
+                break;
+              }
+            }
+          }
+        });
+        
         pendingMutations = [];
-        elementsRef.current = document.querySelectorAll('[data-prepr-encoded]');
+        elementsRef.current = document.querySelectorAll(
+          '[data-prepr-encoded], [data-prepr-edit-target][data-prepr-encoded]'
+        );
         if (onUpdate) onUpdate();
       };
       observerRef.current = new MutationObserver(mutations => {
