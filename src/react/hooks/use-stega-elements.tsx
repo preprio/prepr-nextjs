@@ -93,7 +93,7 @@ export function useStegaElements() {
 
         // Check all spans within the element for hidden ones with encoded data
         const allSpans = element.querySelectorAll('span');
-        for (const span of allSpans) {
+        for (const span of Array.from(allSpans)) {
           const computedStyle = window.getComputedStyle(span);
           const isHidden =
             computedStyle.display === 'none' ||
@@ -151,14 +151,14 @@ export function useStegaElements() {
           }
         });
         allAddedNodes.forEach(node => scanNode(node, decode));
-        
+
         // Also scan for newly added elements with data-prepr-edit-target
         const newEditTargets = document.querySelectorAll(
           '[data-prepr-edit-target]:not([data-prepr-encoded])'
         );
         newEditTargets.forEach(element => {
           const allSpans = element.querySelectorAll('span');
-          for (const span of allSpans) {
+          for (const span of Array.from(allSpans)) {
             const computedStyle = window.getComputedStyle(span);
             const isHidden =
               computedStyle.display === 'none' ||
@@ -175,7 +175,7 @@ export function useStegaElements() {
             }
           }
         });
-        
+
         pendingMutations = [];
         elementsRef.current = document.querySelectorAll(
           '[data-prepr-encoded], [data-prepr-edit-target][data-prepr-encoded]'
