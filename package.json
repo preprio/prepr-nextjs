@@ -1,6 +1,6 @@
 {
   "name": "@preprio/prepr-nextjs",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Next.js package for Prepr CMS preview functionality with advanced debugging and visual editing capabilities",
   "main": "dist/react/index.cjs",
   "types": "./dist/react/index.d.ts",
