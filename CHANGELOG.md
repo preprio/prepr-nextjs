@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.1.4
+
+### Patch Changes
+
+- e4267de: Security patch: Updated Next.js peerDependencies to support Next.js 16.0.3 and specific Next.js 15.x versions with security fixes.
+
 ## 2.1.3
 
 ### Patch Changes
