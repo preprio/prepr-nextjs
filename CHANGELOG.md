@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- Security patch: Updated Next.js peerDependencies to support Next.js 16.0.3 and specific Next.js 15.x versions with security fixes.
+
+## 2.1.2
+
+### Patch Changes
+
 - Added the ability to tag decoded elements with data-prepr-edit-target to still get picket up by the package. See Readme.md on how to set it up.
 
 ## 2.1.1
