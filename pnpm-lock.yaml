@@ -15,8 +15,8 @@ importers:
         specifier: ^2.0.0
         version: 2.2.2
       '@vercel/stega':
-        specifier: ^0.1.2
-        version: 0.1.2
+        specifier: ^1.0.0
+        version: 1.0.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -870,8 +870,8 @@ packages:
       '@aws-sdk/credential-provider-web-identity':
         optional: true
 
-  '@vercel/stega@0.1.2':
-    resolution: {integrity: sha512-P7mafQXjkrsoyTRppnt0N21udKS9wUmLXHRyP9saLXLHw32j/FgUJ3FscSWgvSqRs4cj7wKZtwqJEvWJ2jbGmA==}
+  '@vercel/stega@1.0.0':
+    resolution: {integrity: sha512-jyDUZEBjxmlh28J4y2wB6dBKayYOw1+9fRNRHWRN2oSO+LnooRHUe2z3JeTkCqXY2yrZ9dmtCl982YNIoIBeuw==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -1858,6 +1858,7 @@ packages:
   next@15.3.1:
     resolution: {integrity: sha512-8+dDV0xNLOgHlyBxP1GwHGVaNXsmp+2NhZEYrXr24GWLHtt27YrBPbPuHvzlhi7kZNYjeJNR93IF5zfFu5UL0g==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
@@ -2528,6 +2529,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   spawndamnit@3.0.1:
     resolution: {integrity: sha512-MmnduQUuHCoFckZoWnXsTg7JaiLBJrKFj9UI2MbRPGaJeVpsLcVBu6P/IGZovziM/YBsellCmsprgNA+w0CzVg==}
@@ -3574,7 +3576,7 @@ snapshots:
 
   '@vercel/functions@2.2.2': {}
 
-  '@vercel/stega@0.1.2': {}
+  '@vercel/stega@1.0.0': {}
 
   acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
