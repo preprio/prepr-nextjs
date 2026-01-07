@@ -100,7 +100,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@vercel/functions": "^2.0.0",
-    "@vercel/stega": "^0.1.2",
+    "@vercel/stega": "^1.0.0",
     "clsx": "^2.1.1",
     "postcss-cli": "^11.0.1",
     "tailwind-merge": "^3.0.1",
