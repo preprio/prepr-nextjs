@@ -14,9 +14,7 @@ export function useStegaElements() {
 
   const getElements = useCallback(() => {
     if (!elementsRef.current) {
-      elementsRef.current = document.querySelectorAll(
-        '[data-prepr-encoded], [data-prepr-edit-target][data-prepr-encoded]'
-      );
+      elementsRef.current = document.querySelectorAll('[data-prepr-encoded]');
     }
     return elementsRef.current;
   }, []);
@@ -49,8 +47,28 @@ export function useStegaElements() {
   );
 
   const scanDocument = useCallback(
-    (decode: (str: string | null) => DecodedData | null) => {
-      debug.log('starting document scan');
+    (
+      decode: (str: string | null) => DecodedData | null,
+      skipIfTagged: boolean = false
+    ) => {
+      debug.log('starting document scan', { skipIfTagged });
+
+      // Skip re-scanning if elements are already tagged and skipIfTagged is true
+      if (skipIfTagged) {
+        const existingElements = document.querySelectorAll(
+          '[data-prepr-encoded]'
+        );
+        if (existingElements.length > 0) {
+          debug.log(
+            'skipping scan, found',
+            existingElements.length,
+            'pre-tagged elements'
+          );
+          elementsRef.current = existingElements;
+          return;
+        }
+      }
+
       const walker = document.createTreeWalker(
         document.body,
         NodeFilter.SHOW_TEXT,
@@ -80,53 +98,8 @@ export function useStegaElements() {
           }
         }
       }
-
-      // Scan for elements with data-prepr-edit-target and check for encoded data in hidden spans
-      const editTargetElements = document.querySelectorAll(
-        '[data-prepr-edit-target]'
-      );
-      let editTargetCount = 0;
-      editTargetElements.forEach(element => {
-        if (element.hasAttribute('data-prepr-encoded')) {
-          return; // Already processed
-        }
-
-        // Check all spans within the element for hidden ones with encoded data
-        const allSpans = element.querySelectorAll('span');
-        for (const span of Array.from(allSpans)) {
-          const computedStyle = window.getComputedStyle(span);
-          const isHidden =
-            computedStyle.display === 'none' ||
-            computedStyle.visibility === 'hidden';
-
-          if (isHidden && span.textContent) {
-            const decoded = decode(span.textContent);
-            if (decoded?.href) {
-              // Mark the parent element with data-prepr-edit-target, not the span
-              element.setAttribute('data-prepr-encoded', '');
-              element.setAttribute('data-prepr-href', decoded.href);
-              element.setAttribute('data-prepr-origin', decoded.origin);
-              editTargetCount++;
-              debug.log('encoded element found via data-prepr-edit-target:', {
-                href: decoded.href,
-                origin: decoded.origin,
-              });
-              break; // Found encoded data, no need to check other spans
-            }
-          }
-        }
-      });
-
-      debug.log(
-        'document scan complete, encoded',
-        encodedCount,
-        'elements,',
-        editTargetCount,
-        'via data-prepr-edit-target'
-      );
-      elementsRef.current = document.querySelectorAll(
-        '[data-prepr-encoded], [data-prepr-edit-target][data-prepr-encoded]'
-      );
+      debug.log('document scan complete, encoded', encodedCount, 'elements');
+      elementsRef.current = document.querySelectorAll('[data-prepr-encoded]');
     },
     [debug]
   );
@@ -151,35 +124,8 @@ export function useStegaElements() {
           }
         });
         allAddedNodes.forEach(node => scanNode(node, decode));
-
-        // Also scan for newly added elements with data-prepr-edit-target
-        const newEditTargets = document.querySelectorAll(
-          '[data-prepr-edit-target]:not([data-prepr-encoded])'
-        );
-        newEditTargets.forEach(element => {
-          const allSpans = element.querySelectorAll('span');
-          for (const span of Array.from(allSpans)) {
-            const computedStyle = window.getComputedStyle(span);
-            const isHidden =
-              computedStyle.display === 'none' ||
-              computedStyle.visibility === 'hidden';
-
-            if (isHidden && span.textContent) {
-              const decoded = decode(span.textContent);
-              if (decoded?.href) {
-                element.setAttribute('data-prepr-encoded', '');
-                element.setAttribute('data-prepr-href', decoded.href);
-                element.setAttribute('data-prepr-origin', decoded.origin);
-                break;
-              }
-            }
-          }
-        });
-
         pendingMutations = [];
-        elementsRef.current = document.querySelectorAll(
-          '[data-prepr-encoded], [data-prepr-edit-target][data-prepr-encoded]'
-        );
+        elementsRef.current = document.querySelectorAll('[data-prepr-encoded]');
         if (onUpdate) onUpdate();
       };
       observerRef.current = new MutationObserver(mutations => {
@@ -197,7 +143,16 @@ export function useStegaElements() {
     [scanNode, debug]
   );
 
-  const cleanup = useCallback(() => {
+  const cleanupVisuals = useCallback(() => {
+    // Remove only visual highlights, preserve data attributes
+    const activeElements = document.querySelectorAll('.prepr-overlay-active');
+    activeElements.forEach(element => {
+      element.classList.remove('prepr-overlay-active');
+    });
+    debug.log('cleaned up visuals for', activeElements.length, 'elements');
+  }, [debug]);
+
+  const cleanupAll = useCallback(() => {
     if (observerRef.current) {
       observerRef.current.disconnect();
       observerRef.current = null;
@@ -207,15 +162,23 @@ export function useStegaElements() {
       element.removeAttribute('data-prepr-encoded');
       element.removeAttribute('data-prepr-href');
       element.removeAttribute('data-prepr-origin');
+      element.classList.remove('prepr-overlay-active');
     });
-    debug.log('cleaned up', encodedElements.length, 'encoded elements');
+    debug.log('cleaned up all for', encodedElements.length, 'encoded elements');
     elementsRef.current = undefined;
   }, [debug]);
+
+  const cleanup = useCallback(() => {
+    // For backward compatibility, cleanup calls cleanupAll
+    cleanupAll();
+  }, [cleanupAll]);
 
   return {
     getElements,
     scanDocument,
     setupMutationObserver,
     cleanup,
+    cleanupVisuals,
+    cleanupAll,
   };
 }

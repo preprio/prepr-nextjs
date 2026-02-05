@@ -16,6 +16,7 @@ export default function useStegaScan(editMode: boolean): void {
     createOverlay,
     showOverlay,
     hideOverlay,
+    hideOverlayImmediate,
     cleanup: cleanupOverlay,
     decode,
   } = useStegaOverlay();
@@ -27,12 +28,8 @@ export default function useStegaScan(editMode: boolean): void {
     stopObserving,
   } = useStegaProximity();
 
-  const {
-    getElements,
-    scanDocument,
-    setupMutationObserver,
-    cleanup: cleanupElements,
-  } = useStegaElements();
+  const { getElements, scanDocument, setupMutationObserver, cleanupVisuals } =
+    useStegaElements();
 
   // Memoize the throttled mouse move handler
   const throttledMouseMove = useMemo(
@@ -69,6 +66,12 @@ export default function useStegaScan(editMode: boolean): void {
     }
   }, [currentElementRef, hideOverlay]);
 
+  // Handler for scroll events - hide overlay and clear gradients immediately
+  const handleScroll = useCallback(() => {
+    hideOverlayImmediate();
+    clearAllHighlights();
+  }, [hideOverlayImmediate, clearAllHighlights]);
+
   useEffect(() => {
     debug.log('editMode changed to', editMode);
     if (!editMode) {
@@ -79,9 +82,12 @@ export default function useStegaScan(editMode: boolean): void {
           'mousemove',
           throttledMouseMove
         );
+        DOMService.removeEventListener(window, 'scroll', handleScroll, {
+          capture: true,
+        });
         cleanupOverlay();
         clearAllHighlights();
-        cleanupElements();
+        cleanupVisuals();
         isInitializedRef.current = false;
       }
       return;
@@ -97,7 +103,7 @@ export default function useStegaScan(editMode: boolean): void {
     DOMService.addEventListener(tooltip, 'mouseenter', handleTooltipMouseEnter);
     DOMService.addEventListener(tooltip, 'mouseleave', handleTooltipMouseLeave);
     debug.log('starting document scan');
-    scanDocument(decode);
+    scanDocument(decode, true); // skipIfTagged=true to use pre-cleaned elements
     const elements = getElements();
     debug.log('found', elements.length, 'encoded elements after scan');
     // Start observing visible candidates
@@ -108,11 +114,17 @@ export default function useStegaScan(editMode: boolean): void {
     });
     debug.log('set up mutation observer');
     DOMService.addEventListener(document, 'mousemove', throttledMouseMove);
-    debug.log('added throttled mousemove handler');
+    DOMService.addEventListener(window, 'scroll', handleScroll, {
+      capture: true,
+    }); // Hide overlay and clear gradients on scroll
+    debug.log('added mousemove and scroll handlers');
     isInitializedRef.current = true;
     return () => {
       debug.log('cleaning up');
       DOMService.removeEventListener(document, 'mousemove', throttledMouseMove);
+      DOMService.removeEventListener(window, 'scroll', handleScroll, {
+        capture: true,
+      });
       DOMService.removeEventListener(
         tooltip,
         'mouseenter',
@@ -129,7 +141,7 @@ export default function useStegaScan(editMode: boolean): void {
       cleanupOverlay();
       clearAllHighlights();
       stopObserving();
-      cleanupElements();
+      cleanupVisuals();
       isInitializedRef.current = false;
     };
   }, [editMode]);

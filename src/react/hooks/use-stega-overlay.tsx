@@ -163,6 +163,25 @@ export function useStegaOverlay() {
     [debug]
   );
 
+  const hideOverlayImmediate = useCallback(() => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+
+    if (overlayRef.current) {
+      overlayRef.current.style.display = 'none';
+    }
+    if (tooltipRef.current) {
+      tooltipRef.current.style.display = 'none';
+    }
+    if (currentElementRef.current) {
+      currentElementRef.current.classList.remove('prepr-overlay-active');
+      currentElementRef.current = null;
+    }
+    debug.log('hidden overlay and tooltip immediately');
+  }, [debug]);
+
   const hideOverlay = useCallback(() => {
     if (!overlayRef.current || !tooltipRef.current) return;
 
@@ -171,26 +190,32 @@ export function useStegaOverlay() {
     }
 
     hideTimeoutRef.current = setTimeout(() => {
-      if (overlayRef.current) overlayRef.current.style.display = 'none';
-      if (tooltipRef.current) tooltipRef.current.style.display = 'none';
-      if (currentElementRef.current) {
-        currentElementRef.current.classList.remove('prepr-overlay-active');
-      }
-      currentElementRef.current = null;
-      debug.log('hidden overlay and tooltip');
+      hideOverlayImmediate();
     }, 100);
-  }, [debug]);
+  }, [hideOverlayImmediate]);
 
   const cleanup = useCallback(() => {
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
     }
 
+    // Hide overlay and tooltip before removing them
     if (overlayRef.current) {
+      overlayRef.current.style.display = 'none';
       DOMService.removeFromBody(overlayRef.current);
+      overlayRef.current = null;
     }
     if (tooltipRef.current) {
+      tooltipRef.current.style.display = 'none';
       DOMService.removeFromBody(tooltipRef.current);
+      tooltipRef.current = null;
+    }
+
+    // Remove active class from current element
+    if (currentElementRef.current) {
+      currentElementRef.current.classList.remove('prepr-overlay-active');
+      currentElementRef.current = null;
     }
 
     debug.log('cleaned up overlay and tooltip');
@@ -204,6 +229,7 @@ export function useStegaOverlay() {
     createOverlay,
     showOverlay,
     hideOverlay,
+    hideOverlayImmediate,
     cleanup,
     decode,
   };

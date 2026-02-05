@@ -787,11 +787,44 @@ try {
 Enable debug logging in development:
 
 ```typescript
-<PreprToolbarProvider 
+<PreprToolbarProvider
   props={toolbarProps}
   options={{ debug: true }}
 >
 ```
+
+### Manual Stega Handling (v2.1.* and below)
+
+**Note**: This section only applies to versions 2.1.* and below. Version 2.2.0+ handles stega encoding automatically.
+
+In older versions, stega-encoded text could cause layout shifts with `letter-spacing` or `ReactWrapBalancer`. You needed to manually clean the text using `vercelStegaSplit`:
+
+```typescript
+import { vercelStegaSplit } from '@vercel/stega'
+
+export default function Component({ encodedText }: { encodedText: string }) {
+  const { cleaned, encoded } = vercelStegaSplit(encodedText)
+
+  return (
+    <p data-prepr-edit-target>
+      {cleaned}
+      {encoded && (
+        <span className="hidden" suppressHydrationWarning>
+          {encoded}
+        </span>
+      )}
+    </p>
+  )
+}
+```
+
+**Key points for manual handling (legacy approach)**:
+- Place `data-prepr-edit-target` on the root element (e.g., `<p>`)
+- Render the cleaned text normally
+- Put encoded text in a hidden `<span>` for edit mode detection
+- Add `suppressHydrationWarning` to prevent React warnings
+
+**Upgrade to v2.2.0+** to eliminate this manual work and benefit from automatic cleaning!
 
 ## 📊 How It Works
 
@@ -815,41 +848,22 @@ The toolbar provides:
 ### Visual Editing
 
 When edit mode is enabled, the package:
-1. **Scans content**: Identifies editable content using Stega encoding
-2. **Highlights elements**: Shows proximity-based highlighting
-3. **Provides overlays**: Click-to-edit functionality
-4. **Syncs with Prepr**: Direct integration with Prepr's editing interface
+1. **Auto-cleans stega encoding** (v2.2.0+): Automatically removes invisible Unicode characters that cause layout shifts
+2. **Scans content**: Identifies editable content using Stega encoding
+3. **Highlights elements**: Shows proximity-based highlighting
+4. **Provides overlays**: Click-to-edit functionality
+5. **Syncs with Prepr**: Direct integration with Prepr's editing interface
 
-#### Fixing Styling Issues with Editable Fields
+#### Automatic Stega Cleaning (v2.2.0+)
 
-If the styling of editable fields is incorrect (e.g., text breaking out of its container), you can use the `data-prepr-edit-target` attribute to hide the encoded data in a hidden span. This is particularly useful when elements have `letter-spacing` set in CSS or are inside a `<ReactWrapBalancer>`.
+Version 2.2.0 introduces automatic stega text cleaning in preview mode:
+- Stega-encoded text is automatically cleaned after page load
+- No layout shifts from invisible Unicode characters
+- Works seamlessly with `letter-spacing` and `ReactWrapBalancer`
+- Data attributes persist for instant edit mode activation
+- Backward compatible with manual split patterns
 
-**Install the required package** (if not already installed):
-
-```bash
-npm install @vercel/stega
-```
-
-**Example usage:**
-
-```typescript
-import { vercelStegaSplit } from '@vercel/stega';
-
-function MyComponent({ text }) {
-  const { cleaned, encoded } = vercelStegaSplit(text);
-
-  return (
-    <h1 data-prepr-edit-target>
-      {cleaned}
-      <span style={{ display: 'none' }}>{encoded}</span>
-    </h1>
-  );
-}
-```
-
-The stega scan will automatically detect elements with `data-prepr-edit-target` and look for encoded data in hidden spans within them. The element itself (not the hidden span) will be marked as editable and highlighted correctly.
-
-**Note:** The hidden span should have `display: none` or `visibility: hidden` set via inline styles or CSS. The scan will detect these hidden spans and extract the encoded data to mark the parent element correctly.
+No manual stega handling is required in v2.2.0 and later!
 
 ## 🔄 Upgrading from v1 to v2
 

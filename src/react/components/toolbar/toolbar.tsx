@@ -87,7 +87,7 @@ export default function Toolbar({ children }: ToolbarProps) {
   const previewBarContent = (
     <>
       {isBarVisible && <div className="preview-bar-backdrop" />}
-      <div className={cn('preview-bar-container')}>
+      <div className="preview-bar-container">
         {/* Button holder*/}
         <div className="p-pr-2" ref={triggerRef}>
           <ToolbarButton onClick={handleClick} />

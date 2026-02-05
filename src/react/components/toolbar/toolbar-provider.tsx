@@ -7,6 +7,7 @@ import { PreprStoreInitializer } from '../store/prepr-store-initializer';
 import { initDebugLogger } from '../../../utils/debug';
 import useScrollPosition from '../../hooks/use-scroll-position';
 import { usePreprStore, usePreviewMode } from '../../../stores/prepr-store';
+import { useStegaClean } from '../../hooks/use-stega-clean';
 
 interface PreprToolbarProviderProps {
   children: ReactNode;
@@ -27,6 +28,10 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
 
   // Initialize scroll position handling for iframe communication
   useScrollPosition();
+
+  // Auto-clean stega-encoded text in preview mode
+  const previewMode = usePreviewMode();
+  useStegaClean(previewMode);
 
   // Initialize locale from options
   const setLocale = usePreprStore(s => s.setLocale);
