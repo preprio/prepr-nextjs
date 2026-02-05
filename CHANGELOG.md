@@ -1,16 +1,19 @@
 # @preprio/prepr-nextjs
 
-## 2.1.3
+## 2.2.0
 
-### Patch Changes
+### Minor Changes
 
-- Security patch: Updated Next.js peerDependencies to support Next.js 16.0.3 and specific Next.js 15.x versions with security fixes.
+- **Auto stega scan & clean on load**: Automatically detect and clean stega-encoded text on page load in preview mode, eliminating invisible Unicode characters that cause layout shifts with `letter-spacing` and `ReactWrapBalancer`.
+  - New `useStegaClean` hook scans DOM for stega-encoded text after hydration and cleans it automatically
+  - WeakMap-based tracking handles React re-renders gracefully without infinite loops
+  - Data attributes persist across edit mode toggles for instant re-activation without re-scanning
 
-## 2.1.2
+- **Enhanced cleanup system**: Split cleanup into `cleanupVisuals()` (preserves data attributes) and `cleanupAll()` (full cleanup) for better performance and instant edit mode re-activation.
 
-### Patch Changes
+- **Fixed frozen overlay states**: Added immediate scroll handling with `hideOverlayImmediate()` and `handleScroll()` callback to instantly hide overlay and gradients when scrolling, preventing frozen visual states.
 
-- Added the ability to tag decoded elements with data-prepr-edit-target to still get picket up by the package. See Readme.md on how to set it up.
+- **Performance optimization**: Added `skipIfTagged` parameter to skip redundant re-scanning of pre-cleaned elements when toggling edit mode.
 
 ## 2.1.1
 
