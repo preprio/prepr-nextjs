@@ -132,27 +132,43 @@ export default function createPreprMiddleware(
   // If preview mode is enabled, set additional headers
   response.headers.set('Prepr-Preview-Bar', 'true');
 
-  // Set Prepr Preview Segment and AB test cookies
-  const segmentCookie = request.cookies.get('Prepr-Segments')?.value;
-  if (segmentCookie) {
-    response.headers.set('Prepr-Segments', segmentCookie);
-  }
+  // When loaded inside the Prepr live preview iframe, prepr_hide_bar=true is
+  // always present in the URL. In that context, cookies must never be used —
+  // the live preview controls segments/variants exclusively via query params.
+  // If no query params are present, the default (no segment/variant) should
+  // be shown, not whatever the editor's browser cookie happens to contain.
+  const isLivePreview =
+    request.nextUrl.searchParams.get('prepr_hide_bar') === 'true';
 
-  const abCookie = request.cookies.get('Prepr-ABtesting')?.value;
-  if (abCookie) {
-    response.headers.set('Prepr-ABtesting', abCookie);
+  if (!isLivePreview) {
+    // Set Prepr Preview Segment and AB test from cookies
+    const segmentCookie = request.cookies.get('Prepr-Segments')?.value;
+    if (segmentCookie) {
+      response.headers.set('Prepr-Segments', segmentCookie);
+    }
+
+    const abCookie = request.cookies.get('Prepr-ABtesting')?.value;
+    if (abCookie) {
+      response.headers.set('Prepr-ABtesting', abCookie);
+    }
   }
 
   // Set Prepr Preview Segment and AB test headers from query params
   request.nextUrl.searchParams.forEach((value, key) => {
     if (key === 'prepr_preview_ab') {
       response.headers.set('Prepr-ABtesting', value);
-      response.cookies.set('Prepr-ABtesting', value);
+      // Don't write live preview selections back into the editor's cookies
+      if (!isLivePreview) {
+        response.cookies.set('Prepr-ABtesting', value);
+      }
     }
 
     if (key === 'prepr_preview_segment') {
       response.headers.set('Prepr-Segments', value);
-      response.cookies.set('Prepr-Segments', value);
+      // Don't write live preview selections back into the editor's cookies
+      if (!isLivePreview) {
+        response.cookies.set('Prepr-Segments', value);
+      }
     }
   });
 

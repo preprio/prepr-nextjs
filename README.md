@@ -669,6 +669,46 @@ import { PreprTrackingPixel } from '@preprio/prepr-nextjs/react'
 <PreprTrackingPixel accessToken="your-access-token" />
 ```
 
+#### `PreprStegaClean`
+A standalone component that automatically cleans stega-encoded text from the DOM. Use this when you need stega cleaning without the full toolbar — for example in a layout that conditionally renders the toolbar but always needs clean text.
+
+```typescript
+import { PreprStegaClean } from '@preprio/prepr-nextjs/react'
+
+<PreprStegaClean />
+```
+
+It renders nothing visible and can be placed anywhere in the React tree. If `PreprToolbarProvider` is already mounted (which includes stega cleaning), placing `PreprStegaClean` additionally is safe — a global deduplication guard ensures only one scanner runs at a time.
+
+**Typical use case**: when you render the toolbar only in preview mode but still want stega text cleaned in all preview contexts regardless of toolbar visibility:
+
+```typescript
+import { PreprStegaClean, PreprToolbar, PreprToolbarProvider } from '@preprio/prepr-nextjs/react'
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const isPreview = process.env.PREPR_ENV === 'preview'
+  const toolbarProps = isPreview ? await getToolbarProps(process.env.PREPR_GRAPHQL_URL!) : null
+
+  return (
+    <html lang="en">
+      <body>
+        {isPreview && toolbarProps ? (
+          <PreprToolbarProvider props={toolbarProps}>
+            <PreprToolbar />
+            {children}
+          </PreprToolbarProvider>
+        ) : (
+          <>
+            {isPreview && <PreprStegaClean />}
+            {children}
+          </>
+        )}
+      </body>
+    </html>
+  )
+}
+```
+
 ## 🔧 Configuration Options
 
 ### Environment Variables

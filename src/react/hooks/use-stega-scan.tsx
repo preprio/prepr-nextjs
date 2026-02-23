@@ -28,8 +28,13 @@ export default function useStegaScan(editMode: boolean): void {
     stopObserving,
   } = useStegaProximity();
 
-  const { getElements, scanDocument, setupMutationObserver, cleanupVisuals } =
-    useStegaElements();
+  const {
+    getElements,
+    scanDocument,
+    setupMutationObserver,
+    cleanup: cleanupElements,
+    cleanupVisuals,
+  } = useStegaElements();
 
   // Memoize the throttled mouse move handler
   const throttledMouseMove = useMemo(
@@ -87,6 +92,7 @@ export default function useStegaScan(editMode: boolean): void {
         });
         cleanupOverlay();
         clearAllHighlights();
+        cleanupElements();
         cleanupVisuals();
         isInitializedRef.current = false;
       }
@@ -141,8 +147,28 @@ export default function useStegaScan(editMode: boolean): void {
       cleanupOverlay();
       clearAllHighlights();
       stopObserving();
+      cleanupElements();
       cleanupVisuals();
       isInitializedRef.current = false;
     };
-  }, [editMode]);
+  }, [
+    editMode,
+    debug,
+    throttledMouseMove,
+    handleScroll,
+    cleanupOverlay,
+    clearAllHighlights,
+    cleanupElements,
+    cleanupVisuals,
+    createOverlay,
+    handleTooltipMouseEnter,
+    handleTooltipMouseLeave,
+    hideTimeoutRef,
+    scanDocument,
+    decode,
+    getElements,
+    refreshObserving,
+    setupMutationObserver,
+    stopObserving,
+  ]);
 }
