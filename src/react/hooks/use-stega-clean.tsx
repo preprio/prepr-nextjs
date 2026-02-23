@@ -14,6 +14,8 @@ interface CleanedInfo {
 
 const debug = createScopedLogger('useStegaClean');
 
+let globalObserver: MutationObserver | null = null;
+
 export function useStegaClean(previewMode: boolean) {
   const isProcessingRef = useRef(false);
   const observerRef = useRef<MutationObserver | null>(null);
@@ -22,6 +24,11 @@ export function useStegaClean(previewMode: boolean) {
   useEffect(() => {
     // Only run in preview mode and client-side (after hydration)
     if (!previewMode || typeof window === 'undefined') {
+      return;
+    }
+
+    if (globalObserver) {
+      debug.log('stega clean already active, skipping duplicate');
       return;
     }
 
@@ -89,7 +96,7 @@ export function useStegaClean(previewMode: boolean) {
         }
       } catch (e) {
         // Silently ignore decode errors
-        debug.log('error cleaning text node:', String(e));
+        debug.log('error cleaning text node:', e as object);
       }
 
       return false;
@@ -218,6 +225,7 @@ export function useStegaClean(previewMode: boolean) {
         subtree: true,
         characterData: true,
       });
+      globalObserver = observerRef.current;
 
       debug.log('mutation observer set up');
     };
@@ -244,6 +252,9 @@ export function useStegaClean(previewMode: boolean) {
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
+        if (globalObserver === observerRef.current) {
+          globalObserver = null;
+        }
         observerRef.current = null;
       }
       cleanedNodesRef.current = new WeakMap();

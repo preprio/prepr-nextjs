@@ -74,7 +74,7 @@ export function PreprStoreInitializer({
         setToolbarOpen(toolbarOpenCookie === 'true');
       }
     }
-  }, []);
+  }, [setToolbarOpen]);
 
   return <>{children}</>;
 }

@@ -29,9 +29,8 @@ export const PreprToolbarProvider: React.FC<PreprToolbarProviderProps> = ({
   // Initialize scroll position handling for iframe communication
   useScrollPosition();
 
-  // Auto-clean stega-encoded text in preview mode
-  const previewMode = usePreviewMode();
-  useStegaClean(previewMode);
+  // Auto-clean stega-encoded text whenever the toolbar is mounted
+  useStegaClean(true);
 
   // Initialize locale from options
   const setLocale = usePreprStore(s => s.setLocale);

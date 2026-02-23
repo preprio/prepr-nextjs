@@ -68,21 +68,21 @@ export default function Toolbar({ children }: ToolbarProps) {
         setToolbarOpen(false);
       }, 150);
     }
-  }, [editMode]);
+  }, [editMode, setToolbarOpen]);
 
   // Auto-close modal when segment changes
   useEffect(() => {
     setTimeout(() => {
       setToolbarOpen(false);
     }, 150);
-  }, [selectedSegment]);
+  }, [selectedSegment, setToolbarOpen]);
 
   // Auto-close modal when variant changes
   useEffect(() => {
     setTimeout(() => {
       setToolbarOpen(false);
     }, 150);
-  }, [selectedVariant]);
+  }, [selectedVariant, setToolbarOpen]);
 
   const previewBarContent = (
     <>

@@ -10,7 +10,7 @@ export function useTranslations() {
   const t = useMemo(() => {
     return (key: string, vars?: Record<string, string | number>) =>
       baseT(key, vars);
-  }, [locale]);
+  }, []);
 
   return { t, locale };
 }
