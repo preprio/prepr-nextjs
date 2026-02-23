@@ -120,13 +120,21 @@ export default function createPreprMiddleware(
     return response;
   }
 
-  // Respect preview mode toggle cookie from client
-  const previewModeCookie = request.cookies.get('Prepr-Preview-Mode')?.value;
-  const previewModeEnabled = previewModeCookie !== 'false';
+  // Preview query params always take priority — when the CMS dashboard
+  // loads the site in an iframe it controls segments via query params,
+  // regardless of the user's Prepr-Preview-Mode cookie in the browser.
+  const hasPreviewParams =
+    request.nextUrl.searchParams.has('prepr_preview_segment') ||
+    request.nextUrl.searchParams.has('prepr_preview_ab');
 
-  if (!previewModeEnabled) {
-    // When preview mode is disabled, do not set preview headers
-    return response;
+  if (!hasPreviewParams) {
+    // Respect preview mode toggle cookie from client
+    const previewModeCookie = request.cookies.get('Prepr-Preview-Mode')?.value;
+    const previewModeEnabled = previewModeCookie !== 'false';
+
+    if (!previewModeEnabled) {
+      return response;
+    }
   }
 
   // If preview mode is enabled, set additional headers

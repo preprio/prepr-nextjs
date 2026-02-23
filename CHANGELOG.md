@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.2.2
+
+### Patch Changes
+
+- **Fixed middleware preview params priority**: Preview query params (`prepr_preview_segment`, `prepr_preview_ab`) now always take priority over the `Prepr-Preview-Mode` cookie. Previously, if a user had toggled preview mode off in their browser, the CMS dashboard's iframe-based segment/variant previews would be blocked by that cookie. Preview headers are now always applied when preview query params are present, regardless of the cookie state.
+
 ## 2.2.1
 
 ### Patch Changes
