@@ -1,6 +1,6 @@
 {
   "name": "@preprio/prepr-nextjs",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Next.js package for Prepr CMS preview functionality with advanced debugging and visual editing capabilities",
   "main": "dist/react/index.cjs",
   "types": "./dist/react/index.d.ts",
@@ -101,6 +101,12 @@
     "overrides": {
       "fast-xml-parser": "^5.5.0"
     }
+  },
+  "overrides": {
+    "fast-xml-parser": "^5.5.0"
+  },
+  "resolutions": {
+    "fast-xml-parser": "^5.5.0"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
