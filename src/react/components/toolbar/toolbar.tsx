@@ -28,7 +28,7 @@ export default function Toolbar({ children }: ToolbarProps) {
   });
 
   useEffect(() => {
-    setIsMounted(true);
+    queueMicrotask(() => setIsMounted(true));
   }, []);
 
   // Ref for the popup box

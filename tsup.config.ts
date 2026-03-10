@@ -36,6 +36,7 @@ export default defineConfig((options) => {
             external: ['react', 'react-dom'],
             metafile: !options.watch,
             treeshake: true,
+            splitting: false,
         },
     ] as Options[];
 });

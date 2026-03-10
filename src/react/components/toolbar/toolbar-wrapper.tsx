@@ -22,7 +22,7 @@ export default function ToolbarWrapper() {
     const isIframe =
       typeof window !== 'undefined' && window?.parent !== window.self;
     if (isIframe) {
-      setIsIframe(true);
+      queueMicrotask(() => setIsIframe(true));
       const previewBarMessage = {
         name: 'prepr_preview_bar',
         event: 'loaded',

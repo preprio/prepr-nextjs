@@ -1,25 +1,5 @@
 # @preprio/prepr-nextjs
 
-## 2.2.2
-
-### Patch Changes
-
-- **Fixed middleware preview params priority**: Preview query params (`prepr_preview_segment`, `prepr_preview_ab`) now always take priority over the `Prepr-Preview-Mode` cookie. Previously, if a user had toggled preview mode off in their browser, the CMS dashboard's iframe-based segment/variant previews would be blocked by that cookie. Preview headers are now always applied when preview query params are present, regardless of the cookie state.
-
-## 2.2.1
-
-### Patch Changes
-
-- **Fixed live preview iframe cookie isolation**: Middleware now detects when running inside the Prepr live preview iframe (`prepr_hide_bar=true`) and skips reading/writing segment and variant cookies. This prevents the editor's own browser cookies from leaking into live preview sessions, ensuring the default (no segment/variant) is shown when no query params are present.
-
-- **New `PreprStegaClean` component**: Added a standalone `PreprStegaClean` component that can be placed anywhere in the React tree to trigger stega cleaning without requiring the full toolbar. Exported from `@preprio/prepr-nextjs/react`.
-
-- **Global observer deduplication in `useStegaClean`**: Added a module-level guard to prevent multiple `MutationObserver` instances from being created when `useStegaClean` is mounted more than once (e.g. from both the toolbar provider and `PreprStegaClean`).
-
-- **Improved stega scan cleanup**: `useStegaScan` now calls `cleanupElements()` on edit mode deactivation in addition to `cleanupVisuals()`, ensuring data attributes are fully removed when edit mode is turned off.
-
-- **React hook dependency fixes**: Corrected exhaustive dependency arrays in `useStegaScan` and `use-i18n` to satisfy React's rules of hooks and prevent stale closure bugs.
-
 ## 2.2.0
 
 ### Minor Changes
