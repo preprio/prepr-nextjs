@@ -21,27 +21,30 @@ export function useStegaElements() {
 
   const scanNode = useCallback(
     (node: Node, decode: (str: string | null) => DecodedData | null) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        if (!node.textContent?.trim()) return;
-        if (node.parentElement?.closest('script, style, noscript')) return;
-        const decoded = decode(node.textContent);
-        if (decoded?.href) {
-          const target = node.parentElement;
-          if (target && !target.hasAttribute('data-prepr-encoded')) {
-            target.setAttribute('data-prepr-encoded', '');
-            target.setAttribute('data-prepr-href', decoded.href);
-            target.setAttribute('data-prepr-origin', decoded.origin);
-            debug.log('encoded element found:', {
-              href: decoded.href,
-              origin: decoded.origin,
-            });
+      function scan(n: Node, d: (str: string | null) => DecodedData | null) {
+        if (n.nodeType === Node.TEXT_NODE) {
+          if (!n.textContent?.trim()) return;
+          if (n.parentElement?.closest('script, style, noscript')) return;
+          const decoded = d(n.textContent);
+          if (decoded?.href) {
+            const target = n.parentElement;
+            if (target && !target.hasAttribute('data-prepr-encoded')) {
+              target.setAttribute('data-prepr-encoded', '');
+              target.setAttribute('data-prepr-href', decoded.href);
+              target.setAttribute('data-prepr-origin', decoded.origin);
+              debug.log('encoded element found:', {
+                href: decoded.href,
+                origin: decoded.origin,
+              });
+            }
+          }
+        } else if (n.nodeType === Node.ELEMENT_NODE) {
+          for (let i = 0; i < n.childNodes.length; i++) {
+            scan(n.childNodes[i], d);
           }
         }
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        for (let i = 0; i < node.childNodes.length; i++) {
-          scanNode(node.childNodes[i], decode);
-        }
       }
+      scan(node, decode);
     },
     [debug]
   );
