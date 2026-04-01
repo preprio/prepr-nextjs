@@ -18,7 +18,8 @@ export interface PreprToolbarProps {
 export type PreprHeaderName =
   | 'prepr-customer-id'
   | 'Prepr-Segments'
-  | 'Prepr-ABtesting';
+  | 'Prepr-ABtesting'
+  | 'Prepr-User-Agent';
 
 // Supported A/B testing variants
 export type PreprVariant = 'A' | 'B';
@@ -51,6 +52,7 @@ export interface PreprHeaders {
   readonly 'Prepr-Visitor-IP'?: string;
   readonly 'Prepr-Hubspot-Id'?: string;
   readonly 'Prepr-Customer-Id-Created'?: 'true';
+  readonly 'Prepr-User-Agent'?: string;
 }
 
 // Error codes for better error handling

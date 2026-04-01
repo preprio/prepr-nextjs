@@ -67,7 +67,11 @@ export async function getPreprHeaders(): Promise<Record<string, string>> {
 
   headersList.forEach((value, key) => {
     if (key.startsWith('prepr') || key.startsWith('Prepr')) {
-      preprHeaders[key] = value;
+      if (key === 'prepr-user-agent') {
+        preprHeaders['User-Agent'] = value;
+      } else {
+        preprHeaders[key] = value;
+      }
     }
   });
 

@@ -83,6 +83,12 @@ export default function createPreprMiddleware(
     response.headers.set('Prepr-Context-initial_referral', referrer);
   }
 
+  // Forward browser User-Agent for device detection on the API side
+  const userAgent = request.headers.get('user-agent');
+  if (userAgent) {
+    response.headers.set('Prepr-User-Agent', userAgent);
+  }
+
   // Set Prepr version header
   response.headers.set('Prepr-Package', version);
 
