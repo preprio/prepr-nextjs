@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.2.6
+
+### Patch Changes
+
+- **Forward browser User-Agent to Prepr API**: `getPreprHeaders()` now automatically includes the visitor's real `User-Agent` header, enabling Prepr to detect device type (mobile/desktop/etc). The middleware captures the browser's User-Agent and forwards it through the Next.js header pipeline — no changes required in your application code.
+
 ## 2.2.0
 
 ### Minor Changes
