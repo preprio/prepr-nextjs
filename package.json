@@ -86,7 +86,7 @@
     "postcss": "^8.5.8",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "react": "^19.2.4",
+    "react": "^19.2.6",
     "react-dom": "^19.2.4",
     "tailwindcss": "^3.4.17",
     "tsup": "^8.5.1",
@@ -122,9 +122,9 @@
     "fast-xml-parser": "^5.5.0"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.9",
-    "@vercel/functions": "^3.4.3",
-    "@vercel/stega": "^1.0.0",
+    "@headlessui/react": "^2.2.10",
+    "@vercel/functions": "^3.5.1",
+    "@vercel/stega": "^1.1.0",
     "clsx": "^2.1.1",
     "postcss-cli": "^11.0.1",
     "tailwind-merge": "^3.5.0",
