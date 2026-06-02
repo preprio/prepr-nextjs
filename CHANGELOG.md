@@ -1,5 +1,12 @@
 # @preprio/prepr-nextjs
 
+## 2.2.7
+
+### Patch Changes
+
+- **Security fixes**: Bumped dependency versions to address security vulnerabilities — upgraded `ws`, `turbo`, `js-cookie`, and other transitive dependencies via pnpm overrides.
+- **Toolchain upgrades**: Updated to Tailwind CSS v4, TypeScript 6, ESLint 10, and aligned all dev dependency versions.
+
 ## 2.2.6
 
 ### Patch Changes
