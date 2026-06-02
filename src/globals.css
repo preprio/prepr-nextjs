@@ -104,7 +104,6 @@
   z-index: 9999;
 }
 
-
 /* Component-specific styles */
 .preview-bar-container {
   @apply p-fixed p-right-0 p-top-[calc(50%-64px)] p-z-[999] p-ml-auto p-flex p-items-center p-justify-end;
