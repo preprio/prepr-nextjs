@@ -1,11 +1,28 @@
 # Prepr Next.js Package
 
-A powerful TypeScript library that provides preview functionality, visual editing capabilities, and A/B testing for [Prepr CMS](https://prepr.io) integrated with Next.js applications.
+> **Deprecated.** `@preprio/prepr-nextjs` is no longer maintained. The final release is `2.2.7`.
+>
+> Use [**`@preprio/toolkit`**](https://www.npmjs.com/package/@preprio/toolkit) instead — the framework-agnostic successor with Next.js, Nuxt, Astro, and SvelteKit support.
+>
+> - Package: [`@preprio/toolkit`](https://www.npmjs.com/package/@preprio/toolkit)
+> - Repository: [preprio/prepr-toolkit](https://github.com/preprio/prepr-toolkit)
+> - Migration guide: [Migrating from `@preprio/prepr-nextjs`](https://github.com/preprio/prepr-toolkit/blob/main/MIGRATION.md)
+
+```bash
+npm uninstall @preprio/prepr-nextjs
+npm install @preprio/toolkit
+```
+
+---
+
+A TypeScript library that provides preview functionality, visual editing capabilities, and A/B testing for [Prepr CMS](https://prepr.io) integrated with Next.js applications.
+
+The documentation below is kept for existing installations. New projects should use [`@preprio/toolkit`](https://www.npmjs.com/package/@preprio/toolkit).
 
 ## ⚡ Quick Start
 
 ```bash
-# Install the package
+# Install the package (deprecated — prefer @preprio/toolkit)
 npm install @preprio/prepr-nextjs
 # or
 pnpm add @preprio/prepr-nextjs
@@ -865,9 +882,11 @@ Version 2.2.0 introduces automatic stega text cleaning in preview mode:
 
 No manual stega handling is required in v2.2.0 and later!
 
-## 🔄 Upgrading from v1 to v2
+## 🔄 Migrating away from this package
 
-If you're upgrading from v1, please follow the [Upgrade Guide](./UPGRADE_GUIDE.md) for detailed migration instructions.
+This package is deprecated. Migrate to [`@preprio/toolkit`](https://www.npmjs.com/package/@preprio/toolkit) using the [migration guide](https://github.com/preprio/prepr-toolkit/blob/main/MIGRATION.md).
+
+If you're still on v1 of this package, see the [Upgrade Guide](./UPGRADE_GUIDE.md) for the v1 → v2 steps first, then migrate to the toolkit.
 
 ## 📜 License
 
@@ -875,6 +894,8 @@ MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ## 🆘 Support
 
+- **New package**: [`@preprio/toolkit`](https://github.com/preprio/prepr-toolkit)
+- **Migration guide**: [Migrating from `@preprio/prepr-nextjs`](https://github.com/preprio/prepr-toolkit/blob/main/MIGRATION.md)
 - **Documentation**: [Prepr Documentation](https://docs.prepr.io)
-- **Issues**: [GitHub Issues](https://github.com/preprio/prepr-nextjs/issues)
+- **Issues** (legacy): [GitHub Issues](https://github.com/preprio/prepr-nextjs/issues)
 - **Support**: [Prepr Support](https://prepr.io/support)
