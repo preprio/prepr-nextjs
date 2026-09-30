@@ -78,7 +78,8 @@ export default [
     },
     settings: {
       react: {
-        version: 'detect',
+        // Explicit version: 'detect' calls context.getFilename, removed in ESLint 10
+        version: '19.2',
       },
     },
   },
