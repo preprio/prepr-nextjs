@@ -19,6 +19,8 @@ export type PreprHeaderName =
   | 'prepr-customer-id'
   | 'Prepr-Segments'
   | 'Prepr-ABtesting'
+  | 'User-Agent'
+  // Kept for backward compatibility; the API reads `User-Agent`
   | 'Prepr-User-Agent';
 
 // Supported A/B testing variants
@@ -52,6 +54,8 @@ export interface PreprHeaders {
   readonly 'Prepr-Visitor-IP'?: string;
   readonly 'Prepr-Hubspot-Id'?: string;
   readonly 'Prepr-Customer-Id-Created'?: 'true';
+  readonly 'User-Agent'?: string;
+  /** @deprecated Never populated; the visitor's value is under `User-Agent`. */
   readonly 'Prepr-User-Agent'?: string;
 }
 

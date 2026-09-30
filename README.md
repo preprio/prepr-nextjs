@@ -1,6 +1,6 @@
 # Prepr Next.js Package
 
-> **Deprecated.** `@preprio/prepr-nextjs` is no longer maintained. The final release is `2.2.7`.
+> **Deprecated.** `@preprio/prepr-nextjs` is no longer maintained. The final release is `2.2.8`.
 >
 > Use [**`@preprio/toolkit`**](https://www.npmjs.com/package/@preprio/toolkit) instead — the framework-agnostic successor with Next.js, Nuxt, Astro, and SvelteKit support.
 >

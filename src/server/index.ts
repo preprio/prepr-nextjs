@@ -67,13 +67,15 @@ export async function getPreprHeaders(): Promise<Record<string, string>> {
 
   headersList.forEach((value, key) => {
     if (key.startsWith('prepr') || key.startsWith('Prepr')) {
-      if (key === 'prepr-user-agent') {
-        preprHeaders['User-Agent'] = value;
-      } else {
-        preprHeaders[key] = value;
-      }
+      preprHeaders[key] = value;
     }
   });
+
+  // Forward the visitor's browser User-Agent for device detection on the API side
+  const userAgent = headersList.get('user-agent');
+  if (userAgent) {
+    preprHeaders['User-Agent'] = userAgent;
+  }
 
   return preprHeaders;
 }

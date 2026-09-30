@@ -1,5 +1,11 @@
 # @preprio/prepr-nextjs
 
+## 2.2.8
+
+### Patch Changes
+
+- **User-Agent read directly from the request**: `getPreprHeaders()` now takes the visitor's `User-Agent` straight from the incoming request instead of relaying it through a `Prepr-User-Agent` header. The middleware no longer sets `Prepr-User-Agent`, so the value is no longer echoed on the response. No changes required in your application code.
+
 ## 2.2.7
 
 ### Patch Changes
