@@ -85,7 +85,7 @@
     "next": "^16.4.6",
     "postcss": "^8.5.33",
     "prettier": "^3.10.1",
-    "prettier-plugin-tailwindcss": "^0.7.4",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^3.4.19",
